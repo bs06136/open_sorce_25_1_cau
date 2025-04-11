@@ -21,7 +21,7 @@
 
 > 메인 타이틀 화면 – "저주의 꿈"
 
-<img src="assets/title_screen.png" alt="저주의 꿈 메인 UI" width="500"/>
+<img src="asset/title_screen.png" alt="저주의 꿈 메인 UI" width="500"/>
 
 
 ---
