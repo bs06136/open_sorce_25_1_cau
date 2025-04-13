@@ -9,7 +9,7 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("저주의 꿈")
 
 # 이미지 불러오기
-background = pygame.image.load("image.png")
+background = pygame.image.load("title_screen.png")
 background = pygame.transform.scale(background, (screen_width, screen_height))
 
 # 🎯 완전히 정확한 버튼 Rect
