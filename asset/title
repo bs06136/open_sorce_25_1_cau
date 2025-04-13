@@ -1,0 +1,60 @@
+import pygame
+import sys
+
+pygame.init()
+
+# 768x1152 해상도 고정
+screen_width, screen_height = 768, 1152
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("저주의 꿈")
+
+# 이미지 불러오기
+background = pygame.image.load("image.png")
+background = pygame.transform.scale(background, (screen_width, screen_height))
+
+# 🎯 완전히 정확한 버튼 Rect
+buttons = {
+    "start": pygame.Rect(210, 590, 350, 120),
+    "card": pygame.Rect(210, 735, 350, 120),
+    "exit": pygame.Rect(210, 880, 350, 120),
+    "gear": pygame.Rect(610, 919, 80, 80)
+}
+
+# 마우스 hover 시 하이라이트 효과
+def draw_button_highlight(rect, hover):
+    if hover:
+        glow = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
+        glow.fill((255, 255, 255, 60))
+        screen.blit(glow, rect.topleft)
+
+# 게임 루프
+running = True
+while running:
+    screen.blit(background, (0, 0))
+    mouse_pos = pygame.mouse.get_pos()
+
+    # 버튼 하이라이트
+    for key, rect in buttons.items():
+        draw_button_highlight(rect, rect.collidepoint(mouse_pos))
+
+    pygame.display.flip()
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            print("🖱 클릭 좌표:", mouse_pos)
+
+            if buttons["start"].collidepoint(mouse_pos):
+                print("✅ 게임 시작!")
+            elif buttons["card"].collidepoint(mouse_pos):
+                print("📜 카드 종류 보기")
+            elif buttons["exit"].collidepoint(mouse_pos):
+                print("❌ 게임 종료")
+                running = False
+            elif buttons["gear"].collidepoint(mouse_pos):
+                print("⚙ 설정 열기")
+
+pygame.quit()
+sys.exit()
