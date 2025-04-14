@@ -22,14 +22,14 @@ class Card:
         #체력 변화 전후 출력
         if self.hp_change != 0:
             if self.hp_change > 0:
-                print(f"체력이 {self.hp_change} 증가합니다.")
+                print(f"체력이 {self.hp_change} 증가합니다. : {player.hp} -> {player.hp + self.hp_change}")
             else:
-                print(f"체력이 {-self.hp_change} 감소합니다.")
+                print(f"체력이 {-self.hp_change} 감소합니다. : {player.hp} -> {player.hp + self.hp_change}")
         if self.curse_change != 0:
             if self.curse_change > 0:
-                print(f"저주가 {self.curse_change} 증가합니다.")
+                print(f"저주가 {self.curse_change} 증가합니다. : {player.curse} -> {player.curse + self.curse_change}")
             else:
-                print(f"저주가 {-self.curse_change} 감소합니다.")
+                print(f"저주가 {-self.curse_change} 감소합니다. : {player.curse} -> {player.curse + self.curse_change}")
 
         player.hp += self.hp_change
         player.curse += self.curse_change
@@ -220,7 +220,7 @@ def soul_wedding_effect(player, game, other_cards):
     player.reroll_available += 1
 
 def blood_pact_effect(player, game, other_cards):
-    print("[피의 서약 효과] 다음 2턴간 저주가 증가하지 않습니다!")
+    print("[피의 서약 효과] 다음 2턴간 일반 효과로 저주가 증가하지 않습니다!")
     player.non_curse_increase_turn = 2
 
 def gamble_of_fate_effect(player, game, other_cards):
@@ -249,7 +249,7 @@ judgement = Card("심판", -3, -1, "덱에 있는 무작위 카드 5장을 제�
 temperance = Card("절제", -5, 0, "다음 2턴 동안 저주로 인한 체력 감소가 이루어지지 않습니다.", special=temperance_effect)
 clown = Card("광대", 0, 1, "체력을 1~10 중 무작위로 증가시킨다", special=clown_effect)
 hierophant = Card("교황", 4, 0, "다음 3턴 동안은 일반 효과로 저주를 감소시킬 수 없다.", special=hierophant_effect)
-hermit = Card("은둔자", -2, 0, "5턴 뒤 체력을 7 증가시킨다.", special=hermit_effect)
+hermit = Card("은둔자", -3, 0, "5턴 뒤 체력을 7 증가시킨다.", special=hermit_effect)
 magician = Card("마법사", 0, 1, "3턴 뒤 저주를 3 감소시킨다.", special=magician_effect)
 high_priestess = Card("여교황", 4, 0, "다음 3턴동안 일반 효과로 체력을 증가시킬 수 없다.", special=high_priestess_effect)
 empress = Card("여제", 1, 0, "덱에 있는 죽음 카드 5장을 제거한다.", special=empress_effect)
@@ -263,14 +263,14 @@ eclipse = Card("일식", 8, 0, "2턴 뒤에 저주를 2 증가시킨다.", speci
 black_market = Card("암거래", 0, 2, "다음 5턴 동안 죽음 카드가 덱에 추가되지 않는다.", special=black_market_effect)
 ember = Card("불씨", -1, 1, "다음 한 번 체력이 1 이하로 떨어지게 될 경우 체력을 1로 고정하고 저주를 0으로 변경한다.", special=ember_effect)
 cursed_book = Card("저주받은 책", 0, 1, "")
-prophet = Card("예언자", -3, 1, "다음 턴에 선택한 카드는 일반효과로 체력은 감소시키지 않고 저주는 증가시키지 않는다. (특수효과 제외)", special=prophet_effect)
-apocalypse_scripture = Card("종말의경전", 0, 4, "덱을 리셋 시킨다. ", special=apocalypse_scripture_effect)
-plunderer = Card("강탈자", -2, 0, "")
+prophet = Card("예언자", -3, 1, "다음 턴에 선택한 카드는 일반 효과로 체력은 감소시키지 않고 저주는 증가시키지 않는다. (특수효과 제외)", special=prophet_effect)
+apocalypse_scripture = Card("종말의 경전", 0, 4, "덱을 리셋 시킨다. ", special=apocalypse_scripture_effect)
+plunderer = Card("강탈자", -3, 0, "")
 archangel = Card("대천사", 0, -1, "다음 턴에 죽음 카드가 뽑힐 시, 해당 카드를 랜덤한 카드로 교체한다.", special=archangel_effect)
 soul_candle = Card("영혼의 초", 5, 2, "3턴 뒤, 저주를 2 감소시킨다.", special=soul_candle_effect)
 crack_of_shadow = Card("그림자의 균열", -1, 1, "")
 soul_wedding = Card("영혼 결혼식", 6, 3, "다시 뽑기 기회를 1회 얻는다. 다시 뽑기는 3장을 모두 버리고 새로운  3장을 뽑는다.", special=soul_wedding_effect)
-blood_pact = Card("피의 서약", -10, 0, "다음 2턴간 저주가 증가하지 않는다.", special=blood_pact_effect)
+blood_pact = Card("피의 서약", -10, 0, "다음 2턴간 일반 효과로 저주가 증가하지 않는다.", special=blood_pact_effect)
 gamble_of_fate = Card("운명의 유희", 5, 0, "다음 턴, 카드가 무작위로 선택 된다.", special=gamble_of_fate_effect)
 dream = Card("꿈", -4, -1, "")
 
@@ -381,8 +381,9 @@ def play_game():
                 if delay > 0:
                     new_delayed_effect_list.append((delay, name, effect))
                 else:
-                    print(f"[지연 효과 발동] {name} 효과가 발동합니다.")
+                    print(f"[지연 효과 발동] {name} 효과가 발동합니다. : {player.hp}, {player.curse} -> ", end="")
                     effect(player)
+                    print(f"{player.hp}, {player.curse}")
             player.delayed_effect_list = new_delayed_effect_list
 
         # Apply curse damage
@@ -405,9 +406,9 @@ def play_game():
                 game.insert_death_cards(player.curse - 5)
 
         # 정기적으로 일정 턴마다 curse +1
-        if game.turn % REGULAR_CURSE_INCREASING_FREQUENCY == 0:
-            player.curse += 1
-            print(f"{game.turn}턴 종료로 저주 +1 -> 현재 저주: {player.curse}")
+        if game.turn % REGULAR_CURSE_INCREASING_FREQUENCY == 0:            
+            print(f"{game.turn}턴 종료로 저주가 {REGULAR_CURSE_INCREASING_QUANTITY} 증가합니다. : {player.curse} -> {player.curse + REGULAR_CURSE_INCREASING_QUANTITY}")
+            player.curse += REGULAR_CURSE_INCREASING_QUANTITY
 
         # Check ember effect
         if player.ember and player.hp <= 1:
