@@ -1,12 +1,13 @@
 import random
+import time
 
 
 #---------------------------------------------------------------------------------------------------------------------
 # GAME VALANCE ADJUSTMENT
 
-REGULAR_CURSE_INCREASING_QUANTITY = 1 # 정기적 저주 증가량
-REGULAR_CURSE_INCREASING_FREQUENCY = 3 # 정기적 저주 증가 주기
-
+REGULAR_CURSE_INCREASING_FREQUENCY = 5 # 정기적 저주 증가 주기
+REGULAR_CURSE_INCREASING_INIT = 1 # 정기적 저주 증가량 초기값
+REGULAR_CURSE_INCREASING_CUMULATE = 1 # 정기적 저주 증가량 누적값
 
 #---------------------------------------------------------------------------------------------------------------------
 
@@ -22,24 +23,27 @@ class Card:
         #체력 변화 전후 출력
         if self.hp_change != 0:
             if self.hp_change > 0:
-                print(f"체력이 {self.hp_change} 증가합니다. : {player.hp} -> {player.hp + self.hp_change}")
+                print(f"체력이 {self.hp_change} 증가합니다. : {player.hp} -> ", end="")
             else:
-                print(f"체력이 {-self.hp_change} 감소합니다. : {player.hp} -> {player.hp + self.hp_change}")
+                print(f"체력이 {-self.hp_change} 감소합니다. : {player.hp} -> ", end="")
+            player.hp += self.hp_change
+            print(f"{player.hp}")
+
         if self.curse_change != 0:
             if self.curse_change > 0:
-                print(f"저주가 {self.curse_change} 증가합니다. : {player.curse} -> {player.curse + self.curse_change}")
+                print(f"저주가 {self.curse_change} 증가합니다. : {player.curse} -> ", end="")
             else:
-                print(f"저주가 {-self.curse_change} 감소합니다. : {player.curse} -> {player.curse + self.curse_change}")
+                print(f"저주가 {-self.curse_change} 감소합니다. : {player.curse} -> ", end="")
+            player.curse += self.curse_change
+            print(f"{player.curse}")
 
-        player.hp += self.hp_change
-        player.curse += self.curse_change
         if self.special:
             self.special(player, game, cards)
 
 class Player:
     def __init__(self):
-        self.hp = 10
-        self.curse = 0
+        self._hp = 10
+        self._curse = 0
         self.next_draw_num = 3
         self.skip_next_turn = False
         self.reroll_available = 0
@@ -55,6 +59,22 @@ class Player:
         self.ember = False
         self.archangel = False
         self.random_choice = False
+    
+    @property
+    def curse(self):
+        return self._curse
+
+    @curse.setter
+    def curse(self, value):
+        self._curse = max(0, value)  # curse는 0 미만 불가
+
+    @property
+    def hp(self):
+        return self._hp
+
+    @hp.setter
+    def hp(self, value):
+        self._hp = max(0, value)  # hp도 0 미만 불가
 
 class Game:
     def __init__(self):
@@ -81,9 +101,8 @@ class Game:
 # 카드 특수효과
 
 def death_effect(player, game, other_cards):
-    print("[죽음 효과] 게임 오버!")
+    print("[죽음 효과] 사망합니다...")
     display_score(player, game)
-    exit()
 
 def fool_effect(player, game, other_cards):
     print("[바보 효과] 체력을 10으로 초기화합니다!")
@@ -110,8 +129,9 @@ def life_effect(player, game, other_cards):
         game.deck.insert(pos, new_cards.pop())
 
 def fortune_wheel_effect(player, game, other_cards):
-    print("[운명의 수레바퀴 효과] 체력과 저주를 5:1 비율로 맞바꿉니다!")
+    print("[운명의 수레바퀴 효과] 체력과 저주를 5:1 비율로 맞바꿉니다! : {player.hp}, 저주: {player.curse} -> ", end="")
     player.hp, player.curse = player.curse * 5, player.hp // 5
+    print(f"{player.hp}, {player.curse}")
 
 def hanged_man_effect(player, game, other_cards):
     print("[매달린 남자 효과] 다음 턴에 2장만 뽑습니다!")
@@ -127,8 +147,8 @@ def judgement_effect(player, game, other_cards):
         game.deck = []
 
 def temperance_effect(player, game, other_cards):
-    print("[절제 효과] 다음 2턴 동안 저주로 인한 체력 감소가 없습니다!")
-    player.non_curse_damage_turn = 2
+    print("[절제 효과] 이번을 포함해 3턴 동안 저주로 인한 체력 감소가 이루어지지 않습니다!")
+    player.non_curse_damage_turn = 3
 
 def clown_effect(player, game, other_cards):
     print("[광대 효과] 체력을 1~10 중 무작위로 증가시킵니다!")
@@ -170,10 +190,11 @@ def chariot_effect(player, game, other_cards):
     player.next_pick_num = 2
 
 def justice_effect(player, game, other_cards):
-    print("[정의 효과] 체력과 저주를 합해 5:1 비율로 나눕니다!")
+    print("[정의 효과] 체력과 저주를 합해 5:1 비율로 나눕니다! : {player.hp}, {player.curse} -> ", end="")
     total = player.hp + player.curse
     player.curse = total // 6
     player.hp = total - player.curse
+    print(f"{player.hp}, {player.curse}")
 
 def world_effect(player, game, other_cards):
     print("[세계 효과] 이번 턴에 뽑은 모든 카드의 효과를 적용합니다!")
@@ -192,7 +213,7 @@ def eclipse_effect(player, game, other_cards):
     player.delayed_effect_list.append((2, "일식", lambda p: setattr(p, 'curse', p.curse + 2)))
 
 def black_market_effect(player, game, other_cards):
-    print("[암거래 효과] 다음 5턴 동안 죽음 카드가 덱에 추가되지 않습니다!")
+    print("[암거래 효과] 이번을 포함해 5턴 동안 죽음 카드가 덱에 추가되지 않습니다!")
     player.not_add_death = 5
 
 def ember_effect(player, game, other_cards):
@@ -232,7 +253,7 @@ def gamble_of_fate_effect(player, game, other_cards):
 #---------------------------------------------------------------------------------------------------------------------
 # 카드 목록
 
-death = Card("죽음", 0, 0, "게임을 종료시킨다.", special=death_effect)
+death = Card("죽음", 0, 0, "사망한다.", special=death_effect)
 fool = Card("바보", 0, 0, "체력을 초기 값인 10으로 만든다.", special=fool_effect)
 tower = Card("탑", -1, 0, "다음 턴은 카드를 뽑지 않고 저주로 인한 체력감소가 이루어지지 않습니다.", special=tower_effect)
 lovers = Card("연인", 1, 1, "다시 뽑기 기회를 1회 얻는다. 다시 뽑기는 3장을 모두 버리고 새로운  3장을 뽑는다.", special=lovers_effect)
@@ -246,7 +267,7 @@ life = Card("생명", 0, 0, "덱에 죽음을 제외한 각기 다른 무작위 
 fortune_wheel = Card("운명의 수레바퀴", 0, 0, "체력과 저주를 5:1 비율로 맞바꾼다.", special=fortune_wheel_effect)
 hanged_man = Card("매달린 남자", 5, 0, "다음 턴에는 3장이 아닌 2장의 카드 만을 뽑는다.", special=hanged_man_effect)
 judgement = Card("심판", -3, -1, "덱에 있는 무작위 카드 5장을 제거한다.", special=judgement_effect)
-temperance = Card("절제", -5, 0, "다음 2턴 동안 저주로 인한 체력 감소가 이루어지지 않습니다.", special=temperance_effect)
+temperance = Card("절제", -5, 0, "이번을 포함해 3턴 동안 저주로 인한 체력 감소가 이루어지지 않습니다.", special=temperance_effect)
 clown = Card("광대", 0, 1, "체력을 1~10 중 무작위로 증가시킨다", special=clown_effect)
 hierophant = Card("교황", 4, 0, "다음 3턴 동안은 일반 효과로 저주를 감소시킬 수 없다.", special=hierophant_effect)
 hermit = Card("은둔자", -3, 0, "5턴 뒤 체력을 7 증가시킨다.", special=hermit_effect)
@@ -260,7 +281,7 @@ world = Card("세계", 10, -3, "이번 턴에 뽑은 모든 카드의 효과를 
 mirror = Card("거울", 0, 1, "마지막에 사용한 카드의 효과를 다시 발동한다.", special=mirror_effect)
 smoke = Card("연기", 0, 0, "")
 eclipse = Card("일식", 8, 0, "2턴 뒤에 저주를 2 증가시킨다.", special=eclipse_effect)
-black_market = Card("암거래", 0, 2, "다음 5턴 동안 죽음 카드가 덱에 추가되지 않는다.", special=black_market_effect)
+black_market = Card("암거래", 0, 2, "이번을 포함하여 5턴 동안 죽음 카드가 덱에 추가되지 않는다.", special=black_market_effect)
 ember = Card("불씨", -1, 1, "다음 한 번 체력이 1 이하로 떨어지게 될 경우 체력을 1로 고정하고 저주를 0으로 변경한다.", special=ember_effect)
 cursed_book = Card("저주받은 책", 0, 1, "")
 prophet = Card("예언자", -3, 1, "다음 턴에 선택한 카드는 일반 효과로 체력은 감소시키지 않고 저주는 증가시키지 않는다. (특수효과 제외)", special=prophet_effect)
@@ -291,6 +312,9 @@ def play_game():
 
     while game.turn <= 40 and player.hp > 0:
 
+        if game.turn != 1:
+            time.sleep(2)
+
         isSkipped = False
 
         print(f"\n=== Turn {game.turn} ===")
@@ -305,14 +329,26 @@ def play_game():
             player.next_draw_num = 3  # Reset to default for next turn
             cards = game.draw_cards(draw_count)
 
-            print("카드를 뽑습니다:")
+            print("카드를 뽑습니다", end="")
+            time.sleep(1) # 1초 대기
+            print(". ", end="")
+            time.sleep(1) # 1초 대기
+            print(". ", end="")
+            time.sleep(1) # 1초 대기
+            print(".")
+            time.sleep(1) # 1초 대기
             while True:
                 for i, card in enumerate(cards):
                     if player.archangel and card.name == "죽음": # 대천사 효과 검토
                         card = random.choice([c for c in all_cards if c.name != "죽음"])
+                        cards[i] = card # 대천사 효과 적용
                     print(f"{i+1}. {card.name} (HP {card.hp_change}, Curse {card.curse_change}) - {card.description}")
+                player.archangel = False # 대천사 효과 초기화
+
+                time.sleep(1) # 1초 대기
 
                 if player.reroll_available>0:
+                    print(f"리롤 기회가 {player.reroll_available}회 남았습니다.")
                     reroll = input("리롤하시겠습니까? (y/n): ").lower()
                     if reroll == 'y':
                         cards = game.draw_cards(draw_count)
@@ -327,7 +363,7 @@ def play_game():
 
             #랜덤 카드 선택 검토
             if player.random_choice:
-                print("운명의 유희 효과로 인해 카드가 무작위로 선택됩니다.")
+                time.sleep(2) # 2초 대기
                 selected = random.choice(cards)
                 selected_cards.append(selected)
                 cards.remove(selected)
@@ -344,9 +380,12 @@ def play_game():
                 elif pick_count == 2:
                     print("이번 턴에는 카드를 2장 선택합니다.")
                     for _ in range(2):
+                        if _ == 0:
+                            print(" 첫번째 ", end="")
                         if _ == 1:
                             for i, card in enumerate(cards):
                                 print(f"{i+1}. {card.name} (HP {card.hp_change}, Curse {card.curse_change}) - {card.description}")
+                            print(" 두번째 ", end="")
                         choice = int(input(f"카드를 선택하세요 (1~{len(cards)}): ")) - 1
                         selected = cards.pop(choice)
                         selected_cards.append(selected)
@@ -358,15 +397,19 @@ def play_game():
                 if player.non_curse_increase_turn > 0:
                     if selected.curse_change > 0:
                         selected.curse_change = 0
+                    player.non_curse_increase_turn -= 1
                 if player.non_hp_increase_turn > 0:
                     if selected.hp_change > 0:
                         selected.hp_change = 0
+                    player.non_hp_increase_turn -= 1
                 if player.non_curse_decrease_turn > 0:
                     if selected.curse_change < 0:
                         selected.curse_change = 0
+                    player.non_curse_decrease_turn -= 1    
                 if player.non_hp_decrease_turn > 0:
                     if selected.hp_change < 0:
                         selected.hp_change = 0
+                    player.non_hp_decrease_turn -= 1
 
                 # Apply the selected card's effect
                 selected.apply(player, game, cards) #cards: not chosen cards
@@ -378,7 +421,7 @@ def play_game():
             new_delayed_effect_list = []
             for delay, name, effect in player.delayed_effect_list:
                 delay -= 1
-                if delay > 0:
+                if delay >= 0:
                     new_delayed_effect_list.append((delay, name, effect))
                 else:
                     print(f"[지연 효과 발동] {name} 효과가 발동합니다. : {player.hp}, {player.curse} -> ", end="")
@@ -394,8 +437,9 @@ def play_game():
                 print("이번 턴은 스킵되었습니다. 저주 피해 없음.")
             else:
                 if player.curse > 0:
-                    print(f"저주로 인해 체력이 {player.curse} 감소합니다.")
-                player.hp -= player.curse
+                    print(f"저주로 인해 체력이 {player.curse} 감소합니다. : {player.hp} -> ", end="")
+                    player.hp -= player.curse
+                    print(f"{player.hp}")
 
         # Insert death card to deck if curse >= 6
         if player.not_add_death > 0:
@@ -405,36 +449,35 @@ def play_game():
                 print(f"저주가 {player.curse} 이상이므로 죽음 카드 {player.curse - 5}장 추가됩니다.")
                 game.insert_death_cards(player.curse - 5)
 
-        # 정기적으로 일정 턴마다 curse +1
-        if game.turn % REGULAR_CURSE_INCREASING_FREQUENCY == 0:            
-            print(f"{game.turn}턴 종료로 저주가 {REGULAR_CURSE_INCREASING_QUANTITY} 증가합니다. : {player.curse} -> {player.curse + REGULAR_CURSE_INCREASING_QUANTITY}")
-            player.curse += REGULAR_CURSE_INCREASING_QUANTITY
+        # 정기적으로 일정 턴마다 저주 증가
+        if game.turn % REGULAR_CURSE_INCREASING_FREQUENCY == 0:
+            increase_amount = REGULAR_CURSE_INCREASING_INIT + (game.turn // REGULAR_CURSE_INCREASING_FREQUENCY - 1) * REGULAR_CURSE_INCREASING_CUMULATE            
+            print(f"{game.turn}턴 종료로 저주가 {increase_amount} 증가합니다. : {player.curse} -> ", end="")
+            player.curse += increase_amount
+            print(f"{player.curse}")
 
         # Check ember effect
         if player.ember and player.hp <= 1:
-            print("[불씨 효과 발동] 체력이 1로 고정되고 저주가 0으로 변경됩니다.")
+            print("[불씨 효과 발동] 체력이 1, 저주가 0으로 변경됩니다.")
             player.hp = 1
             player.curse = 0
             player.ember = False
 
-        if player.curse < 0:
-            player.curse = 0
-
         game.turn += 1
 
     if player.hp <= 0:
-        print("체력이 0이 되어 게임 오버입니다.")
+        print("체력이 0이 되어 사망합니다.")
         display_score(player, game)
     else:
         print("생존! 승리!")
         display_score(player, game)
 
 def display_score(player, game):
-    print("=== 최종 점수 ===")
+    print("\n=== 최종 점수 ===")
     print(f"최종 체력: {player.hp}")
     print(f"최종 저주: {player.curse}")
     print(f"최종 층수: {game.turn - 1}층")
-
+    exit()
 
 if __name__ == "__main__":
     play_game()
