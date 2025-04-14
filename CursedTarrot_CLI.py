@@ -20,25 +20,28 @@ class Card:
         self.special = special
 
     def apply(self, player, game, cards):
-        #체력 변화 전후 출력
-        if self.hp_change != 0:
-            if self.hp_change > 0:
-                print(f"체력이 {self.hp_change} 증가합니다. : {player.hp} -> ", end="")
-            else:
-                print(f"체력이 {-self.hp_change} 감소합니다. : {player.hp} -> ", end="")
-            player.hp += self.hp_change
-            print(f"{player.hp}")
+        if self.name == "세계": # 세계 카드의 경우, 모든 카드의 효과의 일반효과는 합산해서 적용하기 위해 구분
+            self.special(player, game, cards)  
 
-        if self.curse_change != 0:
-            if self.curse_change > 0:
-                print(f"저주가 {self.curse_change} 증가합니다. : {player.curse} -> ", end="")
-            else:
-                print(f"저주가 {-self.curse_change} 감소합니다. : {player.curse} -> ", end="")
-            player.curse += self.curse_change
-            print(f"{player.curse}")
+        else:
+            if self.hp_change != 0:
+                if self.hp_change > 0:
+                    print(f"체력이 {self.hp_change} 증가합니다. : {player.hp} -> ", end="")
+                else:
+                    print(f"체력이 {-self.hp_change} 감소합니다. : {player.hp} -> ", end="")
+                player.hp += self.hp_change
+                print(f"{player.hp}")
 
-        if self.special:
-            self.special(player, game, cards)
+            if self.curse_change != 0:
+                if self.curse_change > 0:
+                    print(f"저주가 {self.curse_change} 증가합니다. : {player.curse} -> ", end="")
+                else:
+                    print(f"저주가 {-self.curse_change} 감소합니다. : {player.curse} -> ", end="")
+                player.curse += self.curse_change
+                print(f"{player.curse}")
+
+            if self.special:
+                self.special(player, game, cards)
 
 class Player:
     def __init__(self):
@@ -158,7 +161,7 @@ def clown_effect(player, game, other_cards):
 
 def hierophant_effect(player, game, other_cards):
     print("[교황 효과] 다음 3턴 동안 일반효과로 저주 감소 불가!")
-    player.non_curse_increase_turn = 3
+    player.non_curse_decrease_turn = 3
 
 def hermit_effect(player, game, other_cards):
     player.delayed_effect_list.append((5, "은둔자", lambda p: setattr(p, 'hp', p.hp + 7)))
@@ -198,9 +201,22 @@ def justice_effect(player, game, other_cards):
 
 def world_effect(player, game, other_cards):
     print("[세계 효과] 이번 턴에 뽑은 모든 카드의 효과를 적용합니다!")
+    hp_change = world.hp_change
+    curse_change = world.curse_change
+    
     for card in other_cards:
-        print(f"'{card.name}' 카드의 효과를 적용합니다.")
-        card.apply(player, game, other_cards)
+        hp_change += card.hp_change
+        curse_change += card.curse_change
+
+    print(f"카드들의 체력과 저주 변화를 합산하여 적용합니다! : {player.hp}, {player.curse} -> ", end="")
+    player.hp += hp_change
+    player.curse += curse_change
+    print(f"체력: {hp_change}, 저주: {curse_change}")
+
+    for card in other_cards:
+        if card.special:
+            print(f"'{card.name}' 카드의 특수 효과를 적용합니다.")
+            card.special(player, game, other_cards)
 
 def mirror_effect(player, game, other_cards):
     if player.last_card is None:
@@ -318,7 +334,7 @@ def play_game():
         isSkipped = False
 
         print(f"\n=== Turn {game.turn} ===")
-        print(f"HP: {player.hp} | Curse: {player.curse} | Deck: {len(game.deck)} cards left")
+        print(f"HP: {player.hp} | Curse: {player.curse} | Deck: {len(game.deck)} cards left | ember: {player.ember}")
 
         if player.skip_next_turn:
             print("이번 턴은 스킵됩니다.")
@@ -396,19 +412,19 @@ def play_game():
                 # 일반 효과의 체력 및 저주 변경 제한
                 if player.non_curse_increase_turn > 0:
                     if selected.curse_change > 0:
-                        selected.curse_change = 0
+                        selected = selected.copy(curse_change=0)
                     player.non_curse_increase_turn -= 1
                 if player.non_hp_increase_turn > 0:
                     if selected.hp_change > 0:
-                        selected.hp_change = 0
+                        selected = selected.copy(hp_change=0)
                     player.non_hp_increase_turn -= 1
                 if player.non_curse_decrease_turn > 0:
                     if selected.curse_change < 0:
-                        selected.curse_change = 0
+                        selected = selected.copy(curse_change=0)
                     player.non_curse_decrease_turn -= 1    
                 if player.non_hp_decrease_turn > 0:
                     if selected.hp_change < 0:
-                        selected.hp_change = 0
+                        selected = selected.copy(hp_change=0)
                     player.non_hp_decrease_turn -= 1
 
                 # Apply the selected card's effect
