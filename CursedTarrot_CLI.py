@@ -132,7 +132,7 @@ def life_effect(player, game, other_cards):
         game.deck.insert(pos, new_cards.pop())
 
 def fortune_wheel_effect(player, game, other_cards):
-    print("[운명의 수레바퀴 효과] 체력과 저주를 5:1 비율로 맞바꿉니다! : {player.hp}, 저주: {player.curse} -> ", end="")
+    print(f"[운명의 수레바퀴 효과] 체력과 저주를 5:1 비율로 맞바꿉니다! : {player.hp}, {player.curse} -> ", end="")
     player.hp, player.curse = player.curse * 5, player.hp // 5
     print(f"{player.hp}, {player.curse}")
 
@@ -193,7 +193,7 @@ def chariot_effect(player, game, other_cards):
     player.next_pick_num = 2
 
 def justice_effect(player, game, other_cards):
-    print("[정의 효과] 체력과 저주를 합해 5:1 비율로 나눕니다! : {player.hp}, {player.curse} -> ", end="")
+    print(f"[정의 효과] 체력과 저주를 합해 5:1 비율로 나눕니다! : {player.hp}, {player.curse} -> ", end="")
     total = player.hp + player.curse
     player.curse = total // 6
     player.hp = total - player.curse
@@ -211,7 +211,7 @@ def world_effect(player, game, other_cards):
     print(f"카드들의 체력과 저주 변화를 합산하여 적용합니다! : {player.hp}, {player.curse} -> ", end="")
     player.hp += hp_change
     player.curse += curse_change
-    print(f"체력: {hp_change}, 저주: {curse_change}")
+    print(f"{player.hp}, {player.curse}")
 
     for card in other_cards:
         if card.special:
@@ -233,7 +233,7 @@ def black_market_effect(player, game, other_cards):
     player.not_add_death = 5
 
 def ember_effect(player, game, other_cards):
-    print("[불씨 효과] 다음 한 번 체력이 1 이하로 떨어지게 될 경우 체력을 1로 고정하고 저주를 0으로 변경합니다!")
+    print("[불씨 효과] 다음 한 번 턴 종료시 체력이 1 이하로 떨어지게 될 경우 체력을 1로 고정하고 저주를 0으로 변경합니다!")
     player.ember = True
 
 def prophet_effect(player, game, other_cards):
@@ -298,7 +298,7 @@ mirror = Card("거울", 0, 1, "마지막에 사용한 카드의 효과를 다시
 smoke = Card("연기", 0, 0, "")
 eclipse = Card("일식", 8, 0, "2턴 뒤에 저주를 2 증가시킨다.", special=eclipse_effect)
 black_market = Card("암거래", 0, 2, "이번을 포함하여 5턴 동안 죽음 카드가 덱에 추가되지 않는다.", special=black_market_effect)
-ember = Card("불씨", -1, 1, "다음 한 번 체력이 1 이하로 떨어지게 될 경우 체력을 1로 고정하고 저주를 0으로 변경한다.", special=ember_effect)
+ember = Card("불씨", -1, 1, "다음 한 번 턴 종료시 체력이 1 이하로 떨어지게 될 경우 체력을 1로 고정하고 저주를 0으로 변경한다.", special=ember_effect)
 cursed_book = Card("저주받은 책", 0, 1, "")
 prophet = Card("예언자", -3, 1, "다음 턴에 선택한 카드는 일반 효과로 체력은 감소시키지 않고 저주는 증가시키지 않는다. (특수효과 제외)", special=prophet_effect)
 apocalypse_scripture = Card("종말의 경전", 0, 4, "덱을 리셋 시킨다. ", special=apocalypse_scripture_effect)
@@ -357,6 +357,7 @@ def play_game():
                 for i, card in enumerate(cards):
                     if player.archangel and card.name == "죽음": # 대천사 효과 검토
                         card = random.choice([c for c in all_cards if c.name != "죽음"])
+                        print(f"[대천사 효과] {i+1}번째 카드가 '{card.name}' 카드로 교체되었습니다.")
                         cards[i] = card # 대천사 효과 적용
                     print(f"{i+1}. {card.name} (HP {card.hp_change}, Curse {card.curse_change}) - {card.description}")
                 player.archangel = False # 대천사 효과 초기화
@@ -462,7 +463,7 @@ def play_game():
             player.not_add_death -= 1
         else:
             if player.curse >= 6:
-                print(f"저주가 {player.curse} 이상이므로 죽음 카드 {player.curse - 5}장 추가됩니다.")
+                print(f"저주가 {player.curse}이므로 죽음 카드 {player.curse - 5}장이 덱에 추가됩니다.")
                 game.insert_death_cards(player.curse - 5)
 
         # 정기적으로 일정 턴마다 저주 증가
