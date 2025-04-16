@@ -42,6 +42,12 @@ class Card:
 
             if self.special:
                 self.special(player, game, cards)
+    
+    def copy(self, **kwargs):
+        new_card = Card(self.name, self.hp_change, self.curse_change, self.description, self.special)
+        for key, value in kwargs.items():
+            setattr(new_card, key, value)
+        return new_card
 
 class Player:
     def __init__(self):
