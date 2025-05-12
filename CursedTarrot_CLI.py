@@ -1,5 +1,6 @@
 import random
 import time
+from itertools import chain
 
 
 #---------------------------------------------------------------------------------------------------------------------
@@ -159,7 +160,7 @@ def temperance_effect(player, game, other_cards):
     print("[절제 효과] 이번을 포함해 3턴 동안 저주로 인한 체력 감소가 이루어지지 않습니다!")
     player.non_curse_damage_turn = 3
 
-def clown_effect(player, game, other_cards):
+def scamp_effect(player, game, other_cards):
     print("[광대 효과] 체력을 1~10 중 무작위로 증가시킵니다!")
     random_value = random.randint(1, 10)
     print(f"체력이 {random_value} 증가합니다.")
@@ -207,12 +208,28 @@ def justice_effect(player, game, other_cards):
 
 def world_effect(player, game, other_cards):
     print("[세계 효과] 이번 턴에 뽑은 모든 카드의 효과를 적용합니다!")
-    hp_change = world.hp_change
-    curse_change = world.curse_change
-    
-    for card in other_cards:
-        hp_change += card.hp_change
-        curse_change += card.curse_change
+
+    hp_change = 0
+    curse_change = 0
+
+    for selected in chain([world], other_cards):
+
+        # 일반 효과의 체력 및 저주 변경 제한
+        if player.non_curse_increase_turn > 0:
+            if selected.curse_change > 0:
+                selected = selected.copy(curse_change=0)
+        if player.non_hp_increase_turn > 0:
+            if selected.hp_change > 0:
+                selected = selected.copy(hp_change=0)
+        if player.non_curse_decrease_turn > 0:
+            if selected.curse_change < 0:
+                selected = selected.copy(curse_change=0)
+        if player.non_hp_decrease_turn > 0:
+            if selected.hp_change < 0:
+                selected = selected.copy(hp_change=0)
+
+        hp_change += selected.hp_change
+        curse_change += selected.curse_change
 
     print(f"카드들의 체력과 저주 변화를 합산하여 적용합니다! : {player.hp}, {player.curse} -> ", end="")
     player.hp += hp_change
@@ -275,46 +292,63 @@ def gamble_of_fate_effect(player, game, other_cards):
 #---------------------------------------------------------------------------------------------------------------------
 # 카드 목록
 
-death = Card("죽음", 0, 0, "사망한다.", special=death_effect)
+#0
 fool = Card("바보", 0, 0, "체력을 초기 값인 10으로 만든다.", special=fool_effect)
-tower = Card("탑", -1, 0, "다음 턴은 카드를 뽑지 않고 저주로 인한 체력감소가 이루어지지 않습니다.", special=tower_effect)
-lovers = Card("연인", 1, 1, "다시 뽑기 기회를 1회 얻는다. 다시 뽑기는 3장을 모두 버리고 새로운  3장을 뽑는다.", special=lovers_effect)
-sun = Card("태양", 10, 2, "")
-moon = Card("달", -10, -2, "")
-star = Card("별", 2, 0, "")
-strength = Card("힘", 1, 0, "")
-devil = Card("악마", 20, 5, "")
-revive = Card("부활", -1, 0, "덱에 있는 모든 죽음 카드를 삭제한다.", special=revive_effect)
-life = Card("생명", 0, 0, "덱에 죽음을 제외한 각기 다른 무작위 카드 20장을 추가한다.", special=life_effect)
-fortune_wheel = Card("운명의 수레바퀴", 0, 0, "체력과 저주를 5:1 비율로 맞바꾼다.", special=fortune_wheel_effect)
-hanged_man = Card("매달린 남자", 5, 0, "다음 턴에는 3장이 아닌 2장의 카드 만을 뽑는다.", special=hanged_man_effect)
-judgement = Card("심판", -3, -1, "덱에 있는 무작위 카드 5장을 제거한다.", special=judgement_effect)
-temperance = Card("절제", -5, 0, "이번을 포함해 3턴 동안 저주로 인한 체력 감소가 이루어지지 않습니다.", special=temperance_effect)
-clown = Card("광대", 0, 1, "체력을 1~10 중 무작위로 증가시킨다", special=clown_effect)
-hierophant = Card("교황", 4, 0, "다음 3턴 동안은 일반 효과로 저주를 감소시킬 수 없다.", special=hierophant_effect)
-hermit = Card("은둔자", -3, 0, "5턴 뒤 체력을 7 증가시킨다.", special=hermit_effect)
 magician = Card("마법사", 0, 1, "3턴 뒤 저주를 3 감소시킨다.", special=magician_effect)
 high_priestess = Card("여교황", 4, 0, "다음 3턴동안 일반 효과로 체력을 증가시킬 수 없다.", special=high_priestess_effect)
 empress = Card("여제", 1, 0, "덱에 있는 죽음 카드 5장을 제거한다.", special=empress_effect)
 emperor = Card("황제", 0, 0, "체력과 저주를 모두 두 배로 만든다.", special=emperor_effect)
+
+#5
+hierophant = Card("교황", 4, 0, "다음 3턴 동안은 일반 효과로 저주를 감소시킬 수 없다.", special=hierophant_effect)
+lovers = Card("연인", 1, 1, "다시 뽑기 기회를 1회 얻는다. 다시 뽑기는 3장을 모두 버리고 새롭게 3장을 뽑는다.", special=lovers_effect)
 chariot = Card("전차", 4, 0, "다음 턴에는 두 장의 카드를 고른다.(두장 모두 효과 적용)", special=chariot_effect)
+strength = Card("힘", 1, 0, "")
+hermit = Card("은둔자", -3, 0, "5턴 뒤 체력을 7 증가시킨다.", special=hermit_effect)
+
+#10
+fortune_wheel = Card("운명의 수레바퀴", 0, 0, "체력과 저주를 5:1 비율로 맞바꾼다.", special=fortune_wheel_effect)
 justice = Card("정의", 0, 0, "체력과 저주를 합해 5:1 비율로 나눈다.", special=justice_effect)
-world = Card("세계", 10, -3, "이번 턴에 뽑은 모든 카드의 효과를 적용한다.", special=world_effect)
+hanged_man = Card("매달린 남자", 5, 0, "다음 턴에는 3장이 아닌 2장의 카드 만을 뽑는다.", special=hanged_man_effect)
+death = Card("죽음", 0, 0, "사망한다.", special=death_effect)
+temperance = Card("절제", -5, 0, "이번을 포함해 3턴 동안 저주로 인한 체력 감소가 이루어지지 않습니다.", special=temperance_effect)
+
+#15
+devil = Card("악마", 20, 5, "")
+tower = Card("탑", -1, 0, "다음 턴은 카드를 뽑지 않고 저주로 인한 체력감소가 이루어지지 않습니다.", special=tower_effect)
+star = Card("별", 2, 0, "")
+moon = Card("달", -10, -2, "")
+sun = Card("태양", 10, 2, "")
+
+#20
+judgement = Card("심판", -3, -1, "덱에 있는 무작위 카드 5장을 제거한다.", special=judgement_effect)
+world = Card("세계", 7, -3, "이번 턴에 뽑은 모든 카드의 효과를 적용한다.", special=world_effect)
+revive = Card("부활", -1, 0, "덱에 있는 모든 죽음 카드를 삭제한다.", special=revive_effect)
+life = Card("생명", 0, 0, "덱에 죽음을 제외한 각기 다른 무작위 카드 20장을 추가한다.", special=life_effect)
+scamp = Card("악동", 0, 1, "체력을 1~10 중 무작위로 증가시킨다", special=scamp_effect)
+
+#25
 mirror = Card("거울", 0, 1, "마지막에 사용한 카드의 효과를 다시 발동한다.", special=mirror_effect)
 smoke = Card("연기", 0, 0, "")
 eclipse = Card("일식", 8, 0, "2턴 뒤에 저주를 2 증가시킨다.", special=eclipse_effect)
 black_market = Card("암거래", 0, 2, "이번을 포함하여 5턴 동안 죽음 카드가 덱에 추가되지 않는다.", special=black_market_effect)
 ember = Card("불씨", -1, 1, "다음 한 번 턴 종료시 체력이 1 이하로 떨어지게 될 경우 체력을 1로 고정하고 저주를 0으로 변경한다.", special=ember_effect)
+
+#30
 cursed_book = Card("저주받은 책", 0, 1, "")
 prophet = Card("예언자", -3, 1, "다음 턴에 선택한 카드는 일반 효과로 체력은 감소시키지 않고 저주는 증가시키지 않는다. (특수효과 제외)", special=prophet_effect)
-apocalypse_scripture = Card("종말의 경전", 0, 4, "덱을 리셋 시킨다. ", special=apocalypse_scripture_effect)
+apocalypse_scripture = Card("종말의 경전", 0, 3, "덱을 리셋 시킨다. ", special=apocalypse_scripture_effect)
 plunderer = Card("강탈자", -3, 0, "")
-archangel = Card("대천사", 0, -1, "다음 턴에 죽음 카드가 뽑힐 시, 해당 카드를 랜덤한 카드로 교체한다.", special=archangel_effect)
+archangel = Card("대천사", 1, -1, "다음 턴에 죽음 카드가 뽑힐 시, 해당 카드를 랜덤한 카드로 교체한다.", special=archangel_effect)
+
+#35
 soul_candle = Card("영혼의 초", 5, 2, "3턴 뒤, 저주를 2 감소시킨다.", special=soul_candle_effect)
 crack_of_shadow = Card("그림자의 균열", -1, 1, "")
-soul_wedding = Card("영혼 결혼식", 6, 3, "다시 뽑기 기회를 1회 얻는다. 다시 뽑기는 3장을 모두 버리고 새로운  3장을 뽑는다.", special=soul_wedding_effect)
+soul_wedding = Card("영혼 결혼식", 6, 3, "다시 뽑기 기회를 1회 얻는다. 다시 뽑기는 3장을 모두 버리고 새롭게 3장을 뽑는다.", special=soul_wedding_effect)
 blood_pact = Card("피의 서약", -10, 0, "다음 2턴간 일반 효과로 저주가 증가하지 않는다.", special=blood_pact_effect)
 gamble_of_fate = Card("운명의 유희", 5, 0, "다음 턴, 카드가 무작위로 선택 된다.", special=gamble_of_fate_effect)
+
+#40
 dream = Card("꿈", -4, -1, "")
 
 
@@ -322,7 +356,7 @@ dream = Card("꿈", -4, -1, "")
 
 all_cards = [death, 
             fool, tower, lovers, sun, moon, star, strength, devil, revive, life, 
-            fortune_wheel, hanged_man, judgement, temperance, clown, hierophant, hermit, magician, high_priestess, empress, 
+            fortune_wheel, hanged_man, judgement, temperance, scamp, hierophant, hermit, magician, high_priestess, empress, 
             emperor, chariot, justice, world, mirror, smoke, eclipse, black_market, ember, cursed_book, 
             prophet, apocalypse_scripture, plunderer, archangel, soul_candle, crack_of_shadow, soul_wedding, blood_pact, gamble_of_fate, dream]
 
@@ -395,7 +429,15 @@ def play_game():
 
             else:
                 if pick_count == 1:
-                    choice = int(input(f"카드를 선택하세요 (1~{len(cards)}): ")) - 1
+                    while True:
+                        try:
+                            choice = int(input(f"카드를 선택하세요 (1~{len(cards)}): ")) - 1
+                            if 0 <= choice < len(cards):
+                                break
+                            else:
+                                print("유효하지 않은 선택입니다. 다시 입력하세요.")
+                        except ValueError:
+                            print("숫자를 입력하세요.")
                     selected = cards.pop(choice)
                     selected_cards.append(selected)
                     print(f"'{selected.name}' 선택됨!")
@@ -404,12 +446,20 @@ def play_game():
                     print("이번 턴에는 카드를 2장 선택합니다.")
                     for _ in range(2):
                         if _ == 0:
-                            print(" 첫번째 ", end="")
+                            print("첫번째 ", end="")
                         if _ == 1:
                             for i, card in enumerate(cards):
                                 print(f"{i+1}. {card.name} (HP {card.hp_change}, Curse {card.curse_change}) - {card.description}")
-                            print(" 두번째 ", end="")
-                        choice = int(input(f"카드를 선택하세요 (1~{len(cards)}): ")) - 1
+                            print("두번째 ", end="")
+                        while True:
+                            try:
+                                choice = int(input(f"카드를 선택하세요 (1~{len(cards)}): ")) - 1
+                                if 0 <= choice < len(cards):
+                                    break
+                                else:
+                                    print("유효하지 않은 선택입니다. 다시 입력하세요.")
+                            except ValueError:
+                                print("숫자를 입력하세요.")
                         selected = cards.pop(choice)
                         selected_cards.append(selected)
                         print(f"'{selected.name}' 선택됨!")
