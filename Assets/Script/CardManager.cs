@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CardImageLoader : MonoBehaviour
+public class CardManager: MonoBehaviour
 {
     public Sprite[] cardSprites;       // 카드 스프라이트 모음
     public Image[] cardImageSlots;     // UI에 배치된 Image
