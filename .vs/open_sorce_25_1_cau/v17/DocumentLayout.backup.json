@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|c:\\users\\rlaxo\\onedrive\\\uBB38\uC11C\\github\\open_sorce_25_1_cau\\assets\\script\\playercurse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\playercurse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\assets\\script\\playerhp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\playerhp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\assets\\script\\towerloading.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\towerloading.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "PlayerCurse.cs",
+              "DocumentMoniker": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\PlayerCurse.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\PlayerCurse.cs",
+              "ToolTip": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\PlayerCurse.cs",
+              "RelativeToolTip": "Assets\\Script\\PlayerCurse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T16:39:18.79Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PlayerHP.cs",
+              "DocumentMoniker": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\PlayerHP.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\PlayerHP.cs",
+              "ToolTip": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\PlayerHP.cs",
+              "RelativeToolTip": "Assets\\Script\\PlayerHP.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T16:36:22.419Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "TowerLoading.cs",
+              "DocumentMoniker": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\TowerLoading.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\TowerLoading.cs",
+              "ToolTip": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\TowerLoading.cs",
+              "RelativeToolTip": "Assets\\Script\\TowerLoading.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T16:12:23.845Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
