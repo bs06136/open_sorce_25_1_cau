@@ -21,6 +21,6 @@ public class PlayerCurse : MonoBehaviour
 
     void Start()
     {
-        CurrentCurse = 0;
+        CurrentCurse = 5;
     }
 }
