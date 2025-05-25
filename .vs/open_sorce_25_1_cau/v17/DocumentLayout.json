@@ -7,7 +7,7 @@
       "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\ui\\cardmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|c:\\users\\rlaxo\\onedrive\\\uBB38\uC11C\\github\\open_sorce_25_1_cau\\assets\\script\\ui\\remainingpicks.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\assets\\script\\ui\\remainingpicks.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\ui\\remainingpicks.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -46,8 +46,7 @@
               "RelativeToolTip": "Assets\\Script\\UI\\RemainingPicks.cs",
               "ViewState": "AgIAAFMAAAAAAAAAAAAgwHIAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-25T22:55:21.968Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-25T22:55:21.968Z"
             },
             {
               "$type": "Document",
@@ -57,7 +56,7 @@
               "RelativeDocumentMoniker": "Assets\\Script\\UI\\CardManager.cs",
               "ToolTip": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\UI\\CardManager.cs",
               "RelativeToolTip": "Assets\\Script\\UI\\CardManager.cs",
-              "ViewState": "AgIAAFEBAAAAAAAAAAAgwG8BAABIAAAAAAAAAA==",
+              "ViewState": "AgIAAGUAAAAAAAAAAAAmwH8AAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-25T22:54:43.329Z",
               "EditorCaption": ""
@@ -72,8 +71,7 @@
               "RelativeToolTip": "Assets\\Script\\CardManager.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-16T17:05:26.62Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-16T17:05:26.62Z"
             },
             {
               "$type": "Document",
@@ -85,8 +83,7 @@
               "RelativeToolTip": "Assets\\Script\\PlayerCurse.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-16T16:39:18.79Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-16T16:39:18.79Z"
             },
             {
               "$type": "Document",
