@@ -927,23 +927,23 @@ MonoBehaviour:
       serializedVersion: 2
       x: 0
       y: 21
-      width: 1171.8
-      height: 409
+      width: 1465
+      height: 546
     m_Scale: {x: 0.86046976, y: 0.86046976}
-    m_Translation: {x: 585.9, y: 204.49994}
+    m_Translation: {x: 732.5, y: 272.99994}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -680.90717
-      y: -237.66081
-      width: 1361.8143
-      height: 475.32175
+      x: -851.2792
+      y: -317.2685
+      width: 1702.5583
+      height: 634.5371
     m_MinimalGUI: 1
-  m_defaultScale: 0.18935186
-  m_LastWindowPixelSize: {x: 1171.8, y: 430}
+  m_defaultScale: 0.25277779
+  m_LastWindowPixelSize: {x: 1465, y: 567}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 01000000000000000000
@@ -1016,7 +1016,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 32ba0000
     m_LastClickedID: 47666
-    m_ExpandedIDs: 0000000098ba0000
+    m_ExpandedIDs: 0000000022ba0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1045,7 +1045,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000098ba0000
+    m_ExpandedIDs: 0000000022ba0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
