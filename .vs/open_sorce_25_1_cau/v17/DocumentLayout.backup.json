@@ -3,20 +3,32 @@
   "WorkspaceRootPath": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\assets\\script\\playerhp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\playerhp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|c:\\users\\rlaxo\\onedrive\\\uBB38\uC11C\\github\\open_sorce_25_1_cau\\assets\\script\\ui\\carddisplay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\ui\\carddisplay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\assets\\script\\playercurse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\playercurse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|c:\\users\\rlaxo\\onedrive\\\uBB38\uC11C\\github\\open_sorce_25_1_cau\\assets\\script\\ui\\cardmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:assets\\script\\ui\\cardmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|c:\\users\\rlaxo\\onedrive\\\uBB38\uC11C\\github\\open_sorce_25_1_cau\\assets\\script\\cardmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\cardmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\assets\\script\\manager\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\manager\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\PlayerHP.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Script\\PlayerHP.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\assets\\script\\towerloading.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\towerloading.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\CardManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Script\\CardManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\PlayerCurse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Script\\PlayerCurse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,50 +38,83 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CardDisplay.cs",
+              "DocumentMoniker": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\UI\\CardDisplay.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\UI\\CardDisplay.cs",
+              "ToolTip": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\UI\\CardDisplay.cs",
+              "RelativeToolTip": "Assets\\Script\\UI\\CardDisplay.cs",
+              "ViewState": "AgIAACIAAAAAAAAAAADwvy8AAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-27T17:00:36.278Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "GameManager.cs",
+              "DocumentMoniker": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\Manager\\GameManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\Manager\\GameManager.cs",
+              "ToolTip": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\Manager\\GameManager.cs",
+              "RelativeToolTip": "Assets\\Script\\Manager\\GameManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-27T16:42:31.381Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CardManager.cs",
+              "DocumentMoniker": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\UI\\CardManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\UI\\CardManager.cs",
+              "ToolTip": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\UI\\CardManager.cs",
+              "RelativeToolTip": "Assets\\Script\\UI\\CardManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-27T16:26:33.549Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "CardManager.cs",
               "DocumentMoniker": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\CardManager.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\CardManager.cs",
               "ToolTip": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\CardManager.cs",
               "RelativeToolTip": "Assets\\Script\\CardManager.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAlAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-16T17:05:26.62Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-16T17:05:26.62Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 6,
               "Title": "PlayerCurse.cs",
               "DocumentMoniker": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\PlayerCurse.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\PlayerCurse.cs",
               "ToolTip": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\PlayerCurse.cs",
               "RelativeToolTip": "Assets\\Script\\PlayerCurse.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAANAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-16T16:39:18.79Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-16T16:39:18.79Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "PlayerHP.cs",
               "DocumentMoniker": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\PlayerHP.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\PlayerHP.cs",
               "ToolTip": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\PlayerHP.cs",
               "RelativeToolTip": "Assets\\Script\\PlayerHP.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-16T16:36:22.419Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-16T16:36:22.419Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "TowerLoading.cs",
               "DocumentMoniker": "C:\\Users\\rlaxo\\OneDrive\\\uBB38\uC11C\\GitHub\\open_sorce_25_1_cau\\Assets\\Script\\TowerLoading.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\TowerLoading.cs",

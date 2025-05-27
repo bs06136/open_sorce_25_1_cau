@@ -8,10 +8,10 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    [Header("UI 가상 보조")]
+    [Header("UI 컴포넌트")]
     public PlayerHP playerHpUI;
     public PlayerCurse playerCurseUI;
-    public CardManager cardManager;
+    public UnifiedCardManager unifiedCardManager;
 
     public Game UnityGame { get; private set; }
     public PlayerBridge UnityPlayer { get; private set; }
@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        cardManager.DisplayCards(cards);
+        unifiedCardManager.DisplayCards(cards);
     }
 
     private (List<int>, int) GetCardStatus()
