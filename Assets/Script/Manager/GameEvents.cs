@@ -5,7 +5,6 @@ public static class GameEvents
 {
     // 카드 상태 요청 (UI → 게임 로직)
     public static Func<(List<int> drawnCards, int rerollCount)>? OnCardStatusRequested;
-
     /*
     void Start()
     {
@@ -22,3 +21,4 @@ public static class GameEvents
     // 카드 선택 (UI → 게임 로직)
     public static Action<int>? OnCardChosen;
 }
+

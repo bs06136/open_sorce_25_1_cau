@@ -1,0 +1,370 @@
+﻿using UnityEngine;
+using UnityEngine.UI;
+using CardGame;
+using System.Collections.Generic;
+using TMPro;
+
+public class UnifiedCardManager : MonoBehaviour
+{
+    [Header("=== 카드 스프라이트 설정 ===")]
+    [TextArea(4, 6)]
+    public string setupInstructions = "1. PNG 파일들을 Project에 Import하세요\n2. 각 PNG를 선택하고 Inspector에서 Texture Type을 'Sprite (2D and UI)'로 변경\n3. Apply 버튼 클릭\n4. 변환된 Sprite들을 아래 배열에 드래그";
+
+    [Tooltip("PNG를 Sprite로 변환한 후 CardLibrary.AllCards와 같은 순서로 배열해주세요")]
+    public Sprite[] cardSprites = new Sprite[41];
+
+    [Header("=== 기본 스프라이트 ===")]
+    public Sprite defaultCardSprite;
+    public Sprite emptySlotSprite;
+
+    [Header("=== 게임 UI 참조 ===")]
+    public Image[] cardImageSlots;
+    public Button[] cardButtons;
+    public Text[] cardNameTexts;
+
+    [Header("=== 리롤 시스템 (선택사항) ===")]
+    public TextMeshProUGUI rerollText;
+    public Button rerollButton;
+
+    // 카드 이름 배열 (CardLibrary와 동일한 순서 - 검증용)
+    private readonly string[] cardNames = new string[]
+    {
+        "바보", "죽음", "탑", "연인", "부활", "생명", "운명의 수레바퀴", "매달린 남자",
+        "심판", "절제", "광대", "교황", "은둔자", "마법사", "여교황", "여제",
+        "황제", "전차", "정의", "세계", "거울", "일식", "암거래", "불씨",
+        "저주받은 책", "예언자", "종말의 경전", "강탈자", "대천사", "영혼의 초",
+        "그림자의 균열", "영혼 결혼식", "피의 서약", "운명의 유희", "꿈",
+        "힘", "악마", "별", "달", "태양", "연기"
+    };
+
+    private void Start()
+    {
+        CheckSetup();
+
+        // 리롤 버튼 이벤트 연결 (있는 경우에만)
+        if (rerollButton != null)
+            rerollButton.onClick.AddListener(OnRerollClicked);
+
+        UpdateRerollUI();
+    }
+
+    #region 설정 검증
+
+    private void CheckSetup()
+    {
+        int expectedCount = CardLibrary.AllCards.Count;
+        int actualCount = cardSprites.Length;
+
+        Debug.Log($"[UnifiedCardManager] 설정 확인:");
+        Debug.Log($"  - 전체 카드 수: {expectedCount}");
+        Debug.Log($"  - 스프라이트 배열 크기: {actualCount}");
+
+        if (actualCount != expectedCount)
+        {
+            Debug.LogWarning($"[UnifiedCardManager] 스프라이트 배열 크기를 {expectedCount}로 조정해주세요!");
+        }
+
+        // 카드 순서 검증
+        for (int i = 0; i < Mathf.Min(expectedCount, cardNames.Length); i++)
+        {
+            if (i < CardLibrary.AllCards.Count)
+            {
+                string libraryName = CardLibrary.AllCards[i].Name;
+                string arrayName = cardNames[i];
+
+                if (libraryName != arrayName)
+                {
+                    Debug.LogError($"[UnifiedCardManager] 인덱스 {i}에서 카드 이름 불일치! Library: '{libraryName}', Array: '{arrayName}'");
+                }
+            }
+        }
+    }
+
+    #endregion
+
+    #region 핵심 카드 표시 시스템
+
+    /// <summary>
+    /// 게임에서 뽑힌 카드들을 UI에 표시하는 메인 메서드
+    /// </summary>
+    public void DisplayCards(List<Card> cards)
+    {
+        Debug.Log($"[UnifiedCardManager] DisplayCards 호출됨 - {cards.Count}장의 카드");
+
+        // 모든 슬롯 업데이트
+        for (int i = 0; i < cardImageSlots.Length; i++)
+        {
+            if (i < cards.Count)
+            {
+                SetCardSlot(i, cards[i]);
+                SetCardButtonActive(i, true);
+            }
+            else
+            {
+                SetEmptySlot(i);
+                SetCardButtonActive(i, false);
+            }
+        }
+    }
+
+    private void SetCardSlot(int slotIndex, Card card)
+    {
+        if (slotIndex >= cardImageSlots.Length) return;
+
+        var imageSlot = cardImageSlots[slotIndex];
+        int cardIndex = GetCardIndex(card);
+
+        // 카드 이미지 설정
+        if (cardIndex >= 0 && cardIndex < cardSprites.Length && cardSprites[cardIndex] != null)
+        {
+            imageSlot.sprite = cardSprites[cardIndex];
+            imageSlot.color = Color.white;
+        }
+        else
+        {
+            SetDefaultCardImage(imageSlot, card);
+        }
+
+        // 카드 이름 텍스트 설정
+        if (slotIndex < cardNameTexts.Length && cardNameTexts[slotIndex] != null)
+        {
+            cardNameTexts[slotIndex].text = card.Name;
+        }
+    }
+
+    private void SetDefaultCardImage(Image imageSlot, Card card)
+    {
+        Debug.LogWarning($"[UnifiedCardManager] '{card.Name}' 스프라이트 없음");
+
+        if (defaultCardSprite != null)
+        {
+            imageSlot.sprite = defaultCardSprite;
+            imageSlot.color = GetCardTypeColor(card);
+        }
+        else
+        {
+            imageSlot.sprite = null;
+            imageSlot.color = GetCardTypeColor(card);
+        }
+    }
+
+    private void SetEmptySlot(int slotIndex)
+    {
+        if (slotIndex >= cardImageSlots.Length) return;
+
+        var imageSlot = cardImageSlots[slotIndex];
+
+        if (emptySlotSprite != null)
+        {
+            imageSlot.sprite = emptySlotSprite;
+            imageSlot.color = new Color(1, 1, 1, 0.3f);
+        }
+        else
+        {
+            imageSlot.sprite = null;
+            imageSlot.color = new Color(0.5f, 0.5f, 0.5f, 0.3f);
+        }
+
+        if (slotIndex < cardNameTexts.Length && cardNameTexts[slotIndex] != null)
+        {
+            cardNameTexts[slotIndex].text = "";
+        }
+    }
+
+    private void SetCardButtonActive(int slotIndex, bool active)
+    {
+        if (slotIndex < cardButtons.Length && cardButtons[slotIndex] != null)
+        {
+            cardButtons[slotIndex].interactable = active;
+        }
+    }
+
+    #endregion
+
+    #region 리롤 시스템 (GameManager와 연동)
+
+    public void OnRerollClicked()
+    {
+        // GameManager를 통해 리롤 처리
+        if (GameManager.Instance != null && GameManager.Instance.UnityPlayer != null)
+        {
+            if (GameManager.Instance.UnityPlayer.RerollAvailable > 0)
+            {
+                GameManager.Instance.UnityPlayer.RerollAvailable--;
+                GameManager.Instance.StartTurn(); // 새로운 카드 뽑기
+                UpdateRerollUI();
+                Debug.Log("[UnifiedCardManager] 리롤 사용됨");
+            }
+            else
+            {
+                Debug.Log("[UnifiedCardManager] 리롤 기회 없음");
+                if (rerollText != null)
+                    rerollText.text = "No Rerolls Left";
+            }
+        }
+        else
+        {
+            // 테스트 모드
+            TestDisplayRandomCards();
+        }
+    }
+
+    public void UpdateRerollUI()
+    {
+        if (rerollText != null && GameManager.Instance != null && GameManager.Instance.UnityPlayer != null)
+        {
+            int availableRerolls = GameManager.Instance.UnityPlayer.RerollAvailable;
+            rerollText.text = $"Rerolls Left: {availableRerolls}";
+        }
+    }
+
+    #endregion
+
+    #region 유틸리티 메서드
+
+    private int GetCardIndex(Card card)
+    {
+        for (int i = 0; i < CardLibrary.AllCards.Count; i++)
+        {
+            if (CardLibrary.AllCards[i].Name == card.Name)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private Color GetCardTypeColor(Card card)
+    {
+        switch (card.Name)
+        {
+            case "죽음": return Color.black;
+            case "바보": return new Color(1f, 0.5f, 0f); // 주황색
+            case "전차":
+            case "매달린 남자": return Color.cyan;
+            case "세계": return Color.magenta;
+            default:
+                if (card.HpChange > 0) return Color.green;
+                else if (card.HpChange < 0) return Color.red;
+                else if (card.CurseChange > 0) return new Color(0.5f, 0f, 0.5f); // 보라색
+                else if (card.CurseChange < 0) return Color.blue;
+                else return Color.yellow;
+        }
+    }
+
+    public void SetCardSprite(string cardName, Sprite sprite)
+    {
+        int index = GetCardIndexByName(cardName);
+        if (index >= 0 && index < cardSprites.Length)
+        {
+            cardSprites[index] = sprite;
+            Debug.Log($"[UnifiedCardManager] '{cardName}' 스프라이트 업데이트됨");
+        }
+        else
+        {
+            Debug.LogError($"[UnifiedCardManager] '{cardName}' 카드를 찾을 수 없습니다");
+        }
+    }
+
+    private int GetCardIndexByName(string cardName)
+    {
+        for (int i = 0; i < CardLibrary.AllCards.Count; i++)
+        {
+            if (CardLibrary.AllCards[i].Name == cardName)
+                return i;
+        }
+        return -1;
+    }
+
+    /// <summary>
+    /// 외부에서 UnifiedCardData 생성 (필요시 사용)
+    /// </summary>
+    public UnifiedCardData CreateCardData(Card card)
+    {
+        int cardIndex = GetCardIndex(card);
+        return new UnifiedCardData
+        {
+            cardName = card.Name,
+            description = card.Description,
+            cardImage = (cardIndex >= 0 && cardIndex < cardSprites.Length) ? cardSprites[cardIndex] : defaultCardSprite,
+            hpChange = card.HpChange,
+            curseChange = card.CurseChange
+        };
+    }
+
+    #endregion
+
+    #region 테스트 메서드들
+
+    [ContextMenu("Check Sprite Setup")]
+    public void CheckSpriteSetup()
+    {
+        Debug.Log("[UnifiedCardManager] 스프라이트 설정 검사:");
+
+        int validSprites = 0;
+        int totalSprites = cardSprites.Length;
+
+        for (int i = 0; i < cardSprites.Length; i++)
+        {
+            if (cardSprites[i] != null)
+            {
+                validSprites++;
+                Debug.Log($"  ✓ [{i}] {cardNames[i]} - {cardSprites[i].name}");
+            }
+            else
+            {
+                Debug.LogWarning($"  ✗ [{i}] {cardNames[i]} - 스프라이트 없음");
+            }
+        }
+
+        Debug.Log($"[UnifiedCardManager] 결과: {validSprites}/{totalSprites} 스프라이트 설정됨");
+    }
+
+    [ContextMenu("Test Display Random Cards")]
+    public void TestDisplayRandomCards()
+    {
+        List<Card> testCards = new List<Card>();
+
+        for (int i = 0; i < 3; i++)
+        {
+            int randomIndex = Random.Range(0, CardLibrary.AllCards.Count);
+            testCards.Add(CardLibrary.AllCards[randomIndex]);
+        }
+
+        Debug.Log("[UnifiedCardManager] 테스트 카드 표시");
+        DisplayCards(testCards);
+    }
+
+    [ContextMenu("Test Display Special Cards")]
+    public void TestDisplaySpecialCards()
+    {
+        List<Card> testCards = new List<Card>
+        {
+            CardLibrary.AllCards.Find(c => c.Name == "매달린 남자"),
+            CardLibrary.AllCards.Find(c => c.Name == "전차"),
+            CardLibrary.AllCards.Find(c => c.Name == "죽음")
+        };
+
+        Debug.Log("[UnifiedCardManager] 특수 카드 테스트 표시");
+        DisplayCards(testCards);
+    }
+
+    #endregion
+}
+
+// 통합된 카드 데이터 구조 (간소화)
+[System.Serializable]
+public class UnifiedCardData
+{
+    public string cardName;
+    public string description;
+    public Sprite cardImage;
+    public int hpChange;
+    public int curseChange;
+
+    // 기존 CardData와의 호환성을 위한 변환 메서드
+    public CardData ToCardData()
+    {
+        return new CardData(cardName, description, cardImage);
+    }
+}

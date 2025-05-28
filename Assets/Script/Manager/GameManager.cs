@@ -8,7 +8,6 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    [Header("UI 가상 보조")]
     public PlayerHP playerHpUI;
     public PlayerCurse playerCurseUI;
     public CardManager cardManager;

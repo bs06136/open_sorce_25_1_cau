@@ -60,19 +60,37 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.1.2f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <Compile Include="Assets\Script\Manager\PlayerBridge.cs" />
     <Compile Include="Assets\Script\DebugTest.cs" />
     <Compile Include="Assets\Script\UI\CardManager.cs" />
+=======
+    <Compile Include="Assets\Script\GameCore\CardData.cs" />
+    <Compile Include="Assets\Script\Manager\PlayerBridge.cs" />
+    <Compile Include="Assets\Script\DebugTest.cs" />
+    <Compile Include="Assets\Script\UI\UnifiedCardManager.cs" />
+    <Compile Include="Assets\Script\UI\SoundSettingsManager.cs" />
+>>>>>>> 493954e8d0abbd948b3e29744dffb37bee25a47c
     <Compile Include="Assets\Script\GameCore\Game.cs" />
     <Compile Include="Assets\Script\GameCore\cardEffect.cs" />
     <Compile Include="Assets\Script\GameCore\Player.cs" />
     <Compile Include="Assets\Script\UI\PlayerHP.cs" />
+<<<<<<< HEAD
     <Compile Include="Assets\Script\UI\CardButtonHandler.cs" />
+=======
+    <Compile Include="Assets\Script\UI\LanguageSelector.cs" />
+    <Compile Include="Assets\Script\UI\CardButtonHandler.cs" />
+    <Compile Include="Assets\Script\UI\BackToMainMenu.cs" />
+>>>>>>> 493954e8d0abbd948b3e29744dffb37bee25a47c
     <Compile Include="Assets\Script\GameCore\cardLibrary.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Script\Manager\GameManager.cs" />
     <Compile Include="Assets\Script\UI\PlayerCurse.cs" />
     <Compile Include="Assets\Script\Manager\GameEvents.cs" />
+<<<<<<< HEAD
+=======
+    <Compile Include="Assets\Script\UI\CardDisplay.cs" />
+>>>>>>> 493954e8d0abbd948b3e29744dffb37bee25a47c
     <Compile Include="Assets\Script\GameCore\card.cs" />
     <Compile Include="Assets\Script\TowerLoading.cs" />
     <Compile Include="Assets\Script\GameCore\Program.cs" />
