@@ -223,20 +223,19 @@ namespace CardGame
 
         public static void WorldEffect(Player player, Game game, List<Card> cards)
         {
-            //Debug.Log("[세계 효과] 덱에 있는 모든 카드의 효과를 한 번씩 적용합니다. ");
-
-            foreach (var card in CardLibrary.AllCards)
+            Console.WriteLine("[세계 효과] List<Card>에 있는 모든 카드의 특수효과 실행");
+            foreach (var card in cards)
             {
                 if (card.Special != null)
                 {
                     try
                     {
-                        //Debug.Log($"[세계] {card.Name} 효과 실행");
+                        Console.WriteLine($"[세계] {card.Name} 특수효과 실행");
                         card.Special(player, game, cards);
                     }
                     catch (Exception e)
                     {
-                        //Debug.LogWarning($"[세계] {card.Name} 실행 중 오류: {e.Message}");
+                        Console.WriteLine($"[세계] {card.Name} 실행 중 오류: {e.Message}");
                     }
                 }
             }
