@@ -35,6 +35,13 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        if (playerHpUI == null)
+        playerHpUI = FindObjectOfType<PlayerHP>();
+        if (playerCurseUI == null)
+            playerCurseUI = FindObjectOfType<PlayerCurse>();
+        if (unifiedCardManager == null)
+            unifiedCardManager = FindObjectOfType<UnifiedCardManager>();
+
         Debug.Log("✅ StartGame 실행됨");  
         UnityPlayer = new PlayerBridge(playerHpUI, playerCurseUI);
         UnityGame = new Game(UnityPlayer);
