@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public PlayerHP playerHpUI;
     public PlayerCurse playerCurseUI;
     public UnifiedCardManager unifiedCardManager;
+    public TurnDisplay turnDisplay; // 턴 표시 UI 추가
 
     public Game UnityGame { get; private set; }
     public PlayerBridge UnityPlayer { get; private set; }
@@ -35,14 +36,17 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        // UI 컴포넌트들 자동 찾기
         if (playerHpUI == null)
-        playerHpUI = FindObjectOfType<PlayerHP>();
+            playerHpUI = FindObjectOfType<PlayerHP>();
         if (playerCurseUI == null)
             playerCurseUI = FindObjectOfType<PlayerCurse>();
         if (unifiedCardManager == null)
             unifiedCardManager = FindObjectOfType<UnifiedCardManager>();
+        if (turnDisplay == null)
+            turnDisplay = FindObjectOfType<TurnDisplay>(); // 턴 표시 UI 자동 찾기
 
-        Debug.Log("✅ StartGame 실행됨");  
+        Debug.Log("✅ StartGame 실행됨");
         UnityPlayer = new PlayerBridge(playerHpUI, playerCurseUI);
         UnityGame = new Game(UnityPlayer);
 
@@ -50,6 +54,7 @@ public class GameManager : MonoBehaviour
         UnityPlayer.Curse = 0;
 
         Debug.Log("GameManager: 게임 시작");
+        UpdateTurnDisplay(); // 게임 시작 시 턴 표시 업데이트
         StartTurn();
     }
 
@@ -60,6 +65,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("이번 턴은 스킵됩니다.");
             UnityPlayer.SkipNextTurn = false;
             UnityGame.Turn++;
+            UpdateTurnDisplay(); // 턴 스킵 시에도 표시 업데이트
             StartTurn();
             return;
         }
@@ -80,6 +86,7 @@ public class GameManager : MonoBehaviour
         }
 
         unifiedCardManager.DisplayCards(cards);
+        UpdateTurnDisplay(); // 새 턴 시작 시 표시 업데이트
     }
 
     private (List<int>, int) GetCardStatus()
@@ -127,6 +134,7 @@ public class GameManager : MonoBehaviour
         }
 
         UnityGame.Turn++;
+        UpdateTurnDisplay(); // 턴 증가 후 표시 업데이트
         StartTurn();
     }
 
@@ -194,5 +202,24 @@ public class GameManager : MonoBehaviour
             UnityPlayer.Hp = 1;
             UnityPlayer.Curse = 0;
         }
+    }
+
+    /// <summary>
+    /// 턴 표시 UI 업데이트
+    /// </summary>
+    private void UpdateTurnDisplay()
+    {
+        if (turnDisplay != null)
+        {
+            turnDisplay.ForceUpdateTurn();
+        }
+    }
+
+    /// <summary>
+    /// 현재 턴 정보 가져오기 (외부에서 사용 가능)
+    /// </summary>
+    public int GetCurrentTurn()
+    {
+        return UnityGame?.Turn ?? 0;
     }
 }
