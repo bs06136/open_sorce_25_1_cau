@@ -75,7 +75,6 @@
     <Compile Include="Assets\Script\UI\CardButtonHandler.cs" />
     <Compile Include="Assets\Script\UI\BackToMainMenu.cs" />
     <Compile Include="Assets\Script\GameCore\cardLibrary.cs" />
-    <Compile Include="Assets\Script\UI\CardEffectDisplay.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Script\Manager\GameManager.cs" />
     <Compile Include="Assets\Script\UI\PlayerCurse.cs" />

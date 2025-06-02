@@ -22,6 +22,12 @@ public class UnifiedCardManager : MonoBehaviour
     public Button[] cardButtons;
     public Text[] cardNameTexts;
 
+    [Header("=== 카드 효과 표시 ===")]
+    [Tooltip("카드 효과를 표시할 패널들")]
+    public GameObject[] effectPanels = new GameObject[3];
+    [Tooltip("카드 효과 텍스트들")]
+    public TextMeshProUGUI[] effectTexts = new TextMeshProUGUI[3];
+
     [Header("=== 리롤 시스템 (선택사항) ===")]
     public TextMeshProUGUI rerollText;
     public Button rerollButton;
@@ -29,12 +35,12 @@ public class UnifiedCardManager : MonoBehaviour
     // 카드 이름 배열 (CardLibrary와 동일한 순서 - 검증용)
     private readonly string[] cardNames = new string[]
     {
-        "바보", "죽음", "탑", "연인", "부활", "생명", "운명의 수레바퀴", "매달린 남자",
-        "심판", "절제", "광대", "교황", "은둔자", "마법사", "여교황", "여제",
-        "황제", "전차", "정의", "세계", "거울", "일식", "암거래", "불씨",
+        "바보", "마법사", "여교황", "여제", "황제", "교황", "연인", "전차",
+        "힘", "은둔자", "운명의 수레바퀴", "정의", "매달린 남자", "죽음", "절제",
+        "악마", "탑", "별", "달", "태양", "심판", "세계", "부활",
+        "생명", "광대", "거울", "연기", "일식", "암거래", "불씨",
         "저주받은 책", "예언자", "종말의 경전", "강탈자", "대천사", "영혼의 초",
-        "그림자의 균열", "영혼 결혼식", "피의 서약", "운명의 유희", "꿈",
-        "힘", "악마", "별", "달", "태양", "연기"
+        "그림자의 균열", "영혼 결혼식", "피의 서약", "운명의 유희", "꿈"
     };
 
     private void Start()
@@ -91,18 +97,20 @@ public class UnifiedCardManager : MonoBehaviour
     {
         Debug.Log($"[UnifiedCardManager] DisplayCards 호출됨 - {cards.Count}장의 카드");
 
-        // 모든 슬롯 업데이트
+        // 모든 슬롯 업데이트 (이미지 + 효과)
         for (int i = 0; i < cardImageSlots.Length; i++)
         {
             if (i < cards.Count)
             {
                 SetCardSlot(i, cards[i]);
                 SetCardButtonActive(i, true);
+                ShowCardEffect(i, cards[i]); // 🔥 효과도 함께 표시
             }
             else
             {
                 SetEmptySlot(i);
                 SetCardButtonActive(i, false);
+                HideCardEffect(i); // 🔥 효과도 함께 숨김
             }
         }
     }
@@ -113,6 +121,8 @@ public class UnifiedCardManager : MonoBehaviour
 
         var imageSlot = cardImageSlots[slotIndex];
         int cardIndex = GetCardIndex(card);
+
+        Debug.Log($"[UnifiedCardManager] 슬롯 {slotIndex}에 '{card.Name}' 카드 표시 (인덱스: {cardIndex})");
 
         // 카드 이미지 설정
         if (cardIndex >= 0 && cardIndex < cardSprites.Length && cardSprites[cardIndex] != null)
@@ -177,6 +187,85 @@ public class UnifiedCardManager : MonoBehaviour
         {
             cardButtons[slotIndex].interactable = active;
         }
+    }
+
+    #endregion
+
+    #region 🔥 카드 효과 표시 시스템
+
+    /// <summary>
+    /// 카드 효과 표시
+    /// </summary>
+    private void ShowCardEffect(int slotIndex, Card card)
+    {
+        if (slotIndex >= effectPanels.Length || effectPanels[slotIndex] == null || card == null)
+        {
+            Debug.LogWarning($"[UnifiedCardManager] 효과 표시 실패 - 슬롯: {slotIndex}, 카드: {card?.Name}");
+            return;
+        }
+
+        Debug.Log($"[UnifiedCardManager] 슬롯 {slotIndex}에 '{card.Name}' 효과 표시");
+
+        // 패널 활성화
+        effectPanels[slotIndex].SetActive(true);
+
+        // 효과 텍스트 설정
+        if (effectTexts[slotIndex] != null)
+        {
+            string effectDescription = BuildEffectDescription(card);
+            effectTexts[slotIndex].text = effectDescription;
+
+            Debug.Log($"[UnifiedCardManager] 효과 텍스트: '{effectDescription}'");
+        }
+        else
+        {
+            Debug.LogError($"[UnifiedCardManager] 슬롯 {slotIndex}의 effectTexts가 null!");
+        }
+    }
+
+    /// <summary>
+    /// 카드 효과 숨김
+    /// </summary>
+    private void HideCardEffect(int slotIndex)
+    {
+        if (slotIndex >= effectPanels.Length || effectPanels[slotIndex] == null) return;
+
+        effectPanels[slotIndex].SetActive(false);
+        Debug.Log($"[UnifiedCardManager] 슬롯 {slotIndex} 효과 숨김");
+    }
+
+    /// <summary>
+    /// 효과 설명 텍스트 생성 (실제 카드 데이터 기반)
+    /// </summary>
+    private string BuildEffectDescription(Card card)
+    {
+        List<string> effects = new List<string>();
+
+        // HP 변화
+        if (card.HpChange > 0)
+            effects.Add($"<color=#00FF00>체력 +{card.HpChange}</color>");
+        else if (card.HpChange < 0)
+            effects.Add($"<color=#FF0000>체력 {card.HpChange}</color>");
+
+        // 저주 변화
+        if (card.CurseChange > 0)
+            effects.Add($"<color=#FF0000>저주 +{card.CurseChange}</color>");
+        else if (card.CurseChange < 0)
+            effects.Add($"<color=#00FF00>저주 {card.CurseChange}</color>");
+
+        // 특수 효과 (카드 Description에서)
+        if (!string.IsNullOrEmpty(card.Description))
+        {
+            effects.Add($"<color=#FFFF00>{card.Description}</color>");
+        }
+
+        // 효과가 없는 경우
+        if (effects.Count == 0)
+        {
+            return "<color=#888888>효과 없음</color>";
+        }
+
+        return string.Join("\n", effects);
     }
 
     #endregion

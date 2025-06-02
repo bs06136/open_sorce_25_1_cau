@@ -1,5 +1,4 @@
-﻿
-#nullable disable
+﻿#nullable disable
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -9,10 +8,10 @@ using System.Collections.Generic;
 public class CardEffectPreview : MonoBehaviour
 {
     [Header("기존 구조 활용 - 카드 효과 미리보기")]
-    [Tooltip("CardLeft, CardMiddle, CardRight의 CardEffectPanel들을 자동으로 찾습니다")]
-    public bool autoFindPanels = true;
+    [Tooltip("UnifiedCardManager와 자동 동기화")]
+    public bool autoSync = true;
 
-    [Header("수동 설정 (autoFindPanels이 false일 때만)")]
+    [Header("수동 설정 (autoSync가 false일 때만)")]
     public GameObject[] effectPanels = new GameObject[3];
     public TextMeshProUGUI[] effectTexts = new TextMeshProUGUI[3];
 
@@ -27,11 +26,15 @@ public class CardEffectPreview : MonoBehaviour
     public bool useFadeAnimation = true;
 
     private CanvasGroup[] panelCanvasGroups;
-    private string[] cardSlotNames = { "CardLeft", "CardMiddle", "CardRight" };
+    private UnifiedCardManager unifiedCardManager;
+    private List<Card> lastDisplayedCards = new List<Card>();
 
     private void Awake()
     {
-        if (autoFindPanels)
+        // UnifiedCardManager 찾기
+        unifiedCardManager = FindObjectOfType<UnifiedCardManager>();
+
+        if (autoSync)
         {
             AutoFindCardEffectPanels();
         }
@@ -42,27 +45,118 @@ public class CardEffectPreview : MonoBehaviour
 
     private void Start()
     {
-        // 카드 변화 모니터링 시작
-        StartCoroutine(MonitorCardChanges());
+        // UnifiedCardManager의 DisplayCards가 호출될 때마다 동기화
+        StartCoroutine(MonitorUnifiedCardManager());
     }
 
     /// <summary>
-    /// 기존 구조에서 CardEffectPanel들을 자동으로 찾기
+    /// UnifiedCardManager와 동기화 모니터링
+    /// </summary>
+    private System.Collections.IEnumerator MonitorUnifiedCardManager()
+    {
+        yield return new WaitForSeconds(1f); // 초기 대기
+
+        while (true)
+        {
+            yield return new WaitForSeconds(0.1f);
+
+            if (GameManager.Instance != null)
+            {
+                try
+                {
+                    // GameManager에서 현재 표시된 카드들 가져오기
+                    var currentCards = GameManager.Instance.GetType()
+                        .GetField("currentDrawnCards", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                        ?.GetValue(GameManager.Instance) as List<Card>;
+
+                    if (currentCards != null && currentCards.Count > 0)
+                    {
+                        if (!AreCardListsEqual(currentCards, lastDisplayedCards))
+                        {
+                            Debug.Log($"[CardEffectPreview] 카드 변화 감지: {currentCards.Count}장");
+                            for (int i = 0; i < currentCards.Count; i++)
+                            {
+                                Debug.Log($"  - 슬롯 {i}: {currentCards[i]?.Name}");
+                            }
+
+                            UpdateCardEffectsFromCards(currentCards);
+                            lastDisplayedCards = new List<Card>(currentCards);
+                        }
+                    }
+                    else
+                    {
+                        // 카드가 없으면 모든 패널 숨기기
+                        if (lastDisplayedCards.Count > 0)
+                        {
+                            Debug.Log("[CardEffectPreview] 카드 없음 - 모든 패널 숨김");
+                            HideAllPanels();
+                            lastDisplayedCards.Clear();
+                        }
+                    }
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError($"[CardEffectPreview] 동기화 중 오류: {e.Message}");
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 카드 리스트가 동일한지 확인
+    /// </summary>
+    private bool AreCardListsEqual(List<Card> cards1, List<Card> cards2)
+    {
+        if (cards1 == null && cards2 == null) return true;
+        if (cards1 == null || cards2 == null) return false;
+        if (cards1.Count != cards2.Count) return false;
+
+        for (int i = 0; i < cards1.Count; i++)
+        {
+            if (cards1[i]?.Name != cards2[i]?.Name)
+                return false;
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// 카드 객체에서 직접 효과 업데이트
+    /// </summary>
+    private void UpdateCardEffectsFromCards(List<Card> cards)
+    {
+        Debug.Log($"[CardEffectPreview] 효과 업데이트 시작 - {cards.Count}장의 카드");
+
+        for (int i = 0; i < effectPanels.Length; i++)
+        {
+            if (effectPanels[i] == null)
+            {
+                Debug.LogWarning($"[CardEffectPreview] 슬롯 {i} 패널이 null입니다.");
+                continue;
+            }
+
+            if (i < cards.Count && cards[i] != null)
+            {
+                Debug.Log($"[CardEffectPreview] 슬롯 {i}에 '{cards[i].Name}' 효과 표시");
+                ShowCardEffect(i, cards[i]);
+            }
+            else
+            {
+                Debug.Log($"[CardEffectPreview] 슬롯 {i} 숨김");
+                HideCardEffect(i);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 카드 효과 패널 자동 찾기
     /// </summary>
     private void AutoFindCardEffectPanels()
     {
         effectPanels = new GameObject[3];
         effectTexts = new TextMeshProUGUI[3];
 
-        // UnifiedCardManager 또는 GameManager에서 찾기 시도
-        Transform searchRoot = transform;
-
-        // UnifiedCardManager가 있다면 사용
-        UnifiedCardManager unifiedCardManager = FindObjectOfType<UnifiedCardManager>();
-        if (unifiedCardManager != null)
-        {
-            searchRoot = unifiedCardManager.transform.parent; // 부모에서 찾기
-        }
+        string[] cardSlotNames = { "CardLeft", "CardMiddle", "CardRight" };
+        string[] panelNames = { "CardEffectPanelLeft", "CardEffectPanelMiddle", "CardEffectPanelRight" };
 
         for (int i = 0; i < cardSlotNames.Length; i++)
         {
@@ -71,45 +165,57 @@ public class CardEffectPreview : MonoBehaviour
 
             if (cardSlot != null)
             {
-                // CardEffectPanelLeft, CardEffectPanelMiddle, CardEffectPanelRight 찾기
-                string panelName = GetPanelName(i);
-                Transform effectPanel = cardSlot.Find(panelName);
+                Debug.Log($"[CardEffectPreview] {cardSlotNames[i]} 찾음");
+
+                Transform effectPanel = cardSlot.Find(panelNames[i]);
 
                 if (effectPanel != null)
                 {
                     effectPanels[i] = effectPanel.gameObject;
+                    Debug.Log($"[CardEffectPreview] {panelNames[i]} 패널 찾음");
 
-                    // CardEffectText 찾기
                     Transform effectTextTransform = effectPanel.Find("CardEffectText");
                     if (effectTextTransform != null)
                     {
                         effectTexts[i] = effectTextTransform.GetComponent<TextMeshProUGUI>();
 
-                        // Text 컴포넌트인 경우 확인
-                        if (effectTexts[i] == null)
+                        if (effectTexts[i] != null)
+                        {
+                            Debug.Log($"[CardEffectPreview] {cardSlotNames[i]} TextMeshPro 연결 성공");
+                        }
+                        else
                         {
                             var legacyText = effectTextTransform.GetComponent<Text>();
                             if (legacyText != null)
                             {
-                                Debug.LogWarning($"[CardEffectPreview] {cardSlotNames[i]}/CardEffectText는 Text 컴포넌트입니다. TextMeshPro 사용을 권장합니다.");
+                                Debug.LogWarning($"[CardEffectPreview] {cardSlotNames[i]}는 Text 컴포넌트입니다. TextMeshPro 권장.");
+                            }
+                            else
+                            {
+                                Debug.LogError($"[CardEffectPreview] {cardSlotNames[i]} 텍스트 컴포넌트 없음!");
                             }
                         }
                     }
-
-                    Debug.Log($"[CardEffectPreview] {cardSlotNames[i]} 찾음: {effectPanel.name}");
+                    else
+                    {
+                        Debug.LogError($"[CardEffectPreview] {panelNames[i]} 아래에 CardEffectText 없음!");
+                    }
                 }
                 else
                 {
-                    Debug.LogWarning($"[CardEffectPreview] {cardSlotNames[i]} 아래에 {panelName}을 찾을 수 없습니다.");
+                    Debug.LogError($"[CardEffectPreview] {cardSlotNames[i]} 아래에 {panelNames[i]} 없음!");
                 }
             }
             else
             {
-                Debug.LogWarning($"[CardEffectPreview] {cardSlotNames[i]}를 찾을 수 없습니다.");
+                Debug.LogError($"[CardEffectPreview] {cardSlotNames[i]} 자체를 찾을 수 없음!");
             }
         }
 
-        Debug.Log($"[CardEffectPreview] 자동 탐지 완료 - {System.Array.FindAll(effectPanels, p => p != null).Length}/3개 패널 발견");
+        int connectedCount = System.Array.FindAll(effectPanels, p => p != null).Length;
+        int textCount = System.Array.FindAll(effectTexts, t => t != null).Length;
+
+        Debug.Log($"[CardEffectPreview] 연결 완료 - 패널: {connectedCount}/3, 텍스트: {textCount}/3");
     }
 
     /// <summary>
@@ -129,43 +235,7 @@ public class CardEffectPreview : MonoBehaviour
     }
 
     /// <summary>
-    /// 카드 슬롯 인덱스에 따른 패널 이름 반환
-    /// </summary>
-    private string GetPanelName(int index)
-    {
-        switch (index)
-        {
-            case 0: return "CardEffectPanelLeft";
-            case 1: return "CardEffectPanelMiddle";
-            case 2: return "CardEffectPanelRight";
-            default: return "CardEffectPanel";
-        }
-    }
-
-    /// <summary>
-    /// 자식 오브젝트에서 이름으로 찾기 (재귀)
-    /// </summary>
-    private Transform FindInChildren(Transform parent, string name)
-    {
-        for (int i = 0; i < parent.childCount; i++)
-        {
-            Transform child = parent.GetChild(i);
-            if (child.name == name)
-            {
-                return child;
-            }
-
-            Transform found = FindInChildren(child, name);
-            if (found != null)
-            {
-                return found;
-            }
-        }
-        return null;
-    }
-
-    /// <summary>
-    /// CanvasGroup 컴포넌트 초기화
+    /// CanvasGroup 초기화
     /// </summary>
     private void InitializeCanvasGroups()
     {
@@ -185,82 +255,35 @@ public class CardEffectPreview : MonoBehaviour
     }
 
     /// <summary>
-    /// 카드 변화 모니터링
+    /// 카드 효과 표시 (간소화된 버전)
     /// </summary>
-    private System.Collections.IEnumerator MonitorCardChanges()
+    private void ShowCardEffect(int slotIndex, Card card)
     {
-        while (true)
+        if (slotIndex >= effectPanels.Length || effectPanels[slotIndex] == null || card == null)
         {
-            yield return new WaitForSeconds(0.1f);
-
-            // GameManager가 준비되었는지 확인
-            if (GameManager.Instance != null && GameManager.Instance.UnityGame != null && GameManager.Instance.UnityPlayer != null)
-            {
-                try
-                {
-                    var status = GameEvents.OnCardStatusRequested?.Invoke();
-                    if (status.HasValue)
-                    {
-                        var (cardIndices, hpChanges, curseChanges, descriptions, rerollCount) = status.Value;
-
-                        // 데이터 유효성 검사
-                        if (cardIndices != null && hpChanges != null && curseChanges != null && descriptions != null)
-                        {
-                            UpdateCardPreviews(cardIndices, hpChanges, curseChanges, descriptions);
-                        }
-                    }
-                }
-                catch (System.Exception e)
-                {
-                    Debug.LogWarning($"[CardEffectPreview] 카드 상태 업데이트 중 오류: {e.Message}");
-                }
-            }
+            Debug.LogWarning($"[CardEffectPreview] ShowCardEffect 실패 - slotIndex: {slotIndex}, panel: {effectPanels[slotIndex] != null}, card: {card?.Name}");
+            return;
         }
-    }
 
-    /// <summary>
-    /// 카드 효과 미리보기 업데이트
-    /// </summary>
-    public void UpdateCardPreviews(List<int> cardIndices, List<int> hpChanges, List<int> curseChanges, List<string> descriptions)
-    {
-        for (int i = 0; i < effectPanels.Length; i++)
-        {
-            if (i < cardIndices.Count && cardIndices[i] >= 0 && cardIndices[i] < CardLibrary.AllCards.Count)
-            {
-                // 카드가 있는 경우
-                var card = CardLibrary.AllCards[cardIndices[i]];
-                ShowCardEffect(i, card, hpChanges[i], curseChanges[i], descriptions[i]);
-            }
-            else
-            {
-                // 카드가 없는 경우
-                HideCardEffect(i);
-            }
-        }
-    }
+        Debug.Log($"[CardEffectPreview] 슬롯 {slotIndex}에 카드 '{card.Name}' 표시 시작");
 
-    /// <summary>
-    /// 특정 슬롯의 카드 효과 표시
-    /// </summary>
-    private void ShowCardEffect(int slotIndex, Card card, int hpChange, int curseChange, string description)
-    {
-        if (slotIndex >= effectPanels.Length || effectPanels[slotIndex] == null) return;
-
-        // 패널 활성화
         effectPanels[slotIndex].SetActive(true);
 
-        // 효과 텍스트 설정
         if (effectTexts[slotIndex] != null)
         {
-            string effectDescription = BuildEffectDescription(card, hpChange, curseChange);
+            string effectDescription = BuildEffectDescription(card);
             effectTexts[slotIndex].text = effectDescription;
 
-            // 색상 설정 (전체 효과에 따라)
-            Color textColor = GetEffectColor(hpChange, curseChange, card.Special != null);
+            Debug.Log($"[CardEffectPreview] 슬롯 {slotIndex} 텍스트 설정: '{effectDescription}'");
+
+            Color textColor = GetEffectColor(card.HpChange, card.CurseChange, card.Special != null);
             effectTexts[slotIndex].color = textColor;
         }
+        else
+        {
+            Debug.LogError($"[CardEffectPreview] 슬롯 {slotIndex}의 effectTexts가 null입니다!");
+        }
 
-        // 페이드 인 애니메이션
         if (useFadeAnimation && panelCanvasGroups[slotIndex] != null)
         {
             StartCoroutine(FadeInPanel(slotIndex));
@@ -269,32 +292,33 @@ public class CardEffectPreview : MonoBehaviour
         {
             panelCanvasGroups[slotIndex].alpha = 1f;
         }
+
+        Debug.Log($"[CardEffectPreview] 슬롯 {slotIndex} 표시 완료");
     }
 
     /// <summary>
-    /// 효과 설명 텍스트 생성
+    /// 효과 설명 텍스트 생성 (실제 카드 데이터 기반)
     /// </summary>
-    private string BuildEffectDescription(Card card, int hpChange, int curseChange)
+    private string BuildEffectDescription(Card card)
     {
         List<string> effects = new List<string>();
 
-        // HP 변화
-        if (hpChange > 0)
-            effects.Add($"<color=#00FF00>체력 +{hpChange}</color>");
-        else if (hpChange < 0)
-            effects.Add($"<color=#FF0000>체력 {hpChange}</color>");
+        // HP 변화 (실제 카드 데이터에서)
+        if (card.HpChange > 0)
+            effects.Add($"<color=#00FF00>체력 +{card.HpChange}</color>");
+        else if (card.HpChange < 0)
+            effects.Add($"<color=#FF0000>체력 {card.HpChange}</color>");
 
-        // 저주 변화
-        if (curseChange > 0)
-            effects.Add($"<color=#FF0000>저주 +{curseChange}</color>");
-        else if (curseChange < 0)
-            effects.Add($"<color=#00FF00>저주 {curseChange}</color>");
+        // 저주 변화 (실제 카드 데이터에서)
+        if (card.CurseChange > 0)
+            effects.Add($"<color=#FF0000>저주 +{card.CurseChange}</color>");
+        else if (card.CurseChange < 0)
+            effects.Add($"<color=#00FF00>저주 {card.CurseChange}</color>");
 
-        // 특수 효과
-        string specialEffect = GetSpecialEffectDescription(card);
-        if (!string.IsNullOrEmpty(specialEffect))
+        // 특수 효과 (카드 Description에서 가져오기)
+        if (!string.IsNullOrEmpty(card.Description))
         {
-            effects.Add($"<color=#FFFF00>{specialEffect}</color>");
+            effects.Add($"<color=#FFFF00>{card.Description}</color>");
         }
 
         // 효과가 없는 경우
@@ -307,59 +331,7 @@ public class CardEffectPreview : MonoBehaviour
     }
 
     /// <summary>
-    /// 특수 효과 설명 가져오기 (한글 버전)
-    /// </summary>
-    private string GetSpecialEffectDescription(Card card)
-    {
-        switch (card.Name)
-        {
-            case "바보": return "체력을 10으로 초기화";
-            case "죽음": return "☠️ 사망";
-            case "탑": return "다음 턴 스킵";
-            case "연인": return "리롤 기회 +1";
-            case "부활": return "덱에서 죽음 카드 제거";
-            case "생명": return "덱에 카드 20장 추가";
-            case "운명의 수레바퀴": return "체력과 저주 교환";
-            case "매달린 남자": return "다음 턴 2장만 뽑음";
-            case "심판": return "덱에서 5장 제거";
-            case "절제": return "3턴간 저주 피해 면역";
-            case "광대": return "체력 무작위 증가 (1-10)";
-            case "교황": return "3턴간 저주 감소 불가";
-            case "은둔자": return "5턴 후 체력 +7";
-            case "마법사": return "3턴 후 저주 -3";
-            case "여교황": return "3턴간 체력 증가 불가";
-            case "여제": return "덱에서 죽음 카드 5장 제거";
-            case "황제": return "체력 & 저주 두 배";
-            case "전차": return "다음 턴 2장 선택";
-            case "정의": return "체력 & 저주 재분배";
-            case "세계": return "모든 카드 효과 실행";
-            case "거울": return "마지막 카드 효과 재발동";
-            case "일식": return "2턴 후 저주 +2";
-            case "암거래": return "5턴간 죽음 카드 추가 금지";
-            case "불씨": return "체력 1 이하 시 생존";
-            case "저주받은 책": return "";
-            case "예언자": return "다음 턴 페널티 무효";
-            case "종말의 경전": return "덱 리셋";
-            case "강탈자": return "";
-            case "대천사": return "죽음 카드 교체";
-            case "영혼의 초": return "3턴 후 저주 -2";
-            case "그림자의 균열": return "";
-            case "영혼 결혼식": return "리롤 기회 +1";
-            case "피의 서약": return "2턴간 저주 증가 무효";
-            case "운명의 유희": return "다음 턴 무작위 선택";
-            case "꿈": return "";
-            case "힘": return "";
-            case "악마": return "";
-            case "별": return "";
-            case "달": return "";
-            case "태양": return "";
-            case "연기": return "";
-            default: return string.IsNullOrEmpty(card.Description) ? "" : card.Description;
-        }
-    }
-
-    /// <summary>
-    /// 효과에 따른 색상 결정
+    /// 효과 색상 결정 (실제 카드 데이터 기반)
     /// </summary>
     private Color GetEffectColor(int hpChange, int curseChange, bool hasSpecial)
     {
@@ -378,7 +350,7 @@ public class CardEffectPreview : MonoBehaviour
     }
 
     /// <summary>
-    /// 특정 슬롯의 카드 효과 숨김
+    /// 카드 효과 숨김
     /// </summary>
     private void HideCardEffect(int slotIndex)
     {
@@ -460,43 +432,33 @@ public class CardEffectPreview : MonoBehaviour
     }
 
     /// <summary>
-    /// 외부에서 호출 가능한 새로고침
+    /// 수동 새로고침 (테스트용)
     /// </summary>
-    public void RefreshPreviews()
+    [ContextMenu("Force Refresh")]
+    public void ForceRefresh()
     {
         if (GameManager.Instance != null)
         {
-            var status = GameEvents.OnCardStatusRequested?.Invoke();
-            if (status.HasValue)
+            var currentCards = GameManager.Instance.GetType()
+                .GetField("currentDrawnCards", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                ?.GetValue(GameManager.Instance) as List<Card>;
+
+            if (currentCards != null)
             {
-                var (cardIndices, hpChanges, curseChanges, descriptions, rerollCount) = status.Value;
-                UpdateCardPreviews(cardIndices, hpChanges, curseChanges, descriptions);
+                UpdateCardEffectsFromCards(currentCards);
+                Debug.Log("[CardEffectPreview] 수동 새로고침 완료");
             }
         }
     }
 
     /// <summary>
-    /// 테스트용 메서드
+    /// 연결 상태 재검사
     /// </summary>
-    [ContextMenu("Test Show Effects")]
-    private void TestShowEffects()
+    [ContextMenu("Re-scan Connections")]
+    public void RescanConnections()
     {
-        // 테스트용 카드들로 효과 표시
-        for (int i = 0; i < 3 && i < CardLibrary.AllCards.Count; i++)
-        {
-            var card = CardLibrary.AllCards[i];
-            ShowCardEffect(i, card, card.HpChange, card.CurseChange, card.Description);
-        }
-    }
-
-    [ContextMenu("Re-scan Card Structure")]
-    private void RescanCardStructure()
-    {
-        if (autoFindPanels)
-        {
-            AutoFindCardEffectPanels();
-            InitializeCanvasGroups();
-            Debug.Log("[CardEffectPreview] 카드 구조 재스캔 완료!");
-        }
+        AutoFindCardEffectPanels();
+        InitializeCanvasGroups();
+        Debug.Log("[CardEffectPreview] 연결 재검사 완료");
     }
 }
