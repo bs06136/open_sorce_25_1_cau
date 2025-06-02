@@ -66,6 +66,7 @@
     <Compile Include="Assets\Script\DebugTest.cs" />
     <Compile Include="Assets\Script\UI\UnifiedCardManager.cs" />
     <Compile Include="Assets\Script\UI\SoundSettingsManager.cs" />
+    <Compile Include="Assets\Script\UI\CardEffectPreview.cs" />
     <Compile Include="Assets\Script\GameCore\Game.cs" />
     <Compile Include="Assets\Script\GameCore\cardEffect.cs" />
     <Compile Include="Assets\Script\GameCore\Player.cs" />

@@ -221,8 +221,8 @@ MonoBehaviour:
     y: 0
     width: 369
     height: 917
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 276, y: 76}
+  m_MaxSize: {x: 4001, y: 4026}
   m_ActualView: {fileID: 14}
   m_Panes:
   - {fileID: 14}
@@ -249,8 +249,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Scene\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 604
-    y: 87
+    x: 0
+    y: 24
     width: 938
     height: 617
   m_SerializedDataModeController:
@@ -697,7 +697,7 @@ MonoBehaviour:
   m_Position:
     m_Target: {x: 493.47903, y: 1125.1797, z: 9.723794}
     speed: 2
-    m_Value: {x: 483.01624, y: 1127.7378, z: 9.587594}
+    m_Value: {x: 493.47903, y: 1125.1797, z: 9.723794}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -749,7 +749,7 @@ MonoBehaviour:
   m_Size:
     m_Target: 289.0482
     speed: 2
-    m_Value: 302.66827
+    m_Value: 289.0482
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -822,23 +822,23 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 112}
-      m_SelectedIDs: 38b90000
-      m_LastClickedID: 47416
+      m_SelectedIDs: 
+      m_LastClickedID: 0
       m_ExpandedIDs: acd2ffffb2deffff8ae9ffff6ef7ffff04fbffff38b900006ab90000e2b900002cba000038ba00004cba00007cba00001ebb0000e0c0000012c10000d4c10000e0c10000f4c10000c6c20000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
-        m_Name: CardEffectText
-        m_OriginalName: CardEffectText
+        m_Name: 
+        m_OriginalName: 
         m_EditFieldRect:
           serializedVersion: 2
           x: 0
           y: 0
           width: 0
           height: 0
-        m_UserData: -11746
+        m_UserData: 0
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
-        m_OriginalEventType: 0
+        m_OriginalEventType: 11
         m_IsRenamingFilename: 0
         m_TrimLeadingAndTrailingWhitespace: 0
         m_ClientGUIView: {fileID: 8}
@@ -915,7 +915,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: f6b80000
     m_LastClickedID: 47350
-    m_ExpandedIDs: 0000000076b70000aab8000000ca9a3bffffff7f
+    m_ExpandedIDs: 0000000014bb0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -944,7 +944,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000076b70000
+    m_ExpandedIDs: 0000000014bb0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1023,8 +1023,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Console\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 604
-    y: 730
+    x: 0
+    y: 667
     width: 938
     height: 248
   m_SerializedDataModeController:
@@ -1059,8 +1059,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Inspector\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1543
-    y: 87
+    x: 940
+    y: 24
     width: 368
     height: 891
   m_SerializedDataModeController:
@@ -1139,7 +1139,7 @@ MonoBehaviour:
   m_UseMipMap: 0
   m_SimulatorState:
     controlPanelVisible: 0
-    controlPanelWidth: 0
+    controlPanelWidth: NaN
     controlPanelFoldoutKeys:
     - UnityEditor.AdaptivePerformance.Editor.AdaptivePerformanceUIExtension
     - UnityEditor.DeviceSimulation.ApplicationSettingsPlugin

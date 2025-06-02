@@ -104,8 +104,17 @@ public class GameManager : MonoBehaviour
 
     private (List<int> drawnCards, List<int> HP, List<int> curse, List<string> text, int rerollCount) GetCardStatus()
     {
+        if (currentDrawnCards == null || currentDrawnCards.Count == 0)
+        {
+            return (new List<int>(), new List<int>(), new List<int>(), new List<string>(), 0);
+        }
+
         var cardIndices = currentDrawnCards
-            .Select(c => CardLibrary.AllCards.IndexOf(c))
+            .Select(c => {
+                if (c == null) return -1;
+                int index = CardLibrary.AllCards.IndexOf(c);
+                return index >= 0 ? index : -1;
+            })
             .ToList();
 
         var hpChanges = currentDrawnCards
@@ -120,7 +129,9 @@ public class GameManager : MonoBehaviour
             .Select(c => c.Description)
             .ToList();
 
-        return (cardIndices, hpChanges, curseChanges, descriptions, UnityPlayer.RerollAvailable);
+        int rerollCount = UnityPlayer?.RerollAvailable ?? 0;
+
+        return (cardIndices, hpChanges, curseChanges, descriptions, rerollCount);
     }
 
     private void ApplyCardByIndex(int index)
