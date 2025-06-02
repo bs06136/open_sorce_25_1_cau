@@ -117,6 +117,7 @@
 -define:ENABLE_UNITY_COLLECTIONS_CHECKS
 -define:ENABLE_BURST_AOT
 -define:UNITY_TEAM_LICENSE
+-define:UNITY_PRO_LICENSE
 -define:ENABLE_CUSTOM_RENDER_TEXTURE
 -define:ENABLE_DIRECTOR
 -define:ENABLE_LOCALIZATION
@@ -462,6 +463,7 @@
 "Assets/Script/GameCore/Program.cs"
 "Assets/Script/Manager/GameEvents.cs"
 "Assets/Script/Manager/GameManager.cs"
+"Assets/Script/Manager/GameOverHandler.cs"
 "Assets/Script/Manager/PlayerBridge.cs"
 "Assets/Script/TowerLoading.cs"
 "Assets/Script/UI/BackToMainMenu.cs"
@@ -471,6 +473,7 @@
 "Assets/Script/UI/LanguageSelector.cs"
 "Assets/Script/UI/PlayerCurse.cs"
 "Assets/Script/UI/PlayerHP.cs"
+"Assets/Script/UI/Return_to_main.cs"
 "Assets/Script/UI/SoundSettingsManager.cs"
 "Assets/Script/UI/TurnDisplay.cs"
 "Assets/Script/UI/UnifiedCardManager.cs"

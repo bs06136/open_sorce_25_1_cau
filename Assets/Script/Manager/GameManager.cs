@@ -1,4 +1,3 @@
-#nullable disable
 using UnityEngine;
 using CardGame;
 using System.Collections.Generic;
@@ -20,6 +19,10 @@ public class GameManager : MonoBehaviour
 
     private List<Card> currentDrawnCards = new();
 
+    // 전차 관련 상태 변수
+    private bool isChariotActive = false;
+    private bool isChariotFirstPick = false;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -38,13 +41,13 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         if (playerHpUI == null)
-            playerHpUI = FindFirstObjectByType<PlayerHP>();
+            playerHpUI = FindObjectOfType<PlayerHP>();
         if (playerCurseUI == null)
-            playerCurseUI = FindFirstObjectByType<PlayerCurse>();
+            playerCurseUI = FindObjectOfType<PlayerCurse>();
         if (unifiedCardManager == null)
-            unifiedCardManager = FindFirstObjectByType<UnifiedCardManager>();
+            unifiedCardManager = FindObjectOfType<UnifiedCardManager>();
         if (turnDisplay == null)
-            turnDisplay = FindFirstObjectByType<TurnDisplay>();
+            turnDisplay = FindObjectOfType<TurnDisplay>();
 
         Debug.Log("✅ StartGame 실행됨");
         UnityPlayer = new PlayerBridge(playerHpUI, playerCurseUI);
@@ -54,67 +57,68 @@ public class GameManager : MonoBehaviour
         UnityPlayer.Curse = 0;
 
         Debug.Log("GameManager: 게임 시작");
-        GameEvents.TriggerPositiveEffect("🎮 게임이 시작되었습니다!");
         UpdateTurnDisplay();
         StartTurn();
     }
 
     public void StartTurn()
     {
-        // 무한 재귀 방지를 위한 개선
-        int skipCount = 0;
-        while (UnityPlayer.SkipNextTurn && skipCount < 5)
+        if (UnityPlayer.SkipNextTurn)
         {
-            GameEvents.TriggerNegativeEffect($"⏭️ 턴 {UnityGame.Turn} 스킵!");
-            Debug.Log($"턴 {UnityGame.Turn} 스킵!");
+            Debug.Log("이번 턴은 스킵됩니다.");
             UnityPlayer.SkipNextTurn = false;
             UnityGame.Turn++;
-            skipCount++;
-        }
-
-        if (skipCount >= 5)
-        {
-            GameEvents.TriggerNegativeEffect("⚠️ 턴 스킵이 너무 많이 발생했습니다!");
-            Debug.LogError("턴 스킵이 너무 많이 발생했습니다!");
+            UpdateTurnDisplay();
+            StartTurn();
             return;
         }
-
-        UpdateTurnDisplay();
 
         int drawCount = UnityPlayer.NextDrawNum;
         UnityPlayer.NextDrawNum = 3;
 
         var cards = UnityGame.DrawCards(drawCount);
+
+        if (UnityPlayer.Archangel)
+        {
+            for (int i = 0; i < cards.Count; i++)
+            {
+                if (cards[i].Name == "죽음")
+                {
+                    var nonDeathCards = CardLibrary.AllCards.Where(c => c.Name != "죽음").ToList();
+                    cards[i] = nonDeathCards[UnityEngine.Random.Range(0, nonDeathCards.Count)];
+                    Debug.Log($"[대천사 발동] 죽음 → {cards[i].Name} 교체됨");
+                }
+            }
+            UnityPlayer.Archangel = false;
+        }
+
+        // 전차 발동 여부
+        if (UnityPlayer.Chariot)
+        {
+            isChariotActive = true;
+            isChariotFirstPick = true;
+            UnityPlayer.Chariot = false;
+        }
+
         currentDrawnCards = cards;
 
         if (UnityPlayer.RandomChoice)
         {
             int randomIndex = UnityEngine.Random.Range(0, currentDrawnCards.Count);
-            var selectedCard = currentDrawnCards[randomIndex];
-            GameEvents.TriggerSpecialEffect($"🎲 [무작위 선택] '{selectedCard.Name}' 카드 선택!");
-            Debug.Log($"[무작위 선택] {randomIndex}번 카드 선택");
+            Debug.Log($"[무작의 선택] {randomIndex}번 카드 선택");
             UnityPlayer.RandomChoice = false;
             ApplyCardByIndex(randomIndex);
             return;
         }
 
         unifiedCardManager.DisplayCards(cards);
-        GameEvents.TriggerCardEffect($"🃏 카드 {cards.Count}장을 뽑았습니다");
+        UpdateTurnDisplay();
     }
 
     private (List<int> drawnCards, List<int> HP, List<int> curse, List<string> text, int rerollCount) GetCardStatus()
     {
-        if (currentDrawnCards == null || currentDrawnCards.Count == 0)
-        {
-            return (new List<int>(), new List<int>(), new List<int>(), new List<string>(), 0);
-        }
-
         var cardIndices = currentDrawnCards
-            .Select(c => {
-                if (c == null) return -1;
-                int index = CardLibrary.AllCards.IndexOf(c);
-                return index >= 0 ? index : -1;
-            })
+            .Select(c => CardLibrary.AllCards.IndexOf(c))
             .ToList();
 
         var hpChanges = currentDrawnCards
@@ -129,37 +133,44 @@ public class GameManager : MonoBehaviour
             .Select(c => c.Description)
             .ToList();
 
-        int rerollCount = UnityPlayer?.RerollAvailable ?? 0;
-
-        return (cardIndices, hpChanges, curseChanges, descriptions, rerollCount);
+        return (cardIndices, hpChanges, curseChanges, descriptions, UnityPlayer.RerollAvailable);
     }
 
     private void ApplyCardByIndex(int index)
     {
-        if (currentDrawnCards == null || index < 0 || index >= currentDrawnCards.Count)
-        {
-            GameEvents.TriggerNegativeEffect("❌ 잘못된 카드 선택!");
-            return;
-        }
+        if (index < 0 || index >= currentDrawnCards.Count) return;
 
         var selected = currentDrawnCards[index];
         currentDrawnCards.RemoveAt(index);
+        ApplyCard(selected, currentDrawnCards);
 
-        // 대천사 효과 처리
-        if (UnityPlayer.Archangel && selected.Name == "죽음")
+        if (isChariotActive)
         {
-            var replacement = CardLibrary.AllCards.Find(c => c.Name != "죽음");
-            if (replacement != null)
+            if (isChariotFirstPick)
             {
-                GameEvents.TriggerPositiveEffect($"👼 [대천사 효과] 죽음 카드가 '{replacement.Name}'로 교체됨!");
-                Debug.Log($"[대천사 효과] 죽음 카드가 '{replacement.Name}'로 교체됨");
-                selected = replacement;
+                Debug.Log("[전차] 첫 번째 카드 선택 → 두 번째 선택 준비");
+                isChariotFirstPick = false;
+
+                // 남은 2장 다시 보여주기
+                unifiedCardManager.DisplayCards(currentDrawnCards);
+                UpdateTurnDisplay();
+                return;
+            }
+            else
+            {
+                Debug.Log("[전차] 두 번째 카드 선택 → 전차 종료");
+                isChariotActive = false;
+
+                UnityGame.Turn++;
+                UpdateTurnDisplay();
+                StartTurn();
+                return;
             }
         }
-        UnityPlayer.Archangel = false;
 
-        GameEvents.TriggerCardEffect($"✨ '{selected.Name}' 카드를 선택했습니다!", EffectType.Special);
-        ApplyCard(selected, currentDrawnCards);
+        UnityGame.Turn++;
+        UpdateTurnDisplay();
+        StartTurn();
     }
 
     private void ApplyCard(Card selectedCard, List<Card> remainingCards)
@@ -167,7 +178,6 @@ public class GameManager : MonoBehaviour
         selectedCard.Apply(UnityPlayer, UnityGame, remainingCards);
         UnityPlayer.LastCard = selectedCard;
 
-        Debug.Log($"[지연 효과 개수] {UnityPlayer.DelayedEffects.Count}");
         HandleDelayedEffects();
         HandleCurseDamage();
         HandleDeathCardInjection();
@@ -176,14 +186,9 @@ public class GameManager : MonoBehaviour
 
         if (UnityPlayer.Hp <= 0)
         {
-            GameEvents.TriggerNegativeEffect("💀 사망하였습니다...");
-            Debug.Log("사망");
+            GameOverHandler.GameOver(UnityGame);
             return;
         }
-
-        UnityGame.Turn++;
-        UpdateTurnDisplay();
-        StartTurn();
     }
 
     private void HandleDelayedEffects()
@@ -191,14 +196,10 @@ public class GameManager : MonoBehaviour
         var newList = new List<(int, Action)>();
         foreach (var (delay, effect) in UnityPlayer.DelayedEffects)
         {
-            Debug.Log($"[지연 효과 검사] delay: {delay}");
             if (delay > 0)
                 newList.Add((delay - 1, effect));
             else
-            {
-                Debug.Log("[지연 효과 발동]");
                 effect();
-            }
         }
         UnityPlayer.DelayedEffects = newList;
     }
@@ -208,17 +209,11 @@ public class GameManager : MonoBehaviour
         if (UnityPlayer.NonCurseDamageTurn > 0)
         {
             UnityPlayer.NonCurseDamageTurn--;
-            if (UnityPlayer.Curse > 0)
-            {
-                GameEvents.TriggerPositiveEffect($"🛡️ 저주 피해 면역! (남은 턴: {UnityPlayer.NonCurseDamageTurn})");
-            }
         }
         else if (UnityPlayer.Curse > 0)
         {
-            int curseDamage = UnityPlayer.Curse;
-            GameEvents.TriggerNegativeEffect($"💜 저주 데미지 {curseDamage} 받음!");
-            Debug.Log($"저주 데미지: {curseDamage}");
-            UnityPlayer.Hp -= curseDamage;
+            UnityPlayer.Hp -= UnityPlayer.Curse;
+            UnityPlayer.Hp = UnityPlayer.Hp; // UI 갱신
         }
     }
 
@@ -227,16 +222,10 @@ public class GameManager : MonoBehaviour
         if (UnityPlayer.NotAddDeath > 0)
         {
             UnityPlayer.NotAddDeath--;
-            if (UnityPlayer.Curse >= 6)
-            {
-                GameEvents.TriggerPositiveEffect($"🔒 죽음 카드 추가 금지! (남은 턴: {UnityPlayer.NotAddDeath})");
-            }
         }
         else if (UnityPlayer.Curse >= 6)
         {
             int deathAdd = UnityPlayer.Curse - 5;
-            GameEvents.TriggerNegativeEffect($"💀 죽음 카드 {deathAdd}장이 덱에 추가됨!");
-            Debug.Log($"죽음 카드 {deathAdd}장 덱에 추가");
             UnityGame.InsertDeathCards(deathAdd);
         }
     }
@@ -246,9 +235,8 @@ public class GameManager : MonoBehaviour
         if (UnityGame.Turn % 5 == 0)
         {
             int inc = 1 + (UnityGame.Turn / 5 - 1);
-            GameEvents.TriggerNegativeEffect($"⏰ 정기 저주 증가: +{inc}");
-            Debug.Log($"정기 저주 증가: +{inc}");
             UnityPlayer.Curse += inc;
+            UnityPlayer.Curse = UnityPlayer.Curse;
         }
     }
 
@@ -256,17 +244,11 @@ public class GameManager : MonoBehaviour
     {
         if (UnityPlayer.Ember && UnityPlayer.Hp <= 1)
         {
-            GameEvents.TriggerSpecialEffect("🔥 [불씨 효과] 체력 1, 저주 0으로 회복!");
-            Debug.Log("[불씨 효과] 체력 1, 저주 0으로 변경");
             UnityPlayer.Hp = 1;
             UnityPlayer.Curse = 0;
-            UnityPlayer.Ember = false; // 불씨 효과는 한 번만 발동
         }
     }
 
-    /// <summary>
-    /// 턴 표시 UI 업데이트
-    /// </summary>
     private void UpdateTurnDisplay()
     {
         if (turnDisplay != null)
@@ -275,29 +257,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 현재 턴 정보 가져오기 (외부에서 사용 가능)
-    /// </summary>
     public int GetCurrentTurn()
     {
         return UnityGame?.Turn ?? 0;
-    }
-
-    /// <summary>
-    /// 게임 재시작
-    /// </summary>
-    public void RestartGame()
-    {
-        GameEvents.TriggerCardEffect("🔄 게임을 재시작합니다!");
-        StartGame();
-    }
-
-    /// <summary>
-    /// 게임 종료
-    /// </summary>
-    public void EndGame()
-    {
-        GameEvents.TriggerNegativeEffect("🏁 게임이 종료되었습니다!");
-        Debug.Log("게임 종료");
     }
 }

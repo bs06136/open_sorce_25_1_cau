@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace CardGame
 {
@@ -9,9 +10,7 @@ namespace CardGame
     {
         public static void DeathEffect(Player player, Game game, List<Card> cards)
         {
-            GameEvents.TriggerNegativeEffect("[죽음 효과] 사망합니다...");
-            Debug.Log("[죽음 효과] 사망합니다...");
-            game.DisplayScore();
+            GameOverHandler.GameOver(game);
         }
 
         public static void FoolEffect(Player player, Game game, List<Card> cards)
@@ -171,7 +170,7 @@ namespace CardGame
         {
             GameEvents.TriggerPositiveEffect("[전차 효과] 다음 턴 2장 선택");
             Debug.Log("[전차 효과] 다음 턴 2장 선택");
-            player.NextPickNum = 2;
+            player.Chariot = true;
         }
 
         public static void JusticeEffect(Player player, Game game, List<Card> cards)

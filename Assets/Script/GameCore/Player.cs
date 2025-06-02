@@ -36,6 +36,8 @@ namespace CardGame
         public bool Archangel { get; set; } = false;
         public bool RandomChoice { get; set; } = false;
 
+        public bool Chariot { get; set; } = false;
+
         public Card? LastCard { get; set; } = null;
 
         public List<(int Delay, Action Effect)> DelayedEffects { get; set; } = new();
