@@ -116,7 +116,8 @@ namespace CardGame
         {
             GameEvents.TriggerSpecialEffect("[은둔자 효과] 5턴 후 체력 7 증가 예약");
             Debug.Log("[은둔자 효과] 5턴 후 체력 7 증가 예약");
-            player.DelayedEffects.Add((5, () => {
+            player.DelayedEffects.Add((5, () =>
+            {
                 GameEvents.TriggerPositiveEffect("[지연 효과] 은둔자 - 체력 7 증가!");
                 player.Hp += 7;
             }
@@ -127,7 +128,8 @@ namespace CardGame
         {
             GameEvents.TriggerSpecialEffect("[마법사 효과] 3턴 후 저주 3 감소 예약");
             Debug.Log("[마법사 효과] 3턴 후 저주 3 감소 예약");
-            player.DelayedEffects.Add((3, () => {
+            player.DelayedEffects.Add((3, () =>
+            {
                 GameEvents.TriggerPositiveEffect("[지연 효과] 마법사 - 저주 3 감소!");
                 player.Curse = Math.Max(0, player.Curse - 3);
             }
@@ -203,7 +205,8 @@ namespace CardGame
         {
             GameEvents.TriggerNegativeEffect("[일식 효과] 2턴 후 저주 +2 예약");
             Debug.Log("[일식 효과] 2턴 후 저주 +2 예약");
-            player.DelayedEffects.Add((2, () => {
+            player.DelayedEffects.Add((2, () =>
+            {
                 GameEvents.TriggerNegativeEffect("[지연 효과] 일식 - 저주 2 증가!");
                 player.Curse += 2;
             }
@@ -250,7 +253,8 @@ namespace CardGame
         {
             GameEvents.TriggerSpecialEffect("[영혼의 초 효과] 3턴 후 저주 2 감소 예약");
             Debug.Log("[영혼의 초 효과] 3턴 후 저주 2 감소 예약");
-            player.DelayedEffects.Add((3, () => {
+            player.DelayedEffects.Add((3, () =>
+            {
                 GameEvents.TriggerPositiveEffect("[지연 효과] 영혼의 초 - 저주 2 감소!");
                 player.Curse = Math.Max(0, player.Curse - 2);
             }

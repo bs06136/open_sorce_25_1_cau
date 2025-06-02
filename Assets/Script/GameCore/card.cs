@@ -40,6 +40,17 @@ namespace CardGame
             // 세계 카드는 특별 처리
             if (Name == "세계" && Special != null)
             {
+
+                var tempHpChange = HpChange;
+                var tempCurseChange = CurseChange;
+                foreach (var card in cards)
+                {
+                    tempHpChange += card.HpChange;
+                    tempCurseChange += card.CurseChange;
+                }
+                player.Hp += tempHpChange;
+                player.Curse += tempCurseChange;
+
                 Special(player, game, cards);
                 return;
             }
