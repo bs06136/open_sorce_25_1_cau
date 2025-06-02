@@ -467,6 +467,7 @@
 "Assets/Script/UI/BackToMainMenu.cs"
 "Assets/Script/UI/CardButtonHandler.cs"
 "Assets/Script/UI/CardDisplay.cs"
+"Assets/Script/UI/CardEffectDisplay.cs"
 "Assets/Script/UI/LanguageSelector.cs"
 "Assets/Script/UI/PlayerCurse.cs"
 "Assets/Script/UI/PlayerHP.cs"

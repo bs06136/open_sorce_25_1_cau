@@ -1,3 +1,4 @@
+#nullable disable
 using UnityEngine;
 using CardGame;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ public class GameManager : MonoBehaviour
     public PlayerHP playerHpUI;
     public PlayerCurse playerCurseUI;
     public UnifiedCardManager unifiedCardManager;
-    public TurnDisplay turnDisplay; // 턴 표시 UI 추가
+    public TurnDisplay turnDisplay;
 
     public Game UnityGame { get; private set; }
     public PlayerBridge UnityPlayer { get; private set; }
@@ -36,15 +37,14 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        // UI 컴포넌트들 자동 찾기
         if (playerHpUI == null)
-            playerHpUI = FindObjectOfType<PlayerHP>();
+            playerHpUI = FindFirstObjectByType<PlayerHP>();
         if (playerCurseUI == null)
-            playerCurseUI = FindObjectOfType<PlayerCurse>();
+            playerCurseUI = FindFirstObjectByType<PlayerCurse>();
         if (unifiedCardManager == null)
-            unifiedCardManager = FindObjectOfType<UnifiedCardManager>();
+            unifiedCardManager = FindFirstObjectByType<UnifiedCardManager>();
         if (turnDisplay == null)
-            turnDisplay = FindObjectOfType<TurnDisplay>(); // 턴 표시 UI 자동 찾기
+            turnDisplay = FindFirstObjectByType<TurnDisplay>();
 
         Debug.Log("✅ StartGame 실행됨");
         UnityPlayer = new PlayerBridge(playerHpUI, playerCurseUI);
@@ -54,21 +54,32 @@ public class GameManager : MonoBehaviour
         UnityPlayer.Curse = 0;
 
         Debug.Log("GameManager: 게임 시작");
-        UpdateTurnDisplay(); // 게임 시작 시 턴 표시 업데이트
+        GameEvents.TriggerPositiveEffect("🎮 게임이 시작되었습니다!");
+        UpdateTurnDisplay();
         StartTurn();
     }
 
     public void StartTurn()
     {
-        if (UnityPlayer.SkipNextTurn)
+        // 무한 재귀 방지를 위한 개선
+        int skipCount = 0;
+        while (UnityPlayer.SkipNextTurn && skipCount < 5)
         {
-            Debug.Log("이번 턴은 스킵됩니다.");
+            GameEvents.TriggerNegativeEffect($"⏭️ 턴 {UnityGame.Turn} 스킵!");
+            Debug.Log($"턴 {UnityGame.Turn} 스킵!");
             UnityPlayer.SkipNextTurn = false;
             UnityGame.Turn++;
-            UpdateTurnDisplay(); // 턴 스킵 시에도 표시 업데이트
-            StartTurn();
+            skipCount++;
+        }
+
+        if (skipCount >= 5)
+        {
+            GameEvents.TriggerNegativeEffect("⚠️ 턴 스킵이 너무 많이 발생했습니다!");
+            Debug.LogError("턴 스킵이 너무 많이 발생했습니다!");
             return;
         }
+
+        UpdateTurnDisplay();
 
         int drawCount = UnityPlayer.NextDrawNum;
         UnityPlayer.NextDrawNum = 3;
@@ -79,39 +90,64 @@ public class GameManager : MonoBehaviour
         if (UnityPlayer.RandomChoice)
         {
             int randomIndex = UnityEngine.Random.Range(0, currentDrawnCards.Count);
-            Debug.Log($"[무작의 선택] {randomIndex}번 카드 선택");
+            var selectedCard = currentDrawnCards[randomIndex];
+            GameEvents.TriggerSpecialEffect($"🎲 [무작위 선택] '{selectedCard.Name}' 카드 선택!");
+            Debug.Log($"[무작위 선택] {randomIndex}번 카드 선택");
             UnityPlayer.RandomChoice = false;
             ApplyCardByIndex(randomIndex);
             return;
         }
 
         unifiedCardManager.DisplayCards(cards);
-        UpdateTurnDisplay(); // 새 턴 시작 시 표시 업데이트
+        GameEvents.TriggerCardEffect($"🃏 카드 {cards.Count}장을 뽑았습니다");
     }
 
-    private (List<int>, int) GetCardStatus()
+    private (List<int> drawnCards, List<int> HP, List<int> curse, List<string> text, int rerollCount) GetCardStatus()
     {
         var cardIndices = currentDrawnCards
             .Select(c => CardLibrary.AllCards.IndexOf(c))
             .ToList();
 
-        return (cardIndices, UnityPlayer.RerollAvailable);
+        var hpChanges = currentDrawnCards
+            .Select(c => c.HpChange)
+            .ToList();
+
+        var curseChanges = currentDrawnCards
+            .Select(c => c.CurseChange)
+            .ToList();
+
+        var descriptions = currentDrawnCards
+            .Select(c => c.Description)
+            .ToList();
+
+        return (cardIndices, hpChanges, curseChanges, descriptions, UnityPlayer.RerollAvailable);
     }
 
     private void ApplyCardByIndex(int index)
     {
-        if (index < 0 || index >= currentDrawnCards.Count) return;
+        if (currentDrawnCards == null || index < 0 || index >= currentDrawnCards.Count)
+        {
+            GameEvents.TriggerNegativeEffect("❌ 잘못된 카드 선택!");
+            return;
+        }
 
         var selected = currentDrawnCards[index];
         currentDrawnCards.RemoveAt(index);
 
+        // 대천사 효과 처리
         if (UnityPlayer.Archangel && selected.Name == "죽음")
         {
-            selected = CardLibrary.AllCards.Find(c => c.Name != "죽음");
-            Debug.Log($"[대천사 효과] 죽음 카드가 '{selected.Name}'로 교체됨");
+            var replacement = CardLibrary.AllCards.Find(c => c.Name != "죽음");
+            if (replacement != null)
+            {
+                GameEvents.TriggerPositiveEffect($"👼 [대천사 효과] 죽음 카드가 '{replacement.Name}'로 교체됨!");
+                Debug.Log($"[대천사 효과] 죽음 카드가 '{replacement.Name}'로 교체됨");
+                selected = replacement;
+            }
         }
         UnityPlayer.Archangel = false;
 
+        GameEvents.TriggerCardEffect($"✨ '{selected.Name}' 카드를 선택했습니다!", EffectType.Special);
         ApplyCard(selected, currentDrawnCards);
     }
 
@@ -129,12 +165,13 @@ public class GameManager : MonoBehaviour
 
         if (UnityPlayer.Hp <= 0)
         {
+            GameEvents.TriggerNegativeEffect("💀 사망하였습니다...");
             Debug.Log("사망");
             return;
         }
 
         UnityGame.Turn++;
-        UpdateTurnDisplay(); // 턴 증가 후 표시 업데이트
+        UpdateTurnDisplay();
         StartTurn();
     }
 
@@ -160,12 +197,17 @@ public class GameManager : MonoBehaviour
         if (UnityPlayer.NonCurseDamageTurn > 0)
         {
             UnityPlayer.NonCurseDamageTurn--;
+            if (UnityPlayer.Curse > 0)
+            {
+                GameEvents.TriggerPositiveEffect($"🛡️ 저주 피해 면역! (남은 턴: {UnityPlayer.NonCurseDamageTurn})");
+            }
         }
         else if (UnityPlayer.Curse > 0)
         {
-            Debug.Log($"저주 데미지: {UnityPlayer.Curse}");
-            UnityPlayer.Hp -= UnityPlayer.Curse;
-            UnityPlayer.Hp = UnityPlayer.Hp; // UI 갱신
+            int curseDamage = UnityPlayer.Curse;
+            GameEvents.TriggerNegativeEffect($"💜 저주 데미지 {curseDamage} 받음!");
+            Debug.Log($"저주 데미지: {curseDamage}");
+            UnityPlayer.Hp -= curseDamage;
         }
     }
 
@@ -174,11 +216,16 @@ public class GameManager : MonoBehaviour
         if (UnityPlayer.NotAddDeath > 0)
         {
             UnityPlayer.NotAddDeath--;
+            if (UnityPlayer.Curse >= 6)
+            {
+                GameEvents.TriggerPositiveEffect($"🔒 죽음 카드 추가 금지! (남은 턴: {UnityPlayer.NotAddDeath})");
+            }
         }
         else if (UnityPlayer.Curse >= 6)
         {
             int deathAdd = UnityPlayer.Curse - 5;
-            Debug.Log($"죽음 카드 {deathAdd}장 데크에 추가");
+            GameEvents.TriggerNegativeEffect($"💀 죽음 카드 {deathAdd}장이 덱에 추가됨!");
+            Debug.Log($"죽음 카드 {deathAdd}장 덱에 추가");
             UnityGame.InsertDeathCards(deathAdd);
         }
     }
@@ -188,9 +235,9 @@ public class GameManager : MonoBehaviour
         if (UnityGame.Turn % 5 == 0)
         {
             int inc = 1 + (UnityGame.Turn / 5 - 1);
-            UnityPlayer.Curse += inc;
-            UnityPlayer.Curse = UnityPlayer.Curse; // UI 갱신
+            GameEvents.TriggerNegativeEffect($"⏰ 정기 저주 증가: +{inc}");
             Debug.Log($"정기 저주 증가: +{inc}");
+            UnityPlayer.Curse += inc;
         }
     }
 
@@ -198,9 +245,11 @@ public class GameManager : MonoBehaviour
     {
         if (UnityPlayer.Ember && UnityPlayer.Hp <= 1)
         {
+            GameEvents.TriggerSpecialEffect("🔥 [불씨 효과] 체력 1, 저주 0으로 회복!");
             Debug.Log("[불씨 효과] 체력 1, 저주 0으로 변경");
             UnityPlayer.Hp = 1;
             UnityPlayer.Curse = 0;
+            UnityPlayer.Ember = false; // 불씨 효과는 한 번만 발동
         }
     }
 
@@ -221,5 +270,23 @@ public class GameManager : MonoBehaviour
     public int GetCurrentTurn()
     {
         return UnityGame?.Turn ?? 0;
+    }
+
+    /// <summary>
+    /// 게임 재시작
+    /// </summary>
+    public void RestartGame()
+    {
+        GameEvents.TriggerCardEffect("🔄 게임을 재시작합니다!");
+        StartGame();
+    }
+
+    /// <summary>
+    /// 게임 종료
+    /// </summary>
+    public void EndGame()
+    {
+        GameEvents.TriggerNegativeEffect("🏁 게임이 종료되었습니다!");
+        Debug.Log("게임 종료");
     }
 }
