@@ -44,6 +44,7 @@ namespace CardGame
 
             var drawn = Deck.Take(count).ToList();
             Deck.RemoveRange(0, count);
+            GameManager.Instance?.ShowRemainDeckNum();
             return drawn;
         }
 
