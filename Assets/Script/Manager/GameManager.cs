@@ -19,6 +19,14 @@ public class GameManager : MonoBehaviour
 
     private List<Card> currentDrawnCards = new();
 
+
+    [Header("Canvas handling")]
+    public GameObject gameOverCanvas;
+
+    public GameObject ingameCanvas;
+
+    public GameObject mainMenuCanvas;
+
     // 전차 관련 상태 변수
     private bool isChariotActive = false;
     private bool isChariotFirstPick = false;
@@ -33,6 +41,8 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        gameOverCanvas.SetActive(false);
 
         GameEvents.OnCardStatusRequested = GetCardStatus;
         GameEvents.OnCardChosen = ApplyCardByIndex;
@@ -261,4 +271,12 @@ public class GameManager : MonoBehaviour
     {
         return UnityGame?.Turn ?? 0;
     }
+
+    public void ShowGameOver()
+    {
+        ingameCanvas.SetActive(false);
+        mainMenuCanvas.SetActive(false);
+        gameOverCanvas.SetActive(true);
+    }
+
 }
