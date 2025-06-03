@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using TMPro;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class GameManager : MonoBehaviour
 
     private List<Card> currentDrawnCards = new();
 
+    public Button rerollButton;
     public TextMeshProUGUI rerollButtonText;
 
 
@@ -73,7 +75,7 @@ public class GameManager : MonoBehaviour
         UpdateTurnDisplay();
         StartTurn();
 
-        UpdateRerollText();
+        UpdateRerollState();
     }
 
     public void StartTurn()
@@ -197,7 +199,7 @@ public class GameManager : MonoBehaviour
         selectedCard.Apply(UnityPlayer, UnityGame, remainingCards);
         UnityPlayer.LastCard = selectedCard;
 
-        UpdateRerollText();
+        UpdateRerollState();
 
         HandleDelayedEffects();
         HandleCurseDamage();
@@ -311,7 +313,7 @@ public class GameManager : MonoBehaviour
 
             unifiedCardManager.DisplayCards(currentDrawnCards);
             UpdateTurnDisplay();
-            UpdateRerollText();
+            UpdateRerollState();
         }
         else
         {
@@ -319,7 +321,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void UpdateRerollText()
+    public void UpdateRerollState()
     {
         if (rerollButtonText != null)
         {
@@ -328,6 +330,17 @@ public class GameManager : MonoBehaviour
         else
         {
             Debug.LogWarning("rerollButtonText가 설정되지 않았습니다.");
+        }
+
+        if (UnityPlayer.RerollAvailable == 0)
+        {
+            rerollButton.interactable = false;
+            Debug.Log("리롤 버튼 비활성화");
+        }
+        else
+        {
+            rerollButton.interactable = true;
+            Debug.Log("리롤 버튼 활성화");
         }
     }
 }
