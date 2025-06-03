@@ -49,7 +49,8 @@ public class UnifiedCardManager : MonoBehaviour
 
         // 리롤 버튼 이벤트 연결 (있는 경우에만)
         if (rerollButton != null)
-            rerollButton.onClick.AddListener(OnRerollClicked);
+            Debug.Log("[UnifiedCardManager] 리롤 버튼이 설정됨");
+        // rerollButton.onClick.AddListener(OnRerollClicked);
 
         UpdateRerollUI();
     }
@@ -288,7 +289,7 @@ public class UnifiedCardManager : MonoBehaviour
             {
                 Debug.Log("[UnifiedCardManager] 리롤 기회 없음");
                 if (rerollText != null)
-                    rerollText.text = "No Rerolls Left";
+                    rerollText.text = "0";
             }
         }
         else
@@ -300,10 +301,12 @@ public class UnifiedCardManager : MonoBehaviour
 
     public void UpdateRerollUI()
     {
+        Debug.Log("[UnifiedCardManager] UpdateRerollUI 호출됨");
         if (rerollText != null && GameManager.Instance != null && GameManager.Instance.UnityPlayer != null)
         {
             int availableRerolls = GameManager.Instance.UnityPlayer.RerollAvailable;
-            rerollText.text = $"Rerolls Left: {availableRerolls}";
+            rerollText.text = $"{availableRerolls}";
+            Debug.Log($"[UnifiedCardManager] 현재 리롤 가능 횟수: {availableRerolls}");
         }
     }
 

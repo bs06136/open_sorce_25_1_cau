@@ -3,6 +3,7 @@ using CardGame;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class GameManager : MonoBehaviour
     public PlayerBridge UnityPlayer { get; private set; }
 
     private List<Card> currentDrawnCards = new();
+
+    public TextMeshProUGUI rerollButtonText;
 
 
     [Header("Canvas handling")]
@@ -69,6 +72,8 @@ public class GameManager : MonoBehaviour
         Debug.Log("GameManager: 게임 시작");
         UpdateTurnDisplay();
         StartTurn();
+
+        UpdateRerollText();
     }
 
     public void StartTurn()
@@ -84,9 +89,9 @@ public class GameManager : MonoBehaviour
         }
 
         int drawCount = UnityPlayer.NextDrawNum;
-        UnityPlayer.NextDrawNum = 3;
 
         var cards = UnityGame.DrawCards(drawCount);
+        Debug.Log($"[덱 상태] 남은 카드 수: {UnityGame.Deck.Count}");
 
         if (UnityPlayer.Archangel)
         {
@@ -99,7 +104,6 @@ public class GameManager : MonoBehaviour
                     Debug.Log($"[대천사 발동] 죽음 → {cards[i].Name} 교체됨");
                 }
             }
-            UnityPlayer.Archangel = false;
         }
 
         // 전차 발동 여부
@@ -148,6 +152,11 @@ public class GameManager : MonoBehaviour
 
     private void ApplyCardByIndex(int index)
     {
+        // player상태 초기화 : 리롤을 해야하기 때문에 선택 이후인 여기서 초기화 함.
+        UnityPlayer.NextDrawNum = 3;
+        UnityPlayer.Archangel = false;
+
+
         if (index < 0 || index >= currentDrawnCards.Count) return;
 
         var selected = currentDrawnCards[index];
@@ -187,6 +196,8 @@ public class GameManager : MonoBehaviour
     {
         selectedCard.Apply(UnityPlayer, UnityGame, remainingCards);
         UnityPlayer.LastCard = selectedCard;
+
+        UpdateRerollText();
 
         HandleDelayedEffects();
         HandleCurseDamage();
@@ -279,4 +290,44 @@ public class GameManager : MonoBehaviour
         gameOverCanvas.SetActive(true);
     }
 
+    public void rerollButtonClicked()
+    {
+        if (UnityPlayer.RerollAvailable > 0)
+        {
+            UnityPlayer.RerollAvailable--;
+            currentDrawnCards = UnityGame.DrawCards(UnityPlayer.NextDrawNum);
+            if (UnityPlayer.Archangel)
+            {
+                for (int i = 0; i < currentDrawnCards.Count; i++)
+                {
+                    if (currentDrawnCards[i].Name == "죽음")
+                    {
+                        var nonDeathCards = CardLibrary.AllCards.Where(c => c.Name != "죽음").ToList();
+                        currentDrawnCards[i] = nonDeathCards[UnityEngine.Random.Range(0, nonDeathCards.Count)];
+                        Debug.Log($"[대천사 발동] 죽음 → {currentDrawnCards[i].Name} 교체됨");
+                    }
+                }
+            }
+
+            unifiedCardManager.DisplayCards(currentDrawnCards);
+            UpdateTurnDisplay();
+            UpdateRerollText();
+        }
+        else
+        {
+            Debug.Log("리롤이 부족합니다.");
+        }
+    }
+
+    public void UpdateRerollText()
+    {
+        if (rerollButtonText != null)
+        {
+            rerollButtonText.text = $"{UnityPlayer.RerollAvailable}";
+        }
+        else
+        {
+            Debug.LogWarning("rerollButtonText가 설정되지 않았습니다.");
+        }
+    }
 }
