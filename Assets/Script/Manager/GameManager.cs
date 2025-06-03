@@ -21,15 +21,19 @@ public class GameManager : MonoBehaviour
 
     private List<Card> currentDrawnCards = new();
 
+    [Header("Reroll Button")]
     public Button rerollButton;
     public TextMeshProUGUI rerollButtonText;
+
+    [Header("Player Status")]
+    public TextMeshProUGUI remainDeckNum;
+    public Image emberIcon;
+    public Material grayScaleMaterial;
 
 
     [Header("Canvas handling")]
     public GameObject gameOverCanvas;
-
     public GameObject ingameCanvas;
-
     public GameObject mainMenuCanvas;
 
     // 전차 관련 상태 변수
@@ -75,7 +79,9 @@ public class GameManager : MonoBehaviour
         UpdateTurnDisplay();
         StartTurn();
 
+        // State UI 초기화
         UpdateRerollState();
+        ShowRemainDeckNum();
     }
 
     public void StartTurn()
@@ -270,6 +276,7 @@ public class GameManager : MonoBehaviour
             UnityPlayer.Hp = 1;
             UnityPlayer.Curse = 0;
         }
+        SetEmberGrayscale();
     }
 
     private void UpdateTurnDisplay()
@@ -343,4 +350,21 @@ public class GameManager : MonoBehaviour
             Debug.Log("리롤 버튼 활성화");
         }
     }
+
+    public void ShowRemainDeckNum()
+    {
+        remainDeckNum.text = UnityGame.Deck.Count.ToString();
+        Debug.Log($"남은 덱 수: {remainDeckNum}");
+    }
+
+
+    public void SetEmberGrayscale()
+    {
+        if (!UnityGame.Player.Ember)
+            emberIcon.material = grayScaleMaterial;
+        else
+            emberIcon.material = null; // 원래대로
+    }
 }
+
+

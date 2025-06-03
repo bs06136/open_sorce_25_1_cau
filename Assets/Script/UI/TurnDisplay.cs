@@ -5,21 +5,21 @@ using System.Collections;
 
 public class TurnDisplay : MonoBehaviour
 {
-    [Header("ÅÏ Ç¥½Ã UI")]
-    [Tooltip("ÅÏ ¼ýÀÚ¸¦ Ç¥½ÃÇÒ Text ÄÄÆ÷³ÍÆ® (UI > Text »ç¿ë)")]
+    [Header("ï¿½ï¿½ Ç¥ï¿½ï¿½ UI")]
+    [Tooltip("ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¸ï¿½ Ç¥ï¿½ï¿½ï¿½ï¿½ Text ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® (UI > Text ï¿½ï¿½ï¿½)")]
     public Text turnText;
 
-    [Tooltip("ÅÏ ¼ýÀÚ¸¦ Ç¥½ÃÇÒ TextMeshPro ÄÄÆ÷³ÍÆ® (´õ ÁÁÀº ÅØ½ºÆ® Ç°Áú)")]
+    [Tooltip("ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¸ï¿½ Ç¥ï¿½ï¿½ï¿½ï¿½ TextMeshPro ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® (ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ø½ï¿½Æ® Ç°ï¿½ï¿½)")]
     public TextMeshProUGUI turnTextMeshPro;
 
-    [Header("Ç¥½Ã ¿É¼Ç")]
-    [Tooltip("ÅÏ ÅØ½ºÆ® ¾Õ¿¡ Ç¥½ÃÇÒ Á¢µÎ»ç")]
-    public string turnPrefix = "ÅÏ ";
+    [Header("Ç¥ï¿½ï¿½ ï¿½É¼ï¿½")]
+    [Tooltip("ï¿½ï¿½ ï¿½Ø½ï¿½Æ® ï¿½Õ¿ï¿½ Ç¥ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î»ï¿½")]
+    public string turnPrefix = "ï¿½ï¿½ ";
 
-    [Tooltip("ÅÏÀÌ º¯°æµÉ ¶§ ¾Ö´Ï¸ÞÀÌ¼Ç È¿°ú")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ È¿ï¿½ï¿½")]
     public bool enableTurnAnimation = true;
 
-    [Tooltip("ÅÏ º¯°æ ¾Ö´Ï¸ÞÀÌ¼Ç Áö¼Ó½Ã°£")]
+    [Tooltip("ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½Ó½Ã°ï¿½")]
     public float animationDuration = 0.5f;
 
     private int currentDisplayedTurn = 0;
@@ -27,16 +27,16 @@ public class TurnDisplay : MonoBehaviour
 
     private void Start()
     {
-        // ÃÊ±â ½ºÄÉÀÏ ÀúÀå (¾Ö´Ï¸ÞÀÌ¼Ç¿ë)
+        // ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½Ö´Ï¸ï¿½ï¿½Ì¼Ç¿ï¿½)
         originalScale = transform.localScale;
 
-        // °ÔÀÓ ½ÃÀÛ ½Ã ÅÏ Ç¥½Ã
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ Ç¥ï¿½ï¿½
         UpdateTurnDisplay();
     }
 
     private void Update()
     {
-        // ¸Å ÇÁ·¹ÀÓ¸¶´Ù ÅÏ º¯È­ Ã¼Å© (¼º´É»ó ÁÁÁö ¾ÊÁö¸¸ °£´ÜÇÔ)
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½È­ Ã¼Å© (ï¿½ï¿½ï¿½É»ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
         if (GameManager.Instance != null && GameManager.Instance.UnityGame != null)
         {
             int currentTurn = GameManager.Instance.UnityGame.Turn;
@@ -54,13 +54,13 @@ public class TurnDisplay : MonoBehaviour
     }
 
     /// <summary>
-    /// ÅÏ Ç¥½Ã ¾÷µ¥ÀÌÆ®
+    /// ï¿½ï¿½ Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
     /// </summary>
     public void UpdateTurnDisplay()
     {
         if (GameManager.Instance == null || GameManager.Instance.UnityGame == null)
         {
-            SetTurnText("°ÔÀÓ ÁØºñÁß...");
+            SetTurnText("ï¿½ï¿½ï¿½ï¿½ ï¿½Øºï¿½ï¿½ï¿½...");
             return;
         }
 
@@ -68,11 +68,11 @@ public class TurnDisplay : MonoBehaviour
         string turnDisplayText = $"{turnPrefix}{currentTurn}";
 
         SetTurnText(turnDisplayText);
-        Debug.Log($"[TurnDisplay] ÅÏ Ç¥½Ã ¾÷µ¥ÀÌÆ®: {currentTurn}");
+        Debug.Log($"[TurnDisplay] ï¿½ï¿½ Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®: {currentTurn}");
     }
 
     /// <summary>
-    /// ÅØ½ºÆ® ¼³Á¤ (Text ¶Ç´Â TextMeshPro ÀÚµ¿ ¼±ÅÃ)
+    /// ï¿½Ø½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ (Text ï¿½Ç´ï¿½ TextMeshPro ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½)
     /// </summary>
     private void SetTurnText(string text)
     {
@@ -86,26 +86,26 @@ public class TurnDisplay : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("[TurnDisplay] ÅÏ Ç¥½Ã¿ë Text ÄÄÆ÷³ÍÆ®°¡ ¼³Á¤µÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+            Debug.LogWarning("[TurnDisplay] ï¿½ï¿½ Ç¥ï¿½Ã¿ï¿½ Text ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½!");
         }
     }
 
     /// <summary>
-    /// ÅÏ º¯°æ ½Ã ¾Ö´Ï¸ÞÀÌ¼Ç È¿°ú (Unity ±âº» Coroutine »ç¿ë)
+    /// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ È¿ï¿½ï¿½ (Unity ï¿½âº» Coroutine ï¿½ï¿½ï¿½)
     /// </summary>
     private void PlayTurnChangeAnimation()
     {
         if (!enableTurnAnimation) return;
 
-        // ÀÌÀü ¾Ö´Ï¸ÞÀÌ¼Ç Áß´Ü
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ß´ï¿½
         StopAllCoroutines();
 
-        // »õ ¾Ö´Ï¸ÞÀÌ¼Ç ½ÃÀÛ
+        // ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½
         StartCoroutine(TurnChangeAnimationCoroutine());
     }
 
     /// <summary>
-    /// ÅÏ º¯°æ ¾Ö´Ï¸ÞÀÌ¼Ç ÄÚ·çÆ¾
+    /// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½Ú·ï¿½Æ¾
     /// </summary>
     private System.Collections.IEnumerator TurnChangeAnimationCoroutine()
     {
@@ -113,40 +113,40 @@ public class TurnDisplay : MonoBehaviour
         float shrinkTime = animationDuration * 0.7f;
         Vector3 targetScale = originalScale * 1.2f;
 
-        // È®´ë ¾Ö´Ï¸ÞÀÌ¼Ç
+        // È®ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½
         float elapsedTime = 0f;
         while (elapsedTime < expandTime)
         {
             elapsedTime += Time.deltaTime;
             float progress = elapsedTime / expandTime;
 
-            // EaseOutBack È¿°ú (°£´ÜÇÑ ¹öÀü)
+            // EaseOutBack È¿ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
             float easeProgress = 1f - Mathf.Pow(1f - progress, 3f);
             transform.localScale = Vector3.Lerp(originalScale, targetScale, easeProgress);
 
             yield return null;
         }
 
-        // Ãà¼Ò ¾Ö´Ï¸ÞÀÌ¼Ç
+        // ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½
         elapsedTime = 0f;
         while (elapsedTime < shrinkTime)
         {
             elapsedTime += Time.deltaTime;
             float progress = elapsedTime / shrinkTime;
 
-            // EaseOutBack È¿°ú
+            // EaseOutBack È¿ï¿½ï¿½
             float easeProgress = 1f - Mathf.Pow(1f - progress, 3f);
             transform.localScale = Vector3.Lerp(targetScale, originalScale, easeProgress);
 
             yield return null;
         }
 
-        // ÃÖÁ¾ ½ºÄÉÀÏ º¸Á¤
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         transform.localScale = originalScale;
     }
 
     /// <summary>
-    /// ¿ÜºÎ¿¡¼­ ÅÏ Ç¥½Ã¸¦ °­Á¦·Î ¾÷µ¥ÀÌÆ®ÇÒ ¶§ »ç¿ë
+    /// ï¿½ÜºÎ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ Ç¥ï¿½Ã¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½
     /// </summary>
     public void ForceUpdateTurn()
     {
@@ -154,7 +154,7 @@ public class TurnDisplay : MonoBehaviour
     }
 
     /// <summary>
-    /// Æ¯Á¤ ÅÏÀ» Á÷Á¢ Ç¥½Ã (Å×½ºÆ®¿ë)
+    /// Æ¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ (ï¿½×½ï¿½Æ®ï¿½ï¿½)
     /// </summary>
     public void SetTurn(int turn)
     {
@@ -162,7 +162,7 @@ public class TurnDisplay : MonoBehaviour
         SetTurnText(turnDisplayText);
     }
 
-    // ¿¡µðÅÍ¿¡¼­ Å×½ºÆ®ÇÒ ¼ö ÀÖ´Â ÄÁÅØ½ºÆ® ¸Þ´º
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½Ø½ï¿½Æ® ï¿½Þ´ï¿½
     [ContextMenu("Test Turn Display")]
     private void TestTurnDisplay()
     {
