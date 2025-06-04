@@ -1,8 +1,9 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using CardGame;
+﻿using CardGame;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class UnifiedCardManager : MonoBehaviour
 {
@@ -113,6 +114,69 @@ public class UnifiedCardManager : MonoBehaviour
                 SetCardButtonActive(i, false);
                 HideCardEffect(i); // 🔥 효과도 함께 숨김
             }
+        }
+        AnimateDrawCards();
+    }
+
+    // 드로우 애니메이션용
+    public void AnimateDrawCards()
+    {
+        StartCoroutine(AnimateDraw());
+    }
+
+    private IEnumerator AnimateDraw()
+    {
+        float moveDuration = 0.5f; // 올라오는 시간
+        float delayBetweenCards = 0.2f; // 카드마다 딜레이
+        float flipDelay = 0.5f; // 다 올라오고 뒤집기까지 대기 시간
+        float flipDuration = 0.3f; // 뒤집는 시간
+
+        // 카드 슬롯 전부 애니메이션
+        for (int i = 0; i < cardImageSlots.Length; i++)
+        {
+            if (i >= 3) break; // 3장까지만
+
+            RectTransform rt = cardImageSlots[i].GetComponent<RectTransform>();
+
+            if (rt == null) continue;
+
+            Vector2 originalPos = rt.anchoredPosition;
+            Vector2 startPos = originalPos + new Vector2(0, -Screen.height);
+            rt.anchoredPosition = startPos;
+
+            // 슬라이드 업
+            LeanTween.move(rt, originalPos, moveDuration).setEaseOutCubic();
+
+            yield return new WaitForSeconds(delayBetweenCards);
+        }
+
+        // 전부 올라온 후 약간 대기
+        yield return new WaitForSeconds(flipDelay);
+
+        // 3장 동시에 뒤집기
+        for (int i = 0; i < cardImageSlots.Length; i++)
+        {
+            if (i >= 3) break; // 3장까지만
+
+            RectTransform rt = cardImageSlots[i].GetComponent<RectTransform>();
+            if (rt == null) continue;
+
+            // Y축 회전 90도
+            LeanTween.rotateY(rt.gameObject, 90f, flipDuration / 2).setEaseInOutSine();
+        }
+
+        yield return new WaitForSeconds(flipDuration / 2);
+
+        // (여기서 이미지 교체 없이 바로 회전 복구)
+        for (int i = 0; i < cardImageSlots.Length; i++)
+        {
+            if (i >= 3) break;
+
+            RectTransform rt = cardImageSlots[i].GetComponent<RectTransform>();
+            if (rt == null) continue;
+
+            // 0도로 회전
+            LeanTween.rotateY(rt.gameObject, 0f, flipDuration / 2).setEaseInOutSine();
         }
     }
 
