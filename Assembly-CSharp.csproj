@@ -69,8 +69,8 @@
     <Compile Include="Assets\LeanTween\Testing\TestingDescr.cs" />
     <Compile Include="Assets\Script\UI\SoundSettingsManager.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\GeneralBasics2d.cs" />
-    <Compile Include="Assets\Script\UI\CardEffectPreview.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\TestingZLegacy.cs" />
+    <Compile Include="Assets\Script\UI\CardEffectManager.cs" />
     <Compile Include="Assets\Script\GameCore\Game.cs" />
     <Compile Include="Assets\LeanTween\Testing\TestingSceneSwitching.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\GeneralSequencer.cs" />
