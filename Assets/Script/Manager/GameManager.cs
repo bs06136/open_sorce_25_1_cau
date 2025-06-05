@@ -44,16 +44,17 @@ public class GameManager : MonoBehaviour
     private bool isChariotActive = false;
     private bool isChariotFirstPick = false;
 
+    private bool isRandomPick = false;
+    private int lastRandomIndex = -1;
+
     private void Awake()
     {
-        if (Instance != null && Instance != this)
+        if (Instance != null)
         {
-            Destroy(gameObject);
+            Destroy(gameObject);  // 중복 방지
             return;
         }
-
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         gameOverCanvas.SetActive(false);
         victoryPanel.SetActive(false);
@@ -64,13 +65,13 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        if (playerHpUI == null)
+        //if (playerHpUI == null)
             playerHpUI = FindObjectOfType<PlayerHP>();
-        if (playerCurseUI == null)
+        //if (playerCurseUI == null)
             playerCurseUI = FindObjectOfType<PlayerCurse>();
-        if (unifiedCardManager == null)
+        //if (unifiedCardManager == null)
             unifiedCardManager = FindObjectOfType<UnifiedCardManager>();
-        if (turnDisplay == null)
+        //if (turnDisplay == null)
             turnDisplay = FindObjectOfType<TurnDisplay>();
 
         Debug.Log("✅ StartGame 실행됨");
@@ -87,6 +88,25 @@ public class GameManager : MonoBehaviour
         UpdateRerollState();
         ShowRemainDeckNum();
     }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "SampleScene" && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
+
 
     public void StartTurn()
     {
@@ -132,9 +152,17 @@ public class GameManager : MonoBehaviour
             int randomIndex = UnityEngine.Random.Range(0, currentDrawnCards.Count);
             Debug.Log($"[무작의 선택] {randomIndex}번 카드 선택");
             UnityPlayer.RandomChoice = false;
+
+            // ✅ 랜덤 선택 결과 보관
+            lastRandomIndex = randomIndex;
+            isRandomPick = true;
+
             ApplyCardByIndex(randomIndex);
             return;
         }
+
+        isRandomPick = false;
+        lastRandomIndex = -1;
 
         unifiedCardManager.DisplayCards(cards);
         UpdateTurnDisplay();
@@ -148,6 +176,21 @@ public class GameManager : MonoBehaviour
         var descriptions = currentDrawnCards.Select(c => c.Description).ToList();
         return (cardIndices, hpChanges, curseChanges, descriptions, UnityPlayer.RerollAvailable);
     }
+
+    /* 랜덤 선택의 결과임을 알려주기 위한 변경사항 적용 버전전
+    private (List<int> drawnCards, List<int> HP, List<int> curse, List<string> text, int rerollCount, int is_random, int selected_by_random) GetCardStatus()
+    {
+        var cardIndices = currentDrawnCards.Select(c => CardLibrary.AllCards.IndexOf(c)).ToList();
+        var hpChanges = currentDrawnCards.Select(c => c.HpChange).ToList();
+        var curseChanges = currentDrawnCards.Select(c => c.CurseChange).ToList();
+        var descriptions = currentDrawnCards.Select(c => c.Description).ToList();
+
+        int isRandom = isRandomPick ? 1 : 0;
+        int selectedIndex = isRandomPick ? lastRandomIndex : -1;
+
+        return (cardIndices, hpChanges, curseChanges, descriptions, UnityPlayer.RerollAvailable, isRandom, selectedIndex);
+    }
+    */
 
     private void ApplyCardByIndex(int index)
     {
@@ -188,6 +231,15 @@ public class GameManager : MonoBehaviour
 
     private void ApplyCard(Card selectedCard, List<Card> remainingCards)
     {
+        UnityPlayer.HpChangedThisCard = false;
+        UnityPlayer.CurseChangedThisCard = false;
+        UnityPlayer.DeathCardAddedThisCard = false;
+
+        // 현재값 백업
+        int prevHp = UnityPlayer.Hp;
+        int prevCurse = UnityPlayer.Curse;
+        int prevDeathCard = UnityGame.Deck.Count(c => c.Name == "죽음");
+
         selectedCard.Apply(UnityPlayer, UnityGame, remainingCards);
         UnityPlayer.LastCard = selectedCard;
 
@@ -199,13 +251,58 @@ public class GameManager : MonoBehaviour
         HandleCurseIncrease();
         HandleEmberEffect();
 
+        // 보호버프 처리
+        if (UnityPlayer.NonHpIncreaseTurn > 0 && UnityPlayer.Hp != prevHp && !UnityPlayer.HpChangedThisCard)
+            UnityPlayer.Hp = prevHp;
+        if (UnityPlayer.NonHpIncreaseTurn > 0)
+            UnityPlayer.NonHpIncreaseTurn--;
+
+        if (UnityPlayer.NonHpDecreaseTurn > 0 && UnityPlayer.Hp != prevHp && !UnityPlayer.HpChangedThisCard)
+            UnityPlayer.Hp = prevHp;
+        if (UnityPlayer.NonHpDecreaseTurn > 0)
+            UnityPlayer.NonHpDecreaseTurn--;
+
+        if (UnityPlayer.NonCurseIncreaseTurn > 0 && UnityPlayer.Curse != prevCurse && !UnityPlayer.CurseChangedThisCard)
+            UnityPlayer.Curse = prevCurse;
+        if (UnityPlayer.NonCurseIncreaseTurn > 0)
+            UnityPlayer.NonCurseIncreaseTurn--;
+
+        if (UnityPlayer.NonCurseDecreaseTurn > 0 && UnityPlayer.Curse != prevCurse && !UnityPlayer.CurseChangedThisCard)
+            UnityPlayer.Curse = prevCurse;
+        if (UnityPlayer.NonCurseDecreaseTurn > 0)
+            UnityPlayer.NonCurseDecreaseTurn--;
+
+        int afterDeathCard = UnityGame.Deck.Count(c => c.Name == "죽음");
+        if (UnityPlayer.NotAddDeath > 0 && afterDeathCard != prevDeathCard && !UnityPlayer.DeathCardAddedThisCard)
+        {
+            int diff = afterDeathCard - prevDeathCard;
+            int count = 0;
+            for (int i = UnityGame.Deck.Count - 1; i >= 0 && count < diff; i--)
+            {
+                if (UnityGame.Deck[i].Name == "죽음")
+                {
+                    UnityGame.Deck.RemoveAt(i);
+                    count++;
+                }
+            }
+        }
+
+
+
+        if (UnityPlayer.Ember)
+        {
+            Debug.Log("[Ember] 효과 종료");
+            UnityPlayer.Ember = false;
+            SetEmberGrayscale();
+        }
+
         if (UnityPlayer.Hp <= 0)
         {
             GameOverHandler.GameOver(UnityGame);
             return;
         }
 
-        if (UnityGame.Turn >= 5 && UnityPlayer.Hp > 0)
+        if (UnityGame.Turn >= 10 && UnityPlayer.Hp > 0)
         {
             ShowVictoryPanel();
             return;
@@ -369,17 +466,18 @@ public class GameManager : MonoBehaviour
         emberIcon.material = UnityGame.Player.Ember ? null : grayScaleMaterial;
     }
     public void OnContinueButtonClicked()
-{
-    Debug.Log("继续游戏");
-    victoryPanel.SetActive(false);
-    ingameCanvas.SetActive(true);
-}
+    {
+        Debug.Log("继续游戏");
+        victoryPanel.SetActive(false);
+        ingameCanvas.SetActive(true);
+    }
 
-public void OnReturnMenuButtonClicked()
-{
-    Debug.Log("返回主菜单");
-    SceneManager.LoadScene("SampleScene"); // 替换为你主菜单的名字
-}
+    public void OnReturnMenuButtonClicked()
+    {
+        Debug.Log("返回主菜单");
+
+        SceneManager.LoadScene("SampleScene"); // 替换为你主菜单的名字
+    }
 
 }
 

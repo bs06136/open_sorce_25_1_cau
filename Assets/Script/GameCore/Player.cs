@@ -5,6 +5,8 @@ namespace CardGame
 {
     public class Player
     {
+
+
         private int _hp = 10;
         private int _curse = 0;
 
@@ -41,5 +43,9 @@ namespace CardGame
         public Card? LastCard { get; set; } = null;
 
         public List<(int Delay, Action Effect)> DelayedEffects { get; set; } = new();
+        
+        public bool HpChangedThisCard { get; set; }
+        public bool CurseChangedThisCard { get; set; }
+        public bool DeathCardAddedThisCard { get; set; }
     }
 }

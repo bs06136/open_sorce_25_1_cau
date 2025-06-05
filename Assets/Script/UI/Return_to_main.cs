@@ -8,12 +8,12 @@ public class Return_to_main : MonoBehaviour
 
     public void backToMainMenu()
     {
-        //     MainMenuCanvas.SetActive(true);
-        //     GameOverCanvas.SetActive(false);
+           MainMenuCanvas.SetActive(true);
+           GameOverCanvas.SetActive(false);
         // }
 
         // public void RetryGame()
         // {
-        SceneManager.LoadScene("SampleScene");
+        //SceneManager.LoadScene("SampleScene");
     }
 }

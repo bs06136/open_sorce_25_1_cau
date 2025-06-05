@@ -93,7 +93,7 @@ namespace CardGame
         {
             GameEvents.TriggerPositiveEffect("[절제 효과] 3턴간 저주 피해 면역");
             Debug.Log("[절제 효과] 3턴간 저주 피해 면역");
-            player.NonCurseDamageTurn = 3;
+            player.NonCurseDamageTurn = Math.Max(player.NonCurseDamageTurn, 3);
         }
 
         public static void ScampEffect(Player player, Game game, List<Card> cards)
@@ -103,13 +103,15 @@ namespace CardGame
             GameEvents.TriggerPositiveEffect($"[광대 효과] 체력 {heal} 증가");
             Debug.Log($"[광대 효과] 체력 {heal} 증가");
             player.Hp += heal;
+            player.HpChangedThisCard = true;
         }
 
         public static void HierophantEffect(Player player, Game game, List<Card> cards)
         {
             GameEvents.TriggerNegativeEffect("[교황 효과] 3턴간 저주 감소 불가");
             Debug.Log("[교황 효과] 3턴간 저주 감소 불가");
-            player.NonCurseDecreaseTurn = 3;
+            player.NonCurseDecreaseTurn = Math.Max(player.NonCurseDecreaseTurn, 3);
+            player.CurseChangedThisCard = true;
         }
 
         public static void HermitEffect(Player player, Game game, List<Card> cards)
@@ -140,7 +142,8 @@ namespace CardGame
         {
             GameEvents.TriggerNegativeEffect("[여교황 효과] 3턴간 체력 증가 불가");
             Debug.Log("[여교황 효과] 3턴간 체력 증가 불가");
-            player.NonHpIncreaseTurn = 3;
+            player.NonHpIncreaseTurn = Math.Max(player.NonHpIncreaseTurn, 3);
+            player.HpChangedThisCard = true;
         }
 
         public static void EmpressEffect(Player player, Game game, List<Card> cards)
@@ -217,7 +220,8 @@ namespace CardGame
         {
             GameEvents.TriggerPositiveEffect("[암거래 효과] 5턴간 죽음 카드 추가 금지");
             Debug.Log("[암거래 효과] 5턴간 죽음 카드 추가 금지");
-            player.NotAddDeath = 5;
+            player.NotAddDeath = Math.Max(player.NotAddDeath, 5);
+            player.DeathCardAddedThisCard  = true;
         }
 
         public static void EmberEffect(Player player, Game game, List<Card> cards)
@@ -231,8 +235,10 @@ namespace CardGame
         {
             GameEvents.TriggerPositiveEffect("[예언자 효과] 다음 턴 체력 감소 & 저주 증가 무효");
             Debug.Log("[예언자 효과] 다음 턴 체력 감소 & 저주 증가 무효");
-            player.NonHpDecreaseTurn = 1;
-            player.NonCurseIncreaseTurn = 1;
+            player.NonHpDecreaseTurn = Math.Max(player.NonHpDecreaseTurn, 1);
+            player.NonCurseIncreaseTurn = Math.Max(player.NonCurseIncreaseTurn, 1);
+            player.HpChangedThisCard = true;
+            player.CurseChangedThisCard = true;
         }
 
         public static void ApocalypseScriptureEffect(Player player, Game game, List<Card> cards)
@@ -272,7 +278,8 @@ namespace CardGame
         {
             GameEvents.TriggerPositiveEffect("[피의 서약 효과] 2턴간 저주 증가 무효");
             Debug.Log("[피의 서약 효과] 2턴간 저주 증가 무효");
-            player.NonCurseIncreaseTurn = 2;
+            player.NonCurseIncreaseTurn = Math.Max(player.NonCurseIncreaseTurn, 2);
+            player.CurseChangedThisCard = true;
         }
 
         public static void GambleOfFateEffect(Player player, Game game, List<Card> cards)
