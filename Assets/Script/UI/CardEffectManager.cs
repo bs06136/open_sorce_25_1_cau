@@ -224,22 +224,33 @@ public class CardEffectManager : MonoBehaviour
     {
         if (effectData.hpPanel == null || effectData.hpText == null) return;
 
-        if (card.HpChange != 0)
+        // 🔥 항상 표시 (0인 경우에도 +0으로 표시)
+        effectData.hpPanel.SetActive(true);
+
+        string hpText;
+        Color textColor;
+
+        if (card.HpChange > 0)
         {
-            effectData.hpPanel.SetActive(true);
-
-            string hpText = card.HpChange > 0 ? $"+{card.HpChange}" : $"{card.HpChange}";
-            effectData.hpText.text = $"체력 {hpText}";
-
-            effectData.hpText.color = card.HpChange > 0 ? hpPositiveColor : hpNegativeColor;
-
-            if (useScaleAnimation)
-                StartCoroutine(ScaleAnimation(effectData.hpPanel));
+            hpText = $"+{card.HpChange}";
+            textColor = hpPositiveColor;
+        }
+        else if (card.HpChange < 0)
+        {
+            hpText = $"{card.HpChange}";
+            textColor = hpNegativeColor;
         }
         else
         {
-            effectData.hpPanel.SetActive(false);
+            hpText = "+0";
+            textColor = noEffectColor;
         }
+
+        effectData.hpText.text = $"체력 {hpText}";
+        effectData.hpText.color = textColor;
+
+        if (useScaleAnimation)
+            StartCoroutine(ScaleAnimation(effectData.hpPanel));
     }
 
     /// <summary>
@@ -249,23 +260,33 @@ public class CardEffectManager : MonoBehaviour
     {
         if (effectData.cursePanel == null || effectData.curseText == null) return;
 
-        if (card.CurseChange != 0)
+        // 🔥 항상 표시 (0인 경우에도 +0으로 표시)
+        effectData.cursePanel.SetActive(true);
+
+        string curseText;
+        Color textColor;
+
+        if (card.CurseChange > 0)
         {
-            effectData.cursePanel.SetActive(true);
-
-            string curseText = card.CurseChange > 0 ? $"+{card.CurseChange}" : $"{card.CurseChange}";
-            effectData.curseText.text = $"저주 {curseText}";
-
-            // 저주는 증가가 나쁘고, 감소가 좋음
-            effectData.curseText.color = card.CurseChange > 0 ? curseNegativeColor : cursePositiveColor;
-
-            if (useScaleAnimation)
-                StartCoroutine(ScaleAnimation(effectData.cursePanel));
+            curseText = $"+{card.CurseChange}";
+            textColor = curseNegativeColor; // 저주 증가는 나쁨
+        }
+        else if (card.CurseChange < 0)
+        {
+            curseText = $"{card.CurseChange}";
+            textColor = cursePositiveColor; // 저주 감소는 좋음
         }
         else
         {
-            effectData.cursePanel.SetActive(false);
+            curseText = "+0";
+            textColor = noEffectColor;
         }
+
+        effectData.curseText.text = $"저주 {curseText}";
+        effectData.curseText.color = textColor;
+
+        if (useScaleAnimation)
+            StartCoroutine(ScaleAnimation(effectData.cursePanel));
     }
 
     /// <summary>
