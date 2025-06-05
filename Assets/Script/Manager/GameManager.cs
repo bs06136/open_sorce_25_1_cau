@@ -1,10 +1,11 @@
-using UnityEngine;
+ using UnityEngine;
 using CardGame;
 using System.Collections.Generic;
 using System.Linq;
 using System;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -30,13 +31,16 @@ public class GameManager : MonoBehaviour
     public Image emberIcon;
     public Material grayScaleMaterial;
 
-
     [Header("Canvas handling")]
     public GameObject gameOverCanvas;
     public GameObject ingameCanvas;
     public GameObject mainMenuCanvas;
 
-    // 전차 관련 상태 변수
+    [Header("Victory UI")]
+    public GameObject victoryPanel;
+    public Button continueButton;
+    public Button returnToMenuButton;
+
     private bool isChariotActive = false;
     private bool isChariotFirstPick = false;
 
@@ -52,6 +56,7 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         gameOverCanvas.SetActive(false);
+        victoryPanel.SetActive(false);
 
         GameEvents.OnCardStatusRequested = GetCardStatus;
         GameEvents.OnCardChosen = ApplyCardByIndex;
@@ -79,7 +84,6 @@ public class GameManager : MonoBehaviour
         UpdateTurnDisplay();
         StartTurn();
 
-        // State UI 초기화
         UpdateRerollState();
         ShowRemainDeckNum();
     }
@@ -114,7 +118,6 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // 전차 발동 여부
         if (UnityPlayer.Chariot)
         {
             isChariotActive = true;
@@ -139,31 +142,17 @@ public class GameManager : MonoBehaviour
 
     private (List<int> drawnCards, List<int> HP, List<int> curse, List<string> text, int rerollCount) GetCardStatus()
     {
-        var cardIndices = currentDrawnCards
-            .Select(c => CardLibrary.AllCards.IndexOf(c))
-            .ToList();
-
-        var hpChanges = currentDrawnCards
-            .Select(c => c.HpChange)
-            .ToList();
-
-        var curseChanges = currentDrawnCards
-            .Select(c => c.CurseChange)
-            .ToList();
-
-        var descriptions = currentDrawnCards
-            .Select(c => c.Description)
-            .ToList();
-
+        var cardIndices = currentDrawnCards.Select(c => CardLibrary.AllCards.IndexOf(c)).ToList();
+        var hpChanges = currentDrawnCards.Select(c => c.HpChange).ToList();
+        var curseChanges = currentDrawnCards.Select(c => c.CurseChange).ToList();
+        var descriptions = currentDrawnCards.Select(c => c.Description).ToList();
         return (cardIndices, hpChanges, curseChanges, descriptions, UnityPlayer.RerollAvailable);
     }
 
     private void ApplyCardByIndex(int index)
     {
-        // player상태 초기화 : 리롤을 해야하기 때문에 선택 이후인 여기서 초기화 함.
         UnityPlayer.NextDrawNum = 3;
         UnityPlayer.Archangel = false;
-
 
         if (index < 0 || index >= currentDrawnCards.Count) return;
 
@@ -177,8 +166,6 @@ public class GameManager : MonoBehaviour
             {
                 Debug.Log("[전차] 첫 번째 카드 선택 → 두 번째 선택 준비");
                 isChariotFirstPick = false;
-
-                // 남은 2장 다시 보여주기
                 unifiedCardManager.DisplayCards(currentDrawnCards);
                 UpdateTurnDisplay();
                 return;
@@ -187,7 +174,6 @@ public class GameManager : MonoBehaviour
             {
                 Debug.Log("[전차] 두 번째 카드 선택 → 전차 종료");
                 isChariotActive = false;
-
                 UnityGame.Turn++;
                 UpdateTurnDisplay();
                 StartTurn();
@@ -218,6 +204,36 @@ public class GameManager : MonoBehaviour
             GameOverHandler.GameOver(UnityGame);
             return;
         }
+
+        if (UnityGame.Turn >= 5 && UnityPlayer.Hp > 0)
+        {
+            ShowVictoryPanel();
+            return;
+        }
+    }
+
+    private void ShowVictoryPanel()
+    {
+        Debug.Log("🎉 게임 승리!");
+        Time.timeScale = 0f;
+        victoryPanel.SetActive(true);
+
+        continueButton.onClick.RemoveAllListeners();
+        returnToMenuButton.onClick.RemoveAllListeners();
+
+        continueButton.onClick.AddListener(() =>
+        {
+            Time.timeScale = 1f;
+            victoryPanel.SetActive(false);
+            UnityGame.Turn++;
+            StartTurn();
+        });
+
+        returnToMenuButton.onClick.AddListener(() =>
+        {
+            Time.timeScale = 1f;
+            SceneManager.LoadScene("SampleScene"); // 确保 MainMenu 场景存在
+        });
     }
 
     private void HandleDelayedEffects()
@@ -242,7 +258,7 @@ public class GameManager : MonoBehaviour
         else if (UnityPlayer.Curse > 0)
         {
             UnityPlayer.Hp -= UnityPlayer.Curse;
-            UnityPlayer.Hp = UnityPlayer.Hp; // UI 갱신
+            UnityPlayer.Hp = UnityPlayer.Hp;
         }
     }
 
@@ -339,16 +355,7 @@ public class GameManager : MonoBehaviour
             Debug.LogWarning("rerollButtonText가 설정되지 않았습니다.");
         }
 
-        if (UnityPlayer.RerollAvailable == 0)
-        {
-            rerollButton.interactable = false;
-            Debug.Log("리롤 버튼 비활성화");
-        }
-        else
-        {
-            rerollButton.interactable = true;
-            Debug.Log("리롤 버튼 활성화");
-        }
+        rerollButton.interactable = UnityPlayer.RerollAvailable > 0;
     }
 
     public void ShowRemainDeckNum()
@@ -357,14 +364,36 @@ public class GameManager : MonoBehaviour
         Debug.Log($"남은 덱 수: {remainDeckNum}");
     }
 
-
     public void SetEmberGrayscale()
     {
-        if (!UnityGame.Player.Ember)
-            emberIcon.material = grayScaleMaterial;
-        else
-            emberIcon.material = null; // 원래대로
+        emberIcon.material = UnityGame.Player.Ember ? null : grayScaleMaterial;
     }
+    public void OnContinueButtonClicked()
+{
+    Debug.Log("继续游戏");
+    victoryPanel.SetActive(false);
+    ingameCanvas.SetActive(true);
 }
+
+public void OnReturnMenuButtonClicked()
+{
+    Debug.Log("返回主菜单");
+    SceneManager.LoadScene("SampleScene"); // 替换为你主菜单的名字
+}
+
+}
+
+    
+        
+
+
+
+
+
+
+
+
+
+
 
 
