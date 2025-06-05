@@ -471,30 +471,6 @@ public class GameManager : MonoBehaviour
         victoryPanel.SetActive(false);
         ingameCanvas.SetActive(true);
     }
-<<<<<<< HEAD
-
-    public void OnReturnMenuButtonClicked()
-    {
-        Debug.Log("返回主菜单");
-
-        SceneManager.LoadScene("SampleScene"); // 替换为你主菜单的名字
-    }
-
-}
-
-    
-        
-
-
-
-
-
-
-
-
-
-=======
->>>>>>> 66ec636d998dd922d37a220cff5467f3a4ee2654
 
     public void OnReturnMenuButtonClicked()
     {
