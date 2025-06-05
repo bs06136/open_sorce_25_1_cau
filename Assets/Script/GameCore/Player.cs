@@ -43,7 +43,11 @@ namespace CardGame
         public Card? LastCard { get; set; } = null;
 
         public List<(int Delay, Action Effect)> DelayedEffects { get; set; } = new();
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 66ec636d998dd922d37a220cff5467f3a4ee2654
         public bool HpChangedThisCard { get; set; }
         public bool CurseChangedThisCard { get; set; }
         public bool DeathCardAddedThisCard { get; set; }
