@@ -291,7 +291,7 @@ public class GameManager : MonoBehaviour
         HandleCurseDamage();
         HandleDeathCardInjection();
         HandleCurseIncrease();
-        HandleEmberEffect();
+        
 
         // 보호버프 처리
         if (UnityPlayer.NonHpIncreaseTurn > 0 && UnityPlayer.Hp > prevHp && !UnityPlayer.HpChangedThisCard)
@@ -329,14 +329,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-
-
-        if (UnityPlayer.Ember)
-        {
-            Debug.Log("[Ember] 효과 종료");
-            UnityPlayer.Ember = false;
-            SetEmberGrayscale();
-        }
+        HandleEmberEffect();
 
         if (UnityPlayer.Hp <= 0)
         {
@@ -431,6 +424,8 @@ public class GameManager : MonoBehaviour
         {
             UnityPlayer.Hp = 1;
             UnityPlayer.Curse = 0;
+            Debug.Log("[Ember] 효과 종료");
+            UnityPlayer.Ember = false;
         }
         SetEmberGrayscale();
     }

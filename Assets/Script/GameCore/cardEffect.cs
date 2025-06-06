@@ -100,8 +100,8 @@ namespace CardGame
         {
             var rnd = new System.Random();
             int heal = rnd.Next(1, 11);
-            GameEvents.TriggerPositiveEffect($"[광대 효과] 체력 {heal} 증가");
-            Debug.Log($"[광대 효과] 체력 {heal} 증가");
+            GameEvents.TriggerPositiveEffect($"[악동 효과] 체력 {heal} 증가");
+            Debug.Log($"[악동 효과] 체력 {heal} 증가");
             player.Hp += heal;
             player.HpChangedThisCard = true;
         }
