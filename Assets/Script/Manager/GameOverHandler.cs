@@ -8,14 +8,17 @@ public static class GameOverHandler
         GameEvents.TriggerNegativeEffect("[게임 오버] 플레이어 사망");
         Debug.Log("[게임 오버] 플레이어 사망");
 
+        // ✅ GameManager 통해 캔버스 전환
         if (GameManager.Instance != null)
         {
-            UnityEngine.Object.Destroy(GameManager.Instance.gameObject);
+            GameManager.Instance.ShowGameOver();
+            Debug.Log("[GameOverHandler] GameManager 통해 게임 오버 화면 활성화");
+        }
+        else
+        {
+            Debug.LogError("[GameOverHandler] GameManager 인스턴스 없음!");
         }
 
-
-        GameManager.Instance.ShowGameOver();
-        Debug.Log("게임 오버: 캔버스 전환");
+        Debug.Log("게임 오버: 캔버스 전환 완료");
     }
-
 }

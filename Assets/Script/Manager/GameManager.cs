@@ -9,6 +9,8 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    // ✅ 게임 오버 상태 플래그 추가
+    private bool isGameOver = false;
     public static GameManager Instance { get; private set; }
 
     [Header("UI 컴포넌트")]
@@ -136,6 +138,12 @@ public class GameManager : MonoBehaviour
 
     public void StartTurn()
     {
+        if (isGameOver)
+        {
+            Debug.Log("게임 오버 상태 — StartTurn 중단.");
+            return;
+        }
+
         if (UnityPlayer.SkipNextTurn)
         {
             Debug.Log("이번 턴은 스킵됩니다.");
@@ -257,6 +265,14 @@ public class GameManager : MonoBehaviour
 
     private void ApplyCard(Card selectedCard, List<Card> remainingCards)
     {
+        if (selectedCard.Name == "죽음")
+        {
+            Debug.Log("[GameManager] 죽음 카드 선택 — 게임 오버 트리거");
+            isGameOver = true;
+            GameOverHandler.GameOver(UnityGame);
+            return;
+        }
+
         UnityPlayer.HpChangedThisCard = false;
         UnityPlayer.CurseChangedThisCard = false;
         UnityPlayer.DeathCardAddedThisCard = false;
@@ -324,6 +340,7 @@ public class GameManager : MonoBehaviour
 
         if (UnityPlayer.Hp <= 0)
         {
+            isGameOver = true;
             GameOverHandler.GameOver(UnityGame);
             return;
         }
