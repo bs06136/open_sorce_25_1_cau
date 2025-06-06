@@ -246,7 +246,7 @@ public class CardEffectManager : MonoBehaviour
             textColor = noEffectColor;
         }
 
-        effectData.hpText.text = $"체력 {hpText}";
+        effectData.hpText.text = $"{hpText}";
         effectData.hpText.color = textColor;
 
         if (useScaleAnimation)
@@ -282,7 +282,7 @@ public class CardEffectManager : MonoBehaviour
             textColor = noEffectColor;
         }
 
-        effectData.curseText.text = $"저주 {curseText}";
+        effectData.curseText.text = $"{curseText}";
         effectData.curseText.color = textColor;
 
         if (useScaleAnimation)
