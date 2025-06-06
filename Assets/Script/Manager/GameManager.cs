@@ -338,7 +338,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        if (UnityGame.Turn >= 40 && UnityPlayer.Hp > 0)
+        if (UnityGame.Turn > 10 && UnityPlayer.Hp > 0)
         {
             ShowVictoryPanel();
             return;
@@ -351,16 +351,9 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f;
         victoryPanel.SetActive(true);
 
-        continueButton.onClick.RemoveAllListeners();
-        returnToMenuButton.onClick.RemoveAllListeners();
+        continueButton.gameObject.SetActive(false); 
 
-        continueButton.onClick.AddListener(() =>
-        {
-            Time.timeScale = 1f;
-            victoryPanel.SetActive(false);
-            UnityGame.Turn++;
-            StartTurn();
-        });
+        returnToMenuButton.onClick.RemoveAllListeners();
 
         returnToMenuButton.onClick.AddListener(() =>
         {
