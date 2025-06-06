@@ -1,90 +1,158 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using CardGame;
 
 public class CardPageManager : MonoBehaviour
 {
-    [Header("Ä«µå ÇÁ¸®ÆÕ & ºÎ¸ğ ¿ÀºêÁ§Æ®")]
-    public GameObject cardPrefab;        // Ä«µå ÇÁ¸®ÆÕ
-    public Transform cardContainer;      // Ä«µåµéÀ» ¹èÄ¡ÇÒ ºÎ¸ğ (Grid Layout Group)
+    [Header("ì¹´ë“œ í”„ë¦¬íŒ¹ & ë¶€ëª¨ ì˜¤ë¸Œì íŠ¸")]
+    public GameObject cardPrefab;
+    public Transform cardContainer;
 
-    [Header("ÆäÀÌÁö ÀÌµ¿ ¹öÆ°")]
-    public Button nextButton;            // ´ÙÀ½ ÆäÀÌÁö ¹öÆ°
-    public Button prevButton;            // ÀÌÀü ÆäÀÌÁö ¹öÆ°
+    [Header("í˜ì´ì§€ ì´ë™ ë²„íŠ¼")]
+    public Button nextButton;
+    public Button prevButton;
 
-    private List<Sprite> cardSprites = new List<Sprite>(); // ÀüÃ¼ Ä«µå ½ºÇÁ¶óÀÌÆ® ¸®½ºÆ®
-    private List<GameObject> currentCards = new List<GameObject>(); // ÇöÀç È­¸é¿¡ »ı¼ºµÈ Ä«µå ¿ÀºêÁ§Æ®µé
+    private List<Card> cardDataList = new List<Card>();
+    private List<GameObject> currentCards = new List<GameObject>();
 
     private int currentPage = 0;
-    private int cardsPerPage = 6;
+    private int cardsPerPage = 1; // âœ… í•œ ì¥ì”©ë§Œ í‘œì‹œ
 
     private void Start()
     {
-        // ¹öÆ° Å¬¸¯ ÀÌº¥Æ® ¿¬°á
         nextButton.onClick.AddListener(NextPage);
-        prevButton.onClick.AddListener(PrevPage); 
+        prevButton.onClick.AddListener(PrevPage);
 
-        // Ä«µå ÀÌ¹ÌÁö ·Îµå
-        LoadCardSprites();
-
-        // Ã¹ ÆäÀÌÁö Ç¥½Ã
+        LoadCardData();
         ShowPage(0);
     }
 
-    private void LoadCardSprites()
+    // âœ… ì¹´ë“œ ë°ì´í„° ë¶ˆëŸ¬ì˜¤ê¸°
+    private void LoadCardData()
     {
-        // Resources Æú´õ ±âÁØ °æ·Î
-        Sprite[] loadedSprites = Resources.LoadAll<Sprite>("Image/CardImage");
-
-        foreach (var sprite in loadedSprites)
-        {
-            cardSprites.Add(sprite);
-        }
-
-        Debug.Log($"[CardPageManager] {cardSprites.Count}ÀåÀÇ Ä«µå ½ºÇÁ¶óÀÌÆ®°¡ ·ÎµåµÇ¾ú½À´Ï´Ù.");
+        cardDataList = CardLibrary.AllCards;
+        Debug.Log($"[CardPageManager] {cardDataList.Count}ì¥ì˜ ì¹´ë“œ ë°ì´í„° ë¡œë“œ ì™„ë£Œ.");
     }
 
+    // âœ… í˜„ì¬ ì¹´ë“œë“¤ ì‚­ì œ
     private void ClearCards()
     {
-        // ÇöÀç È­¸é¿¡ ÀÖ´Â Ä«µåµé »èÁ¦
         foreach (var card in currentCards)
         {
-            Destroy(card);
+            if (card != null)
+                Destroy(card);
         }
         currentCards.Clear();
     }
 
+    // âœ… ì¹´ë“œ 1ì¥ í‘œì‹œ
     private void ShowPage(int pageIndex)
     {
         ClearCards();
 
         int startIndex = pageIndex * cardsPerPage;
-        int endIndex = Mathf.Min(startIndex + cardsPerPage, cardSprites.Count);
+        if (startIndex >= cardDataList.Count)
+            return;
 
-        for (int i = startIndex; i < endIndex; i++)
+        Card card = cardDataList[startIndex];
+
+        GameObject cardObj = Instantiate(cardPrefab, cardContainer);
+
+        // âœ… CardImage ì„¸íŒ…
+        Image cardImage = cardObj.transform.Find("CardImage").GetComponent<Image>();
+        if (cardImage != null)
         {
-            GameObject cardObj = Instantiate(cardPrefab, cardContainer);
-            Image cardImage = cardObj.GetComponent<Image>();
-            cardImage.sprite = cardSprites[i]; // ½ºÇÁ¶óÀÌÆ® ÇÒ´ç
-
-            currentCards.Add(cardObj);
+            cardImage.sprite = GetCardSprite(card.Name);
         }
+        else
+        {
+            Debug.LogError("[CardPageManager] âŒ CardImage ì˜¤ë¸Œì íŠ¸ë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤!");
+        }
+
+        // âœ… í…ìŠ¤íŠ¸ ì„¸íŒ…
+        var hpText = cardObj.transform.Find("TextPanel/HpText").GetComponent<TextMeshProUGUI>();
+        var curseText = cardObj.transform.Find("TextPanel/CurseText").GetComponent<TextMeshProUGUI>();
+        var specialText = cardObj.transform.Find("TextPanel/SpecialText").GetComponent<TextMeshProUGUI>();
+
+        if (hpText != null) hpText.text = GetHpText(card);
+        if (curseText != null) curseText.text = GetCurseText(card);
+        if (specialText != null) specialText.text = GetSpecialText(card);
+
+        currentCards.Add(cardObj);
 
         currentPage = pageIndex;
 
-        // ¹öÆ° È°¼ºÈ­/ºñÈ°¼ºÈ­ ¼³Á¤
         prevButton.gameObject.SetActive(currentPage > 0);
-        nextButton.gameObject.SetActive(endIndex < cardSprites.Count);
+        nextButton.gameObject.SetActive((currentPage + 1) * cardsPerPage < cardDataList.Count);
     }
 
+    // âœ… ì¹´ë“œ ì´ë¦„ ê¸°ë°˜ ìŠ¤í”„ë¼ì´íŠ¸ ë¡œë“œ
+    private Sprite GetCardSprite(string cardName)
+    {
+        int index = CardLibrary.AllCards.FindIndex(c => c.Name == cardName);
+        if (index == -1)
+        {
+            Debug.LogError($"[CardPageManager] âŒ ì¹´ë“œ '{cardName}'ì˜ ì¸ë±ìŠ¤ë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤!");
+            return UnifiedCardManager.Instance.defaultCardSprite;
+        }
+
+        // ğŸ”¥ ì¸ë±ìŠ¤ë¥¼ 2ìë¦¬ ë¬¸ìì—´(00, 01, 02, ...)ë¡œ í¬ë§·
+        string resourcePath = $"Image/CardImage/{index:D2}";
+        Debug.Log($"[CardPageManager] ğŸ“¦ ë¡œë”© ì‹œë„: {resourcePath}");
+
+        Sprite sprite = Resources.Load<Sprite>(resourcePath);
+        if (sprite != null)
+        {
+            Debug.Log($"[CardPageManager] âœ… ì¹´ë“œ ìŠ¤í”„ë¼ì´íŠ¸ ë¡œë“œ ì„±ê³µ: {resourcePath}");
+            return sprite;
+        }
+        else
+        {
+            Debug.LogError($"[CardPageManager] âŒ ì¹´ë“œ ìŠ¤í”„ë¼ì´íŠ¸ ë¡œë“œ ì‹¤íŒ¨: {resourcePath}");
+            return UnifiedCardManager.Instance.defaultCardSprite;
+        }
+    }
+
+    // âœ… ì²´ë ¥ ë³€í™” í…ìŠ¤íŠ¸
+    private string GetHpText(Card card)
+    {
+        if (card.HpChange > 0)
+            return $"ì²´ë ¥ +{card.HpChange}";
+        else if (card.HpChange < 0)
+            return $"ì²´ë ¥ {card.HpChange}";
+        else
+            return "ì²´ë ¥ ë³€í™” ì—†ìŒ";
+    }
+
+    // âœ… ì €ì£¼ ë³€í™” í…ìŠ¤íŠ¸
+    private string GetCurseText(Card card)
+    {
+        if (card.CurseChange > 0)
+            return $"ì €ì£¼ +{card.CurseChange}";
+        else if (card.CurseChange < 0)
+            return $"ì €ì£¼ {card.CurseChange}";
+        else
+            return "ì €ì£¼ ë³€í™” ì—†ìŒ";
+    }
+
+    // âœ… íŠ¹ìˆ˜ íš¨ê³¼ í…ìŠ¤íŠ¸
+    private string GetSpecialText(Card card)
+    {
+        return string.IsNullOrEmpty(card.Description) ? "íŠ¹ìˆ˜ íš¨ê³¼ ì—†ìŒ" : card.Description;
+    }
+
+    // âœ… ë‹¤ìŒ ì¹´ë“œ
     public void NextPage()
     {
-        if ((currentPage + 1) * cardsPerPage < cardSprites.Count)
+        if ((currentPage + 1) * cardsPerPage < cardDataList.Count)
         {
             ShowPage(currentPage + 1);
         }
     }
 
+    // âœ… ì´ì „ ì¹´ë“œ
     public void PrevPage()
     {
         if (currentPage > 0)

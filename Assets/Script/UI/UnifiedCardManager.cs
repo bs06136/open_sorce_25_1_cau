@@ -7,6 +7,19 @@ using UnityEngine.UI;
 
 public class UnifiedCardManager : MonoBehaviour
 {
+    public static UnifiedCardManager Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject); // 혹시 중복 생기면 제거
+        }
+    }
     [Header("=== 카드 스프라이트 설정 ===")]
     [TextArea(4, 6)]
     public string setupInstructions = "1. PNG 파일들을 Project에 Import하세요\n2. 각 PNG를 선택하고 Inspector에서 Texture Type을 'Sprite (2D and UI)'로 변경\n3. Apply 버튼 클릭\n4. 변환된 Sprite들을 아래 배열에 드래그";
