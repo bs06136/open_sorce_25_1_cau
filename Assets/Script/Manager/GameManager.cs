@@ -35,6 +35,9 @@ public class GameManager : MonoBehaviour
     public GameObject gameOverCanvas;
     public GameObject ingameCanvas;
     public GameObject mainMenuCanvas;
+   
+    [Header("Card Page Canvas")]
+    public GameObject cardPageCanvas;
 
     [Header("Victory UI")]
     public GameObject victoryPanel;
@@ -65,16 +68,29 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        //if (playerHpUI == null)
-            playerHpUI = FindObjectOfType<PlayerHP>();
-        //if (playerCurseUI == null)
-            playerCurseUI = FindObjectOfType<PlayerCurse>();
-        //if (unifiedCardManager == null)
-            unifiedCardManager = FindObjectOfType<UnifiedCardManager>();
-        //if (turnDisplay == null)
-            turnDisplay = FindObjectOfType<TurnDisplay>();
+        if (playerHpUI == null)
+        {
+            Debug.LogError("❌ PlayerHP가 연결되지 않았습니다! (인스펙터 확인)");
+            return;
+        }
+        if (playerCurseUI == null)
+        {
+            Debug.LogError("❌ PlayerCurse가 연결되지 않았습니다! (인스펙터 확인)");
+            return;
+        }
+        if (unifiedCardManager == null)
+        {
+            Debug.LogError("❌ UnifiedCardManager가 연결되지 않았습니다! (인스펙터 확인)");
+            return;
+        }
+        if (turnDisplay == null)
+        {
+            Debug.LogError("❌ TurnDisplay가 연결되지 않았습니다! (인스펙터 확인)");
+            return;
+        }
 
         Debug.Log("✅ StartGame 실행됨");
+
         UnityPlayer = new PlayerBridge(playerHpUI, playerCurseUI);
         UnityGame = new Game(UnityPlayer);
 
@@ -82,6 +98,16 @@ public class GameManager : MonoBehaviour
         UnityPlayer.Curse = 0;
 
         Debug.Log("GameManager: 게임 시작");
+
+        GameObject player = GameObject.Find("Player");
+        GameObject floor = GameObject.Find("Floor");
+
+        if (player != null) player.SetActive(true);
+        if (floor != null) floor.SetActive(true);
+
+        mainMenuCanvas.SetActive(false);
+        ingameCanvas.SetActive(true);
+
         UpdateTurnDisplay();
         StartTurn();
 
@@ -477,6 +503,11 @@ public class GameManager : MonoBehaviour
         Debug.Log("返回主菜单");
 
         SceneManager.LoadScene("SampleScene"); // 替换为你主菜单的名字
+    }
+    public void OpenCardPage()
+    {
+        mainMenuCanvas.SetActive(false);    // 메인 메뉴 끄기
+        cardPageCanvas.SetActive(true);     // 카드 종류 화면 켜기
     }
 
 }

@@ -22,7 +22,7 @@ public class CardPageManager : MonoBehaviour
     {
         // 버튼 클릭 이벤트 연결
         nextButton.onClick.AddListener(NextPage);
-        prevButton.onClick.AddListener(PrevPage);
+        prevButton.onClick.AddListener(PrevPage); 
 
         // 카드 이미지 로드
         LoadCardSprites();

@@ -25,8 +25,11 @@ public class PlayerBridge : Player
         {
             int clamped = Math.Max(0, value);
             base.Hp = clamped;
-            Debug.Log($"[PlayerBridge] Hp 변경됨: {clamped}"); 
-            hpUI.SetHP(clamped);  // UI에도 반영
+            Debug.Log($"[PlayerBridge] Hp 변경됨: {clamped}");
+            if (hpUI != null)
+                hpUI.SetHP(clamped);  // ✅ Null 체크
+            else
+                Debug.LogWarning("[PlayerBridge] hpUI가 null입니다. SetHP 호출 실패");
         }
     }
 
@@ -38,7 +41,10 @@ public class PlayerBridge : Player
             int clamped = Math.Max(0, value);
             base.Curse = clamped;
             Debug.Log($"[PlayerBridge] Curse 변경됨: {clamped}");
-            curseUI.SetCurse(clamped);  // UI에도 반영
+            if (curseUI != null)
+                curseUI.SetCurse(clamped);  // ✅ Null 체크
+            else
+                Debug.LogWarning("[PlayerBridge] curseUI가 null입니다. SetCurse 호출 실패");
         }
     }
 }

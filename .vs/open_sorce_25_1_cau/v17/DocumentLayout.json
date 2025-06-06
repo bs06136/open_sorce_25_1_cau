@@ -3,7 +3,15 @@
   "WorkspaceRootPath": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|c:\\users\\ms864\\onedrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\assets\\script\\manager\\cardpagemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\assets\\script\\manager\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\manager\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|c:\\users\\ms864\\onedrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\assets\\script\\manager\\playerbridge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\manager\\playerbridge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\assets\\script\\manager\\cardpagemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\manager\\cardpagemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -21,10 +29,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\assets\\script\\ui\\unifiedcardmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\ui\\unifiedcardmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\assets\\script\\manager\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\manager\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,24 +38,36 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "CardPageManager.cs",
-              "DocumentMoniker": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\Manager\\CardPageManager.cs",
-              "RelativeDocumentMoniker": "Assets\\Script\\Manager\\CardPageManager.cs",
-              "ToolTip": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\Manager\\CardPageManager.cs",
-              "RelativeToolTip": "Assets\\Script\\Manager\\CardPageManager.cs",
-              "ViewState": "AgIAAEAAAAAAAAAAAAAmwF8AAAAAAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "PlayerBridge.cs",
+              "DocumentMoniker": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\Manager\\PlayerBridge.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\Manager\\PlayerBridge.cs",
+              "ToolTip": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\Manager\\PlayerBridge.cs",
+              "RelativeToolTip": "Assets\\Script\\Manager\\PlayerBridge.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAIwC4AAABUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-06T00:49:31.259Z",
+              "WhenOpened": "2025-06-06T03:12:36.302Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "CardPageManager.cs",
+              "DocumentMoniker": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\Manager\\CardPageManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\Manager\\CardPageManager.cs",
+              "ToolTip": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\Manager\\CardPageManager.cs",
+              "RelativeToolTip": "Assets\\Script\\Manager\\CardPageManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-06T00:49:31.259Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "cardLibrary.cs",
               "DocumentMoniker": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\GameCore\\cardLibrary.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\GameCore\\cardLibrary.cs",
@@ -63,7 +79,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "cardEffect.cs",
               "DocumentMoniker": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\GameCore\\cardEffect.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\GameCore\\cardEffect.cs",
@@ -75,7 +91,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "CardEffectManager.cs",
               "DocumentMoniker": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\UI\\CardEffectManager.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\UI\\CardEffectManager.cs",
@@ -87,7 +103,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "UnifiedCardManager.cs",
               "DocumentMoniker": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\UI\\UnifiedCardManager.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\UI\\UnifiedCardManager.cs",
@@ -99,15 +115,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 0,
               "Title": "GameManager.cs",
               "DocumentMoniker": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\Manager\\GameManager.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\Manager\\GameManager.cs",
               "ToolTip": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\Manager\\GameManager.cs",
               "RelativeToolTip": "Assets\\Script\\Manager\\GameManager.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAFEAAAAAAAAAAAAYwGQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-04T02:46:15.634Z"
+              "WhenOpened": "2025-06-04T02:46:15.634Z",
+              "EditorCaption": ""
             }
           ]
         }
