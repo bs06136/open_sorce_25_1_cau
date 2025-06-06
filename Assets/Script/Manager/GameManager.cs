@@ -252,28 +252,28 @@ public class GameManager : MonoBehaviour
         HandleEmberEffect();
 
         // 보호버프 처리
-        if (UnityPlayer.NonHpIncreaseTurn > 0 && UnityPlayer.Hp != prevHp && !UnityPlayer.HpChangedThisCard)
+        if (UnityPlayer.NonHpIncreaseTurn > 0 && UnityPlayer.Hp > prevHp && !UnityPlayer.HpChangedThisCard)
             UnityPlayer.Hp = prevHp;
-        if (UnityPlayer.NonHpIncreaseTurn > 0)
+        if (UnityPlayer.NonHpIncreaseTurn > 0 && !UnityPlayer.HpChangedThisCard)
             UnityPlayer.NonHpIncreaseTurn--;
 
-        if (UnityPlayer.NonHpDecreaseTurn > 0 && UnityPlayer.Hp != prevHp && !UnityPlayer.HpChangedThisCard)
+        if (UnityPlayer.NonHpDecreaseTurn > 0 && UnityPlayer.Hp < prevHp && !UnityPlayer.HpChangedThisCard)
             UnityPlayer.Hp = prevHp;
-        if (UnityPlayer.NonHpDecreaseTurn > 0)
+        if (UnityPlayer.NonHpDecreaseTurn > 0 && !UnityPlayer.HpChangedThisCard)
             UnityPlayer.NonHpDecreaseTurn--;
 
-        if (UnityPlayer.NonCurseIncreaseTurn > 0 && UnityPlayer.Curse != prevCurse && !UnityPlayer.CurseChangedThisCard)
+        if (UnityPlayer.NonCurseIncreaseTurn > 0 && UnityPlayer.Curse > prevCurse && !UnityPlayer.CurseChangedThisCard)
             UnityPlayer.Curse = prevCurse;
-        if (UnityPlayer.NonCurseIncreaseTurn > 0)
+        if (UnityPlayer.NonCurseIncreaseTurn > 0 && !UnityPlayer.CurseChangedThisCard)
             UnityPlayer.NonCurseIncreaseTurn--;
 
-        if (UnityPlayer.NonCurseDecreaseTurn > 0 && UnityPlayer.Curse != prevCurse && !UnityPlayer.CurseChangedThisCard)
+        if (UnityPlayer.NonCurseDecreaseTurn > 0 && UnityPlayer.Curse < prevCurse && !UnityPlayer.CurseChangedThisCard)
             UnityPlayer.Curse = prevCurse;
-        if (UnityPlayer.NonCurseDecreaseTurn > 0)
+        if (UnityPlayer.NonCurseDecreaseTurn > 0 && !UnityPlayer.CurseChangedThisCard)
             UnityPlayer.NonCurseDecreaseTurn--;
 
         int afterDeathCard = UnityGame.Deck.Count(c => c.Name == "죽음");
-        if (UnityPlayer.NotAddDeath > 0 && afterDeathCard != prevDeathCard && !UnityPlayer.DeathCardAddedThisCard)
+        if (UnityPlayer.NotAddDeath > 0 && afterDeathCard >= prevDeathCard && !UnityPlayer.DeathCardAddedThisCard)
         {
             int diff = afterDeathCard - prevDeathCard;
             int count = 0;
@@ -302,7 +302,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        if (UnityGame.Turn >= 10 && UnityPlayer.Hp > 0)
+        if (UnityGame.Turn >= 40 && UnityPlayer.Hp > 0)
         {
             ShowVictoryPanel();
             return;
