@@ -1,4 +1,4 @@
- using UnityEngine;
+using UnityEngine;
 using CardGame;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
     public GameObject gameOverCanvas;
     public GameObject ingameCanvas;
     public GameObject mainMenuCanvas;
-   
+
     [Header("Card Page Canvas")]
     public GameObject cardPageCanvas;
 
@@ -495,7 +495,7 @@ public class GameManager : MonoBehaviour
 
     public void ShowRemainDeckNum()
     {
-        remainDeckNum.text = UnityGame.Deck.Count.ToString();
+        remainDeckNum.text = "덱 카드 수: " + UnityGame.Deck.Count.ToString();
         Debug.Log($"남은 덱 수: {remainDeckNum}");
     }
 
