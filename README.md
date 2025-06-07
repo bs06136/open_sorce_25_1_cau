@@ -84,7 +84,7 @@
 - **개발 언어**: C#
 - **버전 관리**: Git & GitHub
 - **협업 도구**: Discord, Notion
-- **AI 도구**: ChatGPT-4 (게임 기획 및 문서화 보조)
+- **AI 도구**: ChatGPT-4
 
 ---
 
