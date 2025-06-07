@@ -161,7 +161,7 @@ def temperance_effect(player, game, other_cards):
     player.non_curse_damage_turn = 3
 
 def scamp_effect(player, game, other_cards):
-    print("[광대 효과] 체력을 1~10 중 무작위로 증가시킵니다!")
+    print("[악동 효과] 체력을 1~10 중 무작위로 증가시킵니다!")
     random_value = random.randint(1, 10)
     print(f"체력이 {random_value} 증가합니다.")
     player.hp += random_value

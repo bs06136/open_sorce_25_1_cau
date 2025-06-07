@@ -17,7 +17,7 @@ namespace CardGame
             new Card("매달린 남자", 5, 0, "다음 턴 2장만 뽑음", CardEffect.HangedManEffect),
             new Card("심판", -3, -1, "덱에서 5장 제거", CardEffect.JudgementEffect),
             new Card("절제", -5, 0, "3턴간 저주 피해 무효", CardEffect.TemperanceEffect),
-            new Card("광대", 0, 1, "체력 무작위 증가", CardEffect.ScampEffect),
+            new Card("악동", 0, 1, "체력 무작위 증가", CardEffect.ScampEffect),
             new Card("교황", 4, 0, "3턴간 저주 감소 불가", CardEffect.HierophantEffect),
             new Card("은둔자", -3, 0, "5턴 후 체력 7 증가", CardEffect.HermitEffect),
             new Card("마법사", 0, 1, "3턴 후 저주 3 감소", CardEffect.MagicianEffect),
