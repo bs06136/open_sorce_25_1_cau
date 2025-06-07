@@ -84,7 +84,7 @@ namespace CardGame
         {
             var rnd = new Random();
             int heal = rnd.Next(1, 11);
-            Console.WriteLine($"[광대 효과] 체력 {heal} 증가");
+            Console.WriteLine($"[악동 효과] 체력 {heal} 증가");
             player.Hp += heal;
         }
 
