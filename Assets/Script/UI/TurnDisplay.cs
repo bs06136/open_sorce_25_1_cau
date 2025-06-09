@@ -14,7 +14,7 @@ public class TurnDisplay : MonoBehaviour
 
     [Header("ǥ�� �ɼ�")]
     [Tooltip("�� �ؽ�Ʈ �տ� ǥ���� ���λ�")]
-    public string turnPrefix = "�� ";
+    public string turnSuffix;
 
     [Tooltip("���� ����� �� �ִϸ��̼� ȿ��")]
     public bool enableTurnAnimation = true;
@@ -65,7 +65,7 @@ public class TurnDisplay : MonoBehaviour
         }
 
         int currentTurn = GameManager.Instance.UnityGame.Turn;
-        string turnDisplayText = $"{turnPrefix}{currentTurn}";
+        string turnDisplayText = $"{currentTurn}{turnSuffix}";
 
         SetTurnText(turnDisplayText);
         Debug.Log($"[TurnDisplay] �� ǥ�� ������Ʈ: {currentTurn}");
@@ -158,7 +158,7 @@ public class TurnDisplay : MonoBehaviour
     /// </summary>
     public void SetTurn(int turn)
     {
-        string turnDisplayText = $"{turnPrefix}{turn}";
+        string turnDisplayText = $"{turn}{turnSuffix}";
         SetTurnText(turnDisplayText);
     }
 

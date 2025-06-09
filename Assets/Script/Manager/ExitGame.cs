@@ -2,17 +2,17 @@ using UnityEngine;
 
 public class ExitGame : MonoBehaviour
 {
-    // Exit ¹öÆ°¿¡¼­ È£ÃâÇÒ ¸Þ¼­µå
-    public void ExitGameButton()
-    {
-        Debug.Log("°ÔÀÓ Á¾·á ¹öÆ° Å¬¸¯µÊ");
+        // Exit ï¿½ï¿½Æ°ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
+        public void ExitGameButton()
+        {
+                Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ° Å¬ï¿½ï¿½ï¿½ï¿½");
 
 #if UNITY_EDITOR
-        // ¿¡µðÅÍ¿¡¼­ ½ÇÇà ÁßÀÏ °æ¿ì ¿¡µðÅÍ Á¾·á
-        UnityEditor.EditorApplication.isPlaying = false;
+                // ï¿½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+                UnityEditor.EditorApplication.isPlaying = false;
 #else
-        // ºôµåµÈ ½ÇÇà ÆÄÀÏ¿¡¼­´Â ¾ÖÇÃ¸®ÄÉÀÌ¼Ç Á¾·á
-        Application.Quit();
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã¸ï¿½ï¿½ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½
+                Application.Quit();
 #endif
-    }
+        }
 }

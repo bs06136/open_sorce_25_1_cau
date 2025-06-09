@@ -7,6 +7,8 @@ using System.Collections.Generic;
 
 public class CardEffectManager : MonoBehaviour
 {
+    public static CardEffectManager Instance { get; private set; }
+
     [Header("=== 카드별 3분할 효과 시스템 ===")]
     [Tooltip("각 카드마다 3개의 효과 영역을 가집니다: HP, 저주, 기타")]
 
@@ -63,6 +65,8 @@ public class CardEffectManager : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
+
         InitializeCardEffectData();
         HideAllEffects();
     }
@@ -118,11 +122,11 @@ public class CardEffectManager : MonoBehaviour
     /// </summary>
     private System.Collections.IEnumerator MonitorCardChanges()
     {
-        yield return new WaitForSeconds(1f);
+        // yield return new WaitForSeconds(1f);
 
         while (true)
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(1f);
 
             if (GameManager.Instance != null)
             {
@@ -132,7 +136,7 @@ public class CardEffectManager : MonoBehaviour
                     if (currentCards != null && !AreCardListsEqual(currentCards, lastDisplayedCards))
                     {
                         Debug.Log($"[CardEffectManager] 카드 변화 감지: {currentCards.Count}장");
-                        UpdateAllCardEffects(currentCards);
+                        StartCoroutine(UpdateAllCardEffects(currentCards));
                         lastDisplayedCards = new List<Card>(currentCards);
                     }
                     else if ((currentCards == null || currentCards.Count == 0) && lastDisplayedCards.Count > 0)
@@ -180,7 +184,7 @@ public class CardEffectManager : MonoBehaviour
     /// <summary>
     /// 모든 카드 효과 업데이트 (메인 메서드)
     /// </summary>
-    public void UpdateAllCardEffects(List<Card> cards)
+    public System.Collections.IEnumerator UpdateAllCardEffects(List<Card> cards)
     {
         Debug.Log($"[CardEffectManager] {cards.Count}장 카드 효과 업데이트");
 
@@ -188,6 +192,10 @@ public class CardEffectManager : MonoBehaviour
         {
             if (i < cards.Count && cards[i] != null)
             {
+                while (!UnifiedCardManager.Instance.isCardFront[i])
+                {
+                    yield return new WaitForSeconds(1f);
+                }
                 ShowCardEffects(i, cards[i]);
             }
             else
@@ -316,7 +324,7 @@ public class CardEffectManager : MonoBehaviour
     /// <summary>
     /// 특정 카드의 모든 효과 숨김
     /// </summary>
-    private void HideCardEffects(int cardIndex)
+    public void HideCardEffects(int cardIndex)
     {
         if (cardIndex >= cardEffects.Length) return;
 
@@ -335,7 +343,7 @@ public class CardEffectManager : MonoBehaviour
     /// <summary>
     /// 모든 효과 숨김
     /// </summary>
-    private void HideAllEffects()
+    public void HideAllEffects()
     {
         for (int i = 0; i < cardEffects.Length; i++)
         {
@@ -385,7 +393,7 @@ public class CardEffectManager : MonoBehaviour
         var currentCards = GetCurrentCards();
         if (currentCards != null)
         {
-            UpdateAllCardEffects(currentCards);
+            StartCoroutine(UpdateAllCardEffects(currentCards));
             Debug.Log("[CardEffectManager] 수동 새로고침 완료");
         }
     }

@@ -19,7 +19,9 @@ public class UnifiedCardManager : MonoBehaviour
         {
             Destroy(gameObject); // 혹시 중복 생기면 제거
         }
+
     }
+
     [Header("=== 카드 스프라이트 설정 ===")]
     [TextArea(4, 6)]
     public string setupInstructions = "1. PNG 파일들을 Project에 Import하세요\n2. 각 PNG를 선택하고 Inspector에서 Texture Type을 'Sprite (2D and UI)'로 변경\n3. Apply 버튼 클릭\n4. 변환된 Sprite들을 아래 배열에 드래그";
@@ -46,6 +48,9 @@ public class UnifiedCardManager : MonoBehaviour
     public TextMeshProUGUI rerollText;
     public Button rerollButton;
 
+    [Header("=== 카드 뒷면 스프라이트 ===")]
+    public Sprite cardBackSprite;
+
     // 카드 이름 배열 (CardLibrary와 동일한 순서 - 검증용)
     private readonly string[] cardNames = new string[]
     {
@@ -56,6 +61,9 @@ public class UnifiedCardManager : MonoBehaviour
         "저주받은 책", "예언자", "종말의 경전", "강탈자", "대천사", "영혼의 초",
         "그림자의 균열", "영혼 결혼식", "피의 서약", "운명의 유희", "꿈"
     };
+
+    // 카드가 앞면인지 여부를 관리
+    public bool[] isCardFront = new bool[3];
 
     private void Start()
     {
@@ -112,14 +120,21 @@ public class UnifiedCardManager : MonoBehaviour
     {
         Debug.Log($"[UnifiedCardManager] DisplayCards 호출됨 - {cards.Count}장의 카드");
 
+        CardEffectManager.Instance?.HideAllEffects(); // 효과 초기화
+
+
         // 모든 슬롯 업데이트 (이미지 + 효과)
         for (int i = 0; i < cardImageSlots.Length; i++)
         {
             if (i < cards.Count)
             {
-                SetCardSlot(i, cards[i]);
+                // 카드 뒷면으로 초기화
+                if (cardBackSprite != null)
+                    cardImageSlots[i].sprite = cardBackSprite;
+                isCardFront[i] = false;
+
                 SetCardButtonActive(i, true);
-                ShowCardEffect(i, cards[i]); // 🔥 효과도 함께 표시
+                HideCardEffect(i); // 효과는 뒤집히기 전까지 숨김
             }
             else
             {
@@ -128,16 +143,16 @@ public class UnifiedCardManager : MonoBehaviour
                 HideCardEffect(i); // 🔥 효과도 함께 숨김
             }
         }
-        AnimateDrawCards();
+        AnimateDrawCards(cards); // cards를 넘겨줌
     }
 
     // 드로우 애니메이션용
-    public void AnimateDrawCards()
+    private void AnimateDrawCards(List<Card> cards)
     {
-        StartCoroutine(AnimateDraw());
+        StartCoroutine(AnimateDraw(cards));
     }
 
-    private IEnumerator AnimateDraw()
+    private IEnumerator AnimateDraw(List<Card> cards)
     {
         float moveDuration = 0.5f; // 올라오는 시간
         float delayBetweenCards = 0.2f; // 카드마다 딜레이
@@ -147,26 +162,24 @@ public class UnifiedCardManager : MonoBehaviour
         // 카드 슬롯 전부 애니메이션
         for (int i = 0; i < cardImageSlots.Length; i++)
         {
+
             if (i >= 3) break; // 3장까지만
 
             RectTransform rt = cardImageSlots[i].GetComponent<RectTransform>();
-
             if (rt == null) continue;
-
             Vector2 originalPos = rt.anchoredPosition;
             Vector2 startPos = originalPos + new Vector2(0, -Screen.height);
             rt.anchoredPosition = startPos;
 
             // 슬라이드 업
             LeanTween.move(rt, originalPos, moveDuration).setEaseOutCubic();
-
             yield return new WaitForSeconds(delayBetweenCards);
         }
 
         // 전부 올라온 후 약간 대기
         yield return new WaitForSeconds(flipDelay);
 
-        // 3장 동시에 뒤집기
+        // 3장 동시에 뒤집기(1단계: 0→90도)
         for (int i = 0; i < cardImageSlots.Length; i++)
         {
             if (i >= 3) break; // 3장까지만
@@ -180,11 +193,22 @@ public class UnifiedCardManager : MonoBehaviour
 
         yield return new WaitForSeconds(flipDuration / 2);
 
-        // (여기서 이미지 교체 없이 바로 회전 복구)
+        // 90도에서 앞면 이미지로 교체 + 효과 표시
         for (int i = 0; i < cardImageSlots.Length; i++)
         {
             if (i >= 3) break;
+            if (i < cards.Count)
+            {
+                SetCardSlot(i, cards[i]);
+                isCardFront[i] = true;
+                // ShowCardEffect(i, cards[i]); // 이 시점에만 효과 표시
+            }
+        }
 
+        // 2단계: 90→0도
+        for (int i = 0; i < cardImageSlots.Length; i++)
+        {
+            if (i >= 3) break;
             RectTransform rt = cardImageSlots[i].GetComponent<RectTransform>();
             if (rt == null) continue;
 
@@ -236,7 +260,7 @@ public class UnifiedCardManager : MonoBehaviour
         }
     }
 
-    private void SetEmptySlot(int slotIndex)
+    public void SetEmptySlot(int slotIndex)
     {
         if (slotIndex >= cardImageSlots.Length) return;
 
@@ -245,12 +269,12 @@ public class UnifiedCardManager : MonoBehaviour
         if (emptySlotSprite != null)
         {
             imageSlot.sprite = emptySlotSprite;
-            imageSlot.color = new Color(1, 1, 1, 0.3f);
+            imageSlot.color = new Color(1, 1, 1, 0.0f);
         }
         else
         {
             imageSlot.sprite = null;
-            imageSlot.color = new Color(0.5f, 0.5f, 0.5f, 0.3f);
+            imageSlot.color = new Color(0.5f, 0.5f, 0.5f, 0.0f);
         }
 
         if (slotIndex < cardNameTexts.Length && cardNameTexts[slotIndex] != null)
@@ -259,7 +283,16 @@ public class UnifiedCardManager : MonoBehaviour
         }
     }
 
-    private void SetCardButtonActive(int slotIndex, bool active)
+    public void SetAllEmptySlots()
+    {
+        for (int i = 0; i < cardImageSlots.Length; i++)
+        {
+            SetEmptySlot(i);
+            isCardFront[i] = false; // 모든 슬롯을 뒷면으로 초기화
+        }
+    }
+
+    public void SetCardButtonActive(int slotIndex, bool active)
     {
         if (slotIndex < cardButtons.Length && cardButtons[slotIndex] != null)
         {
@@ -276,6 +309,14 @@ public class UnifiedCardManager : MonoBehaviour
     /// </summary>
     private void ShowCardEffect(int slotIndex, Card card)
     {
+
+        // 앞면이 아닐 때는 효과를 무조건 숨김
+        if (slotIndex >= isCardFront.Length || !isCardFront[slotIndex])
+        {
+            HideCardEffect(slotIndex);
+            return;
+        }
+
         if (slotIndex >= effectPanels.Length || effectPanels[slotIndex] == null || card == null)
         {
             Debug.LogWarning($"[UnifiedCardManager] 효과 표시 실패 - 슬롯: {slotIndex}, 카드: {card?.Name}");
@@ -306,6 +347,7 @@ public class UnifiedCardManager : MonoBehaviour
     /// </summary>
     private void HideCardEffect(int slotIndex)
     {
+
         if (slotIndex >= effectPanels.Length || effectPanels[slotIndex] == null) return;
 
         effectPanels[slotIndex].SetActive(false);
@@ -537,3 +579,4 @@ public class UnifiedCardData
         return new CardData(cardName, description, cardImage);
     }
 }
+
