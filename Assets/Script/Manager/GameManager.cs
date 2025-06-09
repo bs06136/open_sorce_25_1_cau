@@ -168,7 +168,7 @@ public class GameManager : MonoBehaviour
         int drawCount = UnityPlayer.NextDrawNum;
 
         var cards = UnityGame.DrawCards(drawCount);
-        Debug.Log($"[덱 상태] 남은 카드 수: {UnityGame.Deck.Count}");
+        // Debug.Log($"[덱 상태] 남은 카드 수: {UnityGame.Deck.Count}");
 
         if (UnityPlayer.Archangel)
         {

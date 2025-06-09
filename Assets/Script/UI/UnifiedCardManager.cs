@@ -245,12 +245,12 @@ public class UnifiedCardManager : MonoBehaviour
         if (emptySlotSprite != null)
         {
             imageSlot.sprite = emptySlotSprite;
-            imageSlot.color = new Color(1, 1, 1, 0.3f);
+            imageSlot.color = new Color(1, 1, 1, 0.0f);
         }
         else
         {
             imageSlot.sprite = null;
-            imageSlot.color = new Color(0.5f, 0.5f, 0.5f, 0.3f);
+            imageSlot.color = new Color(0.5f, 0.5f, 0.5f, 0.0f);
         }
 
         if (slotIndex < cardNameTexts.Length && cardNameTexts[slotIndex] != null)
