@@ -239,7 +239,7 @@ public class GameManager : MonoBehaviour
     }
     */
 
-    private void ApplyCardByIndex(int index)
+    public void ApplyCardByIndex(int index)
     {
         UnityPlayer.NextDrawNum = 3;
         UnityPlayer.Archangel = false;
