@@ -37,9 +37,10 @@ public class GameManager : MonoBehaviour
     public GameObject gameOverCanvas;
     public GameObject ingameCanvas;
     public GameObject mainMenuCanvas;
-
-    [Header("Card Page Canvas")]
     public GameObject cardPageCanvas;
+    public GameObject creditCanvas;
+    public GameObject settingCanvas;
+    public GameObject gameClearCanvas;
 
     [Header("Victory UI")]
     public GameObject victoryPanel;
@@ -63,6 +64,12 @@ public class GameManager : MonoBehaviour
 
         gameOverCanvas.SetActive(false);
         victoryPanel.SetActive(false);
+        ingameCanvas.SetActive(false);
+        mainMenuCanvas.SetActive(true);
+        cardPageCanvas.SetActive(false);
+        creditCanvas.SetActive(false);
+        settingCanvas.SetActive(false);
+        gameClearCanvas.SetActive(false);
 
         GameEvents.OnCardStatusRequested = GetCardStatus;
         GameEvents.OnCardChosen = ApplyCardByIndex;
@@ -70,6 +77,12 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        GameObject player = GameObject.Find("Player");
+        GameObject floor = GameObject.Find("Floor");
+
+        if (player != null) player.SetActive(false);
+        if (floor != null) floor.SetActive(false);
+
         if (playerHpUI == null)
         {
             Debug.LogError("❌ PlayerHP가 연결되지 않았습니다! (인스펙터 확인)");
@@ -101,8 +114,6 @@ public class GameManager : MonoBehaviour
 
         Debug.Log("GameManager: 게임 시작");
 
-        GameObject player = GameObject.Find("Player");
-        GameObject floor = GameObject.Find("Floor");
 
         if (player != null) player.SetActive(true);
         if (floor != null) floor.SetActive(true);
@@ -291,7 +302,7 @@ public class GameManager : MonoBehaviour
         HandleCurseDamage();
         HandleDeathCardInjection();
         HandleCurseIncrease();
-        
+
 
         // 보호버프 처리
         if (UnityPlayer.NonHpIncreaseTurn > 0 && UnityPlayer.Hp > prevHp && !UnityPlayer.HpChangedThisCard)
@@ -338,7 +349,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        if (UnityGame.Turn > 10 && UnityPlayer.Hp > 0)
+        if (UnityGame.Turn >= 40)
         {
             ShowVictoryPanel();
             return;
@@ -350,8 +361,6 @@ public class GameManager : MonoBehaviour
         Debug.Log("🎉 게임 승리!");
         Time.timeScale = 0f;
         victoryPanel.SetActive(true);
-
-        continueButton.gameObject.SetActive(false); 
 
         returnToMenuButton.onClick.RemoveAllListeners();
 
