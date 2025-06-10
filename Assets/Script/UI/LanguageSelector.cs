@@ -6,10 +6,10 @@ public class LanguageSelector : MonoBehaviour
     [Header("UI 显示组件")]
     public TextMeshProUGUI languageDisplay;  // 显示当前语言的文本
 
-    private string[] languages = { "English", "Chinese", "Spanish", "French", "German" }; // 语言列表
+    private string[] languages = { "한국어", "English", "Chinese" }; // 语言列表
     private int currentIndex = 0; // 初始为 English
 
-    public static string SelectedLanguage { get; private set; } = "English";  // 当前选择的语言，默认为英语
+    public static string SelectedLanguage { get; private set; } = "한국어";  // 当前选择的语言，默认为英语
 
     void Start()
     {

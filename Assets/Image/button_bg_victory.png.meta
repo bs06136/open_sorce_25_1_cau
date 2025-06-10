@@ -129,10 +129,10 @@ TextureImporter:
       name: button_bg_victory_0
       rect:
         serializedVersion: 2
-        x: 11
+        x: 2
         y: 0
-        width: 1494
-        height: 1024
+        width: 1167
+        height: 428
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
