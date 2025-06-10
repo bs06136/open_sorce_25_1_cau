@@ -25,5 +25,7 @@ public class TowerLoading : MonoBehaviour
 
         if (objectToActivate2 != null)
             objectToActivate2.SetActive(true);
+
+        GameManager.Instance.StartGame();
     }
 }

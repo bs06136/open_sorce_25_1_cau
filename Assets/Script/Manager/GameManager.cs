@@ -522,8 +522,11 @@ public class GameManager : MonoBehaviour
     }
     public void OpenCardPage()
     {
-        mainMenuCanvas.SetActive(false);    // 메인 메뉴 끄기
         cardPageCanvas.SetActive(true);     // 카드 종류 화면 켜기
+    }
+    public void CloseCardPage()
+    {
+        cardPageCanvas.SetActive(false);    // 카드 종류 화면 끄기
     }
 
 }
