@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: 3b27c08eca3de01429c85cfedd15ab81
+guid: 4f35d7c49fca9e940a5ae34bfdcd13be
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4367416702115258102
-    second: button_bg_victory_0
+      213: -7975792479327943879
+    second: Gambler_0
+  - first:
+      213: 4015831363720060411
+    second: Gambler_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +129,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: button_bg_victory_0
+      name: Gambler_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 0
-        width: 1167
-        height: 428
+        x: 99
+        y: 1166
+        width: 87
+        height: 101
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +144,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6fe10bbd95e2c9c30800000000000000
-      internalID: 4367416702115258102
+      spriteID: 9330d636ffa405190800000000000000
+      internalID: -7975792479327943879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gambler_1
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 65
+        width: 846
+        height: 1437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bfd186839591bb730800000000000000
+      internalID: 4015831363720060411
       vertices: []
       indices: 
       edges: []

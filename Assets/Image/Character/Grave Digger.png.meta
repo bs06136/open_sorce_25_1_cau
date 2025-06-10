@@ -1,37 +1,22 @@
 fileFormatVersion: 2
-guid: 4f9493a9205bc4d409f1743fa727854c
+guid: f44ebe0561ad59d458721e63b746da2f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7406818082991441597
-    second: some_0
+      213: 4134146125076026615
+    second: Grave Digger_0
   - first:
-      213: -3601339675561317122
-    second: some_1
+      213: -4897035440214956087
+    second: Grave Digger_1
   - first:
-      213: 5679726224955701680
-    second: some_2
+      213: 8950046428933278275
+    second: Grave Digger_2
   - first:
-      213: -1397576436054820957
-    second: some_3
+      213: -7710884578063038830
+    second: Grave Digger_3
   - first:
-      213: 8488441845571986067
-    second: some_4
-  - first:
-      213: 7134275183213328506
-    second: some_5
-  - first:
-      213: -405411797937301876
-    second: some_6
-  - first:
-      213: 1385281569372639121
-    second: some_7
-  - first:
-      213: -6112758970637156689
-    second: some_8
-  - first:
-      213: 8459621138054300299
-    second: some_9
+      213: -1196183270563651023
+    second: Grave Digger_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -153,13 +138,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: some_0
+      name: Grave Digger_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 157
-        width: 1080
-        height: 731
+        y: 0
+        width: 1024
+        height: 1531
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -168,129 +153,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 349fa5f4232b53990800000000000000
-      internalID: -7406818082991441597
+      spriteID: 7f4d6b24fff6f5930800000000000000
+      internalID: 4134146125076026615
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: some_1
+      name: Grave Digger_1
       rect:
         serializedVersion: 2
-        x: 318
-        y: 843
-        width: 28
-        height: 51
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: efca5a255a8750ec0800000000000000
-      internalID: -3601339675561317122
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: some_2
-      rect:
-        serializedVersion: 2
-        x: 1018
-        y: 639
-        width: 31
-        height: 22
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 0b974fbb8e072de40800000000000000
-      internalID: 5679726224955701680
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: some_3
-      rect:
-        serializedVersion: 2
-        x: 1033
-        y: 396
-        width: 9
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 3a7fe76d2afca9ce0800000000000000
-      internalID: -1397576436054820957
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: some_4
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 336
-        width: 18
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 39221e582e00dc570800000000000000
-      internalID: 8488441845571986067
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: some_5
-      rect:
-        serializedVersion: 2
-        x: 28
-        y: 352
-        width: 10
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a78b059ea79020360800000000000000
-      internalID: 7134275183213328506
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: some_6
-      rect:
-        serializedVersion: 2
-        x: 1026
-        y: 352
-        width: 8
+        x: 88
+        y: 1211
+        width: 7
         height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -300,20 +175,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c86d1342e10bf5af0800000000000000
-      internalID: -405411797937301876
+      spriteID: 9c72d75763c3a0cb0800000000000000
+      internalID: -4897035440214956087
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: some_7
+      name: Grave Digger_2
       rect:
         serializedVersion: 2
-        x: 1029
-        y: 321
+        x: 108
+        y: 638
         width: 14
-        height: 30
+        height: 11
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -322,20 +197,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 19f0a507f32893310800000000000000
-      internalID: 1385281569372639121
+      spriteID: 34a42d7cec3f43c70800000000000000
+      internalID: 8950046428933278275
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: some_8
+      name: Grave Digger_3
       rect:
         serializedVersion: 2
-        x: 1012
-        y: 282
-        width: 44
-        height: 36
+        x: 131
+        y: 415
+        width: 6
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -344,20 +219,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: faef69d5a1e1b2ba0800000000000000
-      internalID: -6112758970637156689
+      spriteID: 296c38c845f6df490800000000000000
+      internalID: -7710884578063038830
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: some_9
+      name: Grave Digger_4
       rect:
         serializedVersion: 2
-        x: 512
-        y: 181
-        width: 17
-        height: 25
+        x: 142
+        y: 416
+        width: 8
+        height: 7
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -366,8 +241,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b82cc14aa9c966570800000000000000
-      internalID: 8459621138054300299
+      spriteID: 132e9cf27ad466fe0800000000000000
+      internalID: -1196183270563651023
       vertices: []
       indices: 
       edges: []

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 3b27c08eca3de01429c85cfedd15ab81
+guid: 1884ce05aedf10d478d0f5e03fdda91b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4367416702115258102
-    second: button_bg_victory_0
+      213: 8998553830603943519
+    second: Explorer_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: button_bg_victory_0
+      name: Explorer_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 0
-        width: 1167
-        height: 428
+        x: 0
+        y: 8
+        width: 1024
+        height: 1503
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6fe10bbd95e2c9c30800000000000000
-      internalID: 4367416702115258102
+      spriteID: f5ee065580941ec70800000000000000
+      internalID: 8998553830603943519
       vertices: []
       indices: 
       edges: []

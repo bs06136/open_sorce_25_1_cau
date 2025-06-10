@@ -42,6 +42,8 @@ public class GameManager : MonoBehaviour
     public GameObject settingCanvas;
     public GameObject gameClearCanvas;
     public GameObject ingameSettingCanvas;
+    public GameObject storyCanvas;
+    public GameObject CharacterCanvas;
 
     [Header("Victory UI")]
     public GameObject victoryPanel;
@@ -72,6 +74,8 @@ public class GameManager : MonoBehaviour
         settingCanvas.SetActive(false);
         gameClearCanvas.SetActive(false);
         ingameSettingCanvas.SetActive(false);
+        storyCanvas.SetActive(false);
+        CharacterCanvas.SetActive(false);
 
         GameEvents.OnCardStatusRequested = GetCardStatus;
         GameEvents.OnCardChosen = ApplyCardByIndex;
