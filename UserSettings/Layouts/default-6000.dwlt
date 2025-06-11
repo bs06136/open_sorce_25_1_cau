@@ -91,9 +91,9 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-    x: 990
+    x: 989
     y: 0
-    width: 477
+    width: 478
     height: 666
   m_MinSize: {x: 202, y: 226}
   m_MaxSize: {x: 4002, y: 4026}
@@ -171,7 +171,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 360
+    width: 359
     height: 666
   m_MinSize: {x: 201, y: 226}
   m_MaxSize: {x: 4001, y: 4026}
@@ -345,7 +345,7 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-    x: 360
+    x: 359
     y: 0
     width: 630
     height: 666
@@ -377,9 +377,9 @@ MonoBehaviour:
     m_TextWithWhitespace: "\uC2DC\uBBAC\uB808\uC774\uD130\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 991
+    x: 990
     y: 24
-    width: 475
+    width: 476
     height: 640
   m_SerializedDataModeController:
     m_DataMode: 0
@@ -495,7 +495,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 231}
     m_SelectedIDs: fcc00000
     m_LastClickedID: 49404
-    m_ExpandedIDs: 000000005ec1000060c1000062c1000064c1000066c1000068c100006ac100006cc100006ec10000
+    m_ExpandedIDs: 000000008ace00008cce00008ece000090ce000092ce000094ce000096ce000098ce00009ace0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -524,7 +524,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000005ec1000060c1000062c1000064c1000066c1000068c100006ac100006cc100006ec10000
+    m_ExpandedIDs: 000000008ace00008cce00008ece000090ce000092ce000094ce000096ce000098ce00009ace0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -654,7 +654,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 24
-    width: 359
+    width: 358
     height: 640
   m_SerializedDataModeController:
     m_DataMode: 0
@@ -718,7 +718,7 @@ MonoBehaviour:
     m_TextWithWhitespace: "\uC52C\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 361
+    x: 360
     y: 24
     width: 628
     height: 640
@@ -1164,7 +1164,7 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: 599.9137, y: 1167.8099, z: -12.075209}
+    m_Target: {x: 569.53815, y: 1143.1101, z: -6.574395}
     speed: 2
     m_Value: {x: 599.9137, y: 1167.8099, z: -12.075209}
   m_RenderMode: 0
@@ -1216,7 +1216,7 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 1459.883
+    m_Target: 1252.5042
     speed: 2
     m_Value: 1459.883
   m_Ortho:

@@ -260,7 +260,12 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Grave Digger_0: 4134146125076026615
+      Grave Digger_1: -4897035440214956087
+      Grave Digger_2: 8950046428933278275
+      Grave Digger_3: -7710884578063038830
+      Grave Digger_4: -1196183270563651023
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

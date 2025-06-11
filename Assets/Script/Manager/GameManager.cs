@@ -50,11 +50,19 @@ public class GameManager : MonoBehaviour
     public Button continueButton;
     public Button returnToMenuButton;
 
+    [Header("GameMode")]
+    public TextMeshProUGUI gameModeText;
+
+    //-------------------------------------------------------------------------------------
+
     private bool isChariotActive = false;
     private bool isChariotFirstPick = false;
 
     private bool isRandomPick = false;
     private int lastRandomIndex = -1;
+
+    private string[] gameModes = { "일반모드", "무한모드" };
+    private int currentGameModeIndex = 0;
 
     private void Awake()
     {
@@ -76,6 +84,8 @@ public class GameManager : MonoBehaviour
         ingameSettingCanvas.SetActive(false);
         storyCanvas.SetActive(false);
         CharacterCanvas.SetActive(false);
+
+        UpdateGameModeUI();
 
         GameEvents.OnCardStatusRequested = GetCardStatus;
         GameEvents.OnCardChosen = ApplyCardByIndex;
@@ -511,19 +521,7 @@ public class GameManager : MonoBehaviour
     {
         emberIcon.material = UnityGame.Player.Ember ? null : grayScaleMaterial;
     }
-    public void OnContinueButtonClicked()
-    {
-        Debug.Log("继续游戏");
-        victoryPanel.SetActive(false);
-        ingameCanvas.SetActive(true);
-    }
 
-    public void OnReturnMenuButtonClicked()
-    {
-        Debug.Log("返回主菜单");
-
-        SceneManager.LoadScene("SampleScene"); // 替换为你主菜单的名字
-    }
     public void OpenCardPage()
     {
         cardPageCanvas.SetActive(true);     // 카드 종류 화면 켜기
@@ -533,4 +531,15 @@ public class GameManager : MonoBehaviour
         cardPageCanvas.SetActive(false);    // 카드 종류 화면 끄기
     }
 
+    public void OnGameModeClick()
+    {
+        currentGameModeIndex = (currentGameModeIndex + 1) % gameModes.Length;
+        UpdateGameModeUI();
+    }
+
+    private void UpdateGameModeUI()
+    {
+        if (gameModeText != null)
+            gameModeText.text = gameModes[currentGameModeIndex];
+    }
 }
