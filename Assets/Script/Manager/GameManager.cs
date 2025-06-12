@@ -7,9 +7,14 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+public enum GameMode
+{
+    Normal,
+    Infinite
+}
+
 public class GameManager : MonoBehaviour
 {
-    // ✅ 게임 오버 상태 플래그 추가
     private bool isGameOver = false;
     public static GameManager Instance { get; private set; }
 
@@ -52,8 +57,9 @@ public class GameManager : MonoBehaviour
 
     [Header("GameMode")]
     public TextMeshProUGUI gameModeText;
-
-    //-------------------------------------------------------------------------------------
+    
+    [Header("Mode Notice UI")]
+    public GameObject infiniteModeNotice;
 
     private bool isChariotActive = false;
     private bool isChariotFirstPick = false;
@@ -64,11 +70,13 @@ public class GameManager : MonoBehaviour
     private string[] gameModes = { "일반모드", "무한모드" };
     private int currentGameModeIndex = 0;
 
+    private GameMode logicGameMode = GameMode.Normal;
+
     private void Awake()
     {
         if (Instance != null)
         {
-            Destroy(gameObject);  // 중복 방지
+            Destroy(gameObject);
             return;
         }
         Instance = this;
@@ -99,24 +107,9 @@ public class GameManager : MonoBehaviour
         if (player != null) player.SetActive(false);
         if (floor != null) floor.SetActive(false);
 
-        if (playerHpUI == null)
+        if (playerHpUI == null || playerCurseUI == null || unifiedCardManager == null || turnDisplay == null)
         {
-            Debug.LogError("❌ PlayerHP가 연결되지 않았습니다! (인스펙터 확인)");
-            return;
-        }
-        if (playerCurseUI == null)
-        {
-            Debug.LogError("❌ PlayerCurse가 연결되지 않았습니다! (인스펙터 확인)");
-            return;
-        }
-        if (unifiedCardManager == null)
-        {
-            Debug.LogError("❌ UnifiedCardManager가 연결되지 않았습니다! (인스펙터 확인)");
-            return;
-        }
-        if (turnDisplay == null)
-        {
-            Debug.LogError("❌ TurnDisplay가 연결되지 않았습니다! (인스펙터 확인)");
+            Debug.LogError("❌ 필수 UI 컴포넌트 연결 누락");
             return;
         }
 
@@ -127,9 +120,6 @@ public class GameManager : MonoBehaviour
 
         UnityPlayer.Hp = 10;
         UnityPlayer.Curse = 0;
-
-        Debug.Log("GameManager: 게임 시작");
-
 
         if (player != null) player.SetActive(true);
         if (floor != null) floor.SetActive(true);
@@ -142,6 +132,18 @@ public class GameManager : MonoBehaviour
 
         UpdateRerollState();
         ShowRemainDeckNum();
+
+        if (logicGameMode == GameMode.Infinite)
+{
+    if (infiniteModeNotice != null)
+        infiniteModeNotice.SetActive(true);
+}
+else
+{
+    if (infiniteModeNotice != null)
+        infiniteModeNotice.SetActive(false);
+}
+
     }
 
     private void OnEnable()
@@ -162,18 +164,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
     public void StartTurn()
     {
-        if (isGameOver)
-        {
-            Debug.Log("게임 오버 상태 — StartTurn 중단.");
-            return;
-        }
+        if (isGameOver) return;
 
         if (UnityPlayer.SkipNextTurn)
         {
-            Debug.Log("이번 턴은 스킵됩니다.");
             UnityPlayer.SkipNextTurn = false;
             UnityGame.Turn++;
             UpdateTurnDisplay();
@@ -182,9 +178,7 @@ public class GameManager : MonoBehaviour
         }
 
         int drawCount = UnityPlayer.NextDrawNum;
-
         var cards = UnityGame.DrawCards(drawCount);
-        // Debug.Log($"[덱 상태] 남은 카드 수: {UnityGame.Deck.Count}");
 
         if (UnityPlayer.Archangel)
         {
@@ -194,7 +188,6 @@ public class GameManager : MonoBehaviour
                 {
                     var nonDeathCards = CardLibrary.AllCards.Where(c => c.Name != "죽음").ToList();
                     cards[i] = nonDeathCards[UnityEngine.Random.Range(0, nonDeathCards.Count)];
-                    Debug.Log($"[대천사 발동] 죽음 → {cards[i].Name} 교체됨");
                 }
             }
         }
@@ -211,10 +204,8 @@ public class GameManager : MonoBehaviour
         if (UnityPlayer.RandomChoice)
         {
             int randomIndex = UnityEngine.Random.Range(0, currentDrawnCards.Count);
-            Debug.Log($"[무작의 선택] {randomIndex}번 카드 선택");
             UnityPlayer.RandomChoice = false;
 
-            // ✅ 랜덤 선택 결과 보관
             lastRandomIndex = randomIndex;
             isRandomPick = true;
 
@@ -229,29 +220,14 @@ public class GameManager : MonoBehaviour
         UpdateTurnDisplay();
     }
 
-    private (List<int> drawnCards, List<int> HP, List<int> curse, List<string> text, int rerollCount) GetCardStatus()
+    private (List<int>, List<int>, List<int>, List<string>, int) GetCardStatus()
     {
-        var cardIndices = currentDrawnCards.Select(c => CardLibrary.AllCards.IndexOf(c)).ToList();
-        var hpChanges = currentDrawnCards.Select(c => c.HpChange).ToList();
-        var curseChanges = currentDrawnCards.Select(c => c.CurseChange).ToList();
-        var descriptions = currentDrawnCards.Select(c => c.Description).ToList();
-        return (cardIndices, hpChanges, curseChanges, descriptions, UnityPlayer.RerollAvailable);
+        var indices = currentDrawnCards.Select(c => CardLibrary.AllCards.IndexOf(c)).ToList();
+        var hp = currentDrawnCards.Select(c => c.HpChange).ToList();
+        var curse = currentDrawnCards.Select(c => c.CurseChange).ToList();
+        var text = currentDrawnCards.Select(c => c.Description).ToList();
+        return (indices, hp, curse, text, UnityPlayer.RerollAvailable);
     }
-
-    /* 랜덤 선택의 결과임을 알려주기 위한 변경사항 적용 버전전
-    private (List<int> drawnCards, List<int> HP, List<int> curse, List<string> text, int rerollCount, int is_random, int selected_by_random) GetCardStatus()
-    {
-        var cardIndices = currentDrawnCards.Select(c => CardLibrary.AllCards.IndexOf(c)).ToList();
-        var hpChanges = currentDrawnCards.Select(c => c.HpChange).ToList();
-        var curseChanges = currentDrawnCards.Select(c => c.CurseChange).ToList();
-        var descriptions = currentDrawnCards.Select(c => c.Description).ToList();
-
-        int isRandom = isRandomPick ? 1 : 0;
-        int selectedIndex = isRandomPick ? lastRandomIndex : -1;
-
-        return (cardIndices, hpChanges, curseChanges, descriptions, UnityPlayer.RerollAvailable, isRandom, selectedIndex);
-    }
-    */
 
     public void ApplyCardByIndex(int index)
     {
@@ -268,7 +244,6 @@ public class GameManager : MonoBehaviour
         {
             if (isChariotFirstPick)
             {
-                Debug.Log("[전차] 첫 번째 카드 선택 → 두 번째 선택 준비");
                 isChariotFirstPick = false;
                 unifiedCardManager.DisplayCards(currentDrawnCards);
                 UpdateTurnDisplay();
@@ -276,7 +251,6 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("[전차] 두 번째 카드 선택 → 전차 종료");
                 isChariotActive = false;
                 UnityGame.Turn++;
                 UpdateTurnDisplay();
@@ -294,20 +268,14 @@ public class GameManager : MonoBehaviour
     {
         if (selectedCard.Name == "죽음")
         {
-            Debug.Log("[GameManager] 죽음 카드 선택 — 게임 오버 트리거");
             isGameOver = true;
             GameOverHandler.GameOver(UnityGame);
             return;
         }
 
-        UnityPlayer.HpChangedThisCard = false;
-        UnityPlayer.CurseChangedThisCard = false;
-        UnityPlayer.DeathCardAddedThisCard = false;
-
-        // 현재값 백업
         int prevHp = UnityPlayer.Hp;
         int prevCurse = UnityPlayer.Curse;
-        int prevDeathCard = UnityGame.Deck.Count(c => c.Name == "죽음");
+        int prevDeath = UnityGame.Deck.Count(c => c.Name == "죽음");
 
         selectedCard.Apply(UnityPlayer, UnityGame, remainingCards);
         UnityPlayer.LastCard = selectedCard;
@@ -319,8 +287,6 @@ public class GameManager : MonoBehaviour
         HandleDeathCardInjection();
         HandleCurseIncrease();
 
-
-        // 보호버프 처리
         if (UnityPlayer.NonHpIncreaseTurn > 0 && UnityPlayer.Hp > prevHp && !UnityPlayer.HpChangedThisCard)
             UnityPlayer.Hp = prevHp;
         if (UnityPlayer.NonHpIncreaseTurn > 0 && !UnityPlayer.HpChangedThisCard)
@@ -341,10 +307,10 @@ public class GameManager : MonoBehaviour
         if (UnityPlayer.NonCurseDecreaseTurn > 0 && !UnityPlayer.CurseChangedThisCard)
             UnityPlayer.NonCurseDecreaseTurn--;
 
-        int afterDeathCard = UnityGame.Deck.Count(c => c.Name == "죽음");
-        if (UnityPlayer.NotAddDeath > 0 && afterDeathCard >= prevDeathCard && !UnityPlayer.DeathCardAddedThisCard)
+        int afterDeath = UnityGame.Deck.Count(c => c.Name == "죽음");
+        if (UnityPlayer.NotAddDeath > 0 && afterDeath >= prevDeath && !UnityPlayer.DeathCardAddedThisCard)
         {
-            int diff = afterDeathCard - prevDeathCard;
+            int diff = afterDeath - prevDeath;
             int count = 0;
             for (int i = UnityGame.Deck.Count - 1; i >= 0 && count < diff; i--)
             {
@@ -365,7 +331,8 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        if (UnityGame.Turn >= 40)
+        // ✅ 胜利条件只在 일반모드 时启用
+        if (logicGameMode == GameMode.Normal && UnityGame.Turn >= 5)
         {
             ShowVictoryPanel();
             return;
@@ -379,11 +346,10 @@ public class GameManager : MonoBehaviour
         victoryPanel.SetActive(true);
 
         returnToMenuButton.onClick.RemoveAllListeners();
-
         returnToMenuButton.onClick.AddListener(() =>
         {
             Time.timeScale = 1f;
-            SceneManager.LoadScene("SampleScene"); // 确保 MainMenu 场景存在
+            SceneManager.LoadScene("SampleScene");
         });
     }
 
@@ -442,7 +408,6 @@ public class GameManager : MonoBehaviour
         {
             UnityPlayer.Hp = 1;
             UnityPlayer.Curse = 0;
-            Debug.Log("[Ember] 효과 종료");
             UnityPlayer.Ember = false;
         }
         SetEmberGrayscale();
@@ -456,10 +421,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public int GetCurrentTurn()
-    {
-        return UnityGame?.Turn ?? 0;
-    }
+    public int GetCurrentTurn() => UnityGame?.Turn ?? 0;
 
     public void ShowGameOver()
     {
@@ -474,26 +436,9 @@ public class GameManager : MonoBehaviour
         {
             UnityPlayer.RerollAvailable--;
             currentDrawnCards = UnityGame.DrawCards(UnityPlayer.NextDrawNum);
-            if (UnityPlayer.Archangel)
-            {
-                for (int i = 0; i < currentDrawnCards.Count; i++)
-                {
-                    if (currentDrawnCards[i].Name == "죽음")
-                    {
-                        var nonDeathCards = CardLibrary.AllCards.Where(c => c.Name != "죽음").ToList();
-                        currentDrawnCards[i] = nonDeathCards[UnityEngine.Random.Range(0, nonDeathCards.Count)];
-                        Debug.Log($"[대천사 발동] 죽음 → {currentDrawnCards[i].Name} 교체됨");
-                    }
-                }
-            }
-
             unifiedCardManager.DisplayCards(currentDrawnCards);
             UpdateTurnDisplay();
             UpdateRerollState();
-        }
-        else
-        {
-            Debug.Log("리롤이 부족합니다.");
         }
     }
 
@@ -503,10 +448,6 @@ public class GameManager : MonoBehaviour
         {
             rerollButtonText.text = $"{UnityPlayer.RerollAvailable}";
         }
-        else
-        {
-            Debug.LogWarning("rerollButtonText가 설정되지 않았습니다.");
-        }
 
         rerollButton.interactable = UnityPlayer.RerollAvailable > 0;
     }
@@ -514,7 +455,6 @@ public class GameManager : MonoBehaviour
     public void ShowRemainDeckNum()
     {
         remainDeckNum.text = "덱 카드 수: " + UnityGame.Deck.Count.ToString();
-        Debug.Log($"남은 덱 수: {remainDeckNum}");
     }
 
     public void SetEmberGrayscale()
@@ -522,19 +462,17 @@ public class GameManager : MonoBehaviour
         emberIcon.material = UnityGame.Player.Ember ? null : grayScaleMaterial;
     }
 
-    public void OpenCardPage()
-    {
-        cardPageCanvas.SetActive(true);     // 카드 종류 화면 켜기
-    }
-    public void CloseCardPage()
-    {
-        cardPageCanvas.SetActive(false);    // 카드 종류 화면 끄기
-    }
+    public void OpenCardPage() => cardPageCanvas.SetActive(true);
+    public void CloseCardPage() => cardPageCanvas.SetActive(false);
 
     public void OnGameModeClick()
     {
         currentGameModeIndex = (currentGameModeIndex + 1) % gameModes.Length;
         UpdateGameModeUI();
+
+        // ✅ 同步逻辑模式
+        logicGameMode = (currentGameModeIndex == 0) ? GameMode.Normal : GameMode.Infinite;
+        Debug.Log($"게임모드 변경됨: {logicGameMode}");
     }
 
     private void UpdateGameModeUI()
@@ -542,4 +480,6 @@ public class GameManager : MonoBehaviour
         if (gameModeText != null)
             gameModeText.text = gameModes[currentGameModeIndex];
     }
+
+    public bool IsInfiniteMode() => logicGameMode == GameMode.Infinite;
 }
