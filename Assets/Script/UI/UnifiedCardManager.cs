@@ -115,6 +115,7 @@ public class UnifiedCardManager : MonoBehaviour
 
     /// <summary>
     /// 게임에서 뽑힌 카드들을 UI에 표시하는 메인 메서드
+    /// 2장일 때는 Left(0)와 Right(2)에, 1장일 때는 Middle(1)에 배치
     /// </summary>
     public void DisplayCards(List<Card> cards)
     {
@@ -122,28 +123,54 @@ public class UnifiedCardManager : MonoBehaviour
 
         CardEffectManager.Instance?.HideAllEffects(); // 효과 초기화
 
+        // 카드 배치 인덱스 결정
+        int[] slotIndices = GetSlotIndices(cards.Count);
 
-        // 모든 슬롯 업데이트 (이미지 + 효과)
+        // 모든 슬롯을 일단 빈 상태로 초기화
         for (int i = 0; i < cardImageSlots.Length; i++)
         {
-            if (i < cards.Count)
-            {
-                // 카드 뒷면으로 초기화
-                if (cardBackSprite != null)
-                    cardImageSlots[i].sprite = cardBackSprite;
-                isCardFront[i] = false;
-
-                SetCardButtonActive(i, true);
-                HideCardEffect(i); // 효과는 뒤집히기 전까지 숨김
-            }
-            else
-            {
-                SetEmptySlot(i);
-                SetCardButtonActive(i, false);
-                HideCardEffect(i); // 🔥 효과도 함께 숨김
-            }
+            SetEmptySlot(i);
+            SetCardButtonActive(i, false);
+            HideCardEffect(i);
+            isCardFront[i] = false;
         }
+
+        // 실제 카드가 배치될 슬롯들만 카드 뒷면으로 설정
+        for (int i = 0; i < cards.Count; i++)
+        {
+            int slotIndex = slotIndices[i];
+
+            // 카드 뒷면으로 초기화
+            if (cardBackSprite != null)
+                cardImageSlots[slotIndex].sprite = cardBackSprite;
+
+            cardImageSlots[slotIndex].color = Color.white; // 투명도 복원
+            isCardFront[slotIndex] = false;
+            SetCardButtonActive(slotIndex, true);
+            HideCardEffect(slotIndex);
+        }
+
         AnimateDrawCards(cards); // cards를 넘겨줌
+    }
+
+    /// <summary>
+    /// 카드 수에 따른 슬롯 인덱스 배열 반환
+    /// 1장: [1] (가운데)
+    /// 2장: [0, 2] (양쪽)  
+    /// 3장: [0, 1, 2] (모두)
+    /// </summary>
+    private int[] GetSlotIndices(int cardCount)
+    {
+        switch (cardCount)
+        {
+            case 1:
+                return new int[] { 1 }; // 가운데만
+            case 2:
+                return new int[] { 0, 2 }; // 양쪽만
+            case 3:
+            default:
+                return new int[] { 0, 1, 2 }; // 모두
+        }
     }
 
     // 드로우 애니메이션용
@@ -159,14 +186,17 @@ public class UnifiedCardManager : MonoBehaviour
         float flipDelay = 0.5f; // 다 올라오고 뒤집기까지 대기 시간
         float flipDuration = 0.3f; // 뒤집는 시간
 
-        // 카드 슬롯 전부 애니메이션
-        for (int i = 0; i < cardImageSlots.Length; i++)
+        // 카드 배치 슬롯 인덱스 가져오기
+        int[] slotIndices = GetSlotIndices(cards.Count);
+
+        // 배치될 카드 슬롯들만 애니메이션
+        for (int i = 0; i < cards.Count; i++)
         {
+            int slotIndex = slotIndices[i];
 
-            if (i >= 3) break; // 3장까지만
-
-            RectTransform rt = cardImageSlots[i].GetComponent<RectTransform>();
+            RectTransform rt = cardImageSlots[slotIndex].GetComponent<RectTransform>();
             if (rt == null) continue;
+
             Vector2 originalPos = rt.anchoredPosition;
             Vector2 startPos = originalPos + new Vector2(0, -Screen.height);
             rt.anchoredPosition = startPos;
@@ -179,12 +209,12 @@ public class UnifiedCardManager : MonoBehaviour
         // 전부 올라온 후 약간 대기
         yield return new WaitForSeconds(flipDelay);
 
-        // 3장 동시에 뒤집기(1단계: 0→90도)
-        for (int i = 0; i < cardImageSlots.Length; i++)
+        // 배치된 카드들 동시에 뒤집기(1단계: 0→90도)
+        for (int i = 0; i < cards.Count; i++)
         {
-            if (i >= 3) break; // 3장까지만
+            int slotIndex = slotIndices[i];
 
-            RectTransform rt = cardImageSlots[i].GetComponent<RectTransform>();
+            RectTransform rt = cardImageSlots[slotIndex].GetComponent<RectTransform>();
             if (rt == null) continue;
 
             // Y축 회전 90도
@@ -193,23 +223,21 @@ public class UnifiedCardManager : MonoBehaviour
 
         yield return new WaitForSeconds(flipDuration / 2);
 
-        // 90도에서 앞면 이미지로 교체 + 효과 표시
-        for (int i = 0; i < cardImageSlots.Length; i++)
+        // 90도에서 앞면 이미지로 교체
+        for (int i = 0; i < cards.Count; i++)
         {
-            if (i >= 3) break;
-            if (i < cards.Count)
-            {
-                SetCardSlot(i, cards[i]);
-                isCardFront[i] = true;
-                // ShowCardEffect(i, cards[i]); // 이 시점에만 효과 표시
-            }
+            int slotIndex = slotIndices[i];
+
+            SetCardSlot(slotIndex, cards[i]);
+            isCardFront[slotIndex] = true;
         }
 
         // 2단계: 90→0도
-        for (int i = 0; i < cardImageSlots.Length; i++)
+        for (int i = 0; i < cards.Count; i++)
         {
-            if (i >= 3) break;
-            RectTransform rt = cardImageSlots[i].GetComponent<RectTransform>();
+            int slotIndex = slotIndices[i];
+
+            RectTransform rt = cardImageSlots[slotIndex].GetComponent<RectTransform>();
             if (rt == null) continue;
 
             // 0도로 회전
@@ -579,4 +607,3 @@ public class UnifiedCardData
         return new CardData(cardName, description, cardImage);
     }
 }
-

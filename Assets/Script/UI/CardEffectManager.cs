@@ -182,25 +182,49 @@ public class CardEffectManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 카드 수에 따른 슬롯 인덱스 배열 반환 (UnifiedCardManager와 동일한 로직)
+    /// </summary>
+    private int[] GetSlotIndices(int cardCount)
+    {
+        switch (cardCount)
+        {
+            case 1:
+                return new int[] { 1 }; // 가운데만
+            case 2:
+                return new int[] { 0, 2 }; // 양쪽만
+            case 3:
+            default:
+                return new int[] { 0, 1, 2 }; // 모두
+        }
+    }
+
+
+    /// <summary>
     /// 모든 카드 효과 업데이트 (메인 메서드)
     /// </summary>
     public System.Collections.IEnumerator UpdateAllCardEffects(List<Card> cards)
     {
         Debug.Log($"[CardEffectManager] {cards.Count}장 카드 효과 업데이트");
 
-        for (int i = 0; i < cardEffects.Length; i++)
+        // 카드 배치 슬롯 인덱스 가져오기
+        int[] slotIndices = GetSlotIndices(cards.Count);
+
+        // 모든 효과 먼저 숨김
+        HideAllEffects();
+
+        // 배치된 카드들만 효과 표시
+        for (int i = 0; i < cards.Count; i++)
         {
-            if (i < cards.Count && cards[i] != null)
+            int slotIndex = slotIndices[i];
+
+            if (cards[i] != null)
             {
-                while (!UnifiedCardManager.Instance.isCardFront[i])
+                // 카드가 앞면이 될 때까지 대기
+                while (!UnifiedCardManager.Instance.isCardFront[slotIndex])
                 {
-                    yield return new WaitForSeconds(1f);
+                    yield return new WaitForSeconds(0.1f);
                 }
-                ShowCardEffects(i, cards[i]);
-            }
-            else
-            {
-                HideCardEffects(i);
+                ShowCardEffects(slotIndex, cards[i]);
             }
         }
     }
