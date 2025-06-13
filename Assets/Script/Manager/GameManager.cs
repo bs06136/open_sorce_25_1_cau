@@ -6,6 +6,7 @@ using System;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using CardGame.Effects; 
 
 public enum GameMode
 {
@@ -72,6 +73,12 @@ public class GameManager : MonoBehaviour
 
     private GameMode logicGameMode = GameMode.Normal;
 
+    public CharacterType selectedCharacter = CharacterType.Explorer; // 기본 캐릭터 설정
+
+    private ICharacterEffect characterEffect;   // 캐릭터 효과 인터페이스
+
+    private int turnCounter = 0;
+
     private void Awake()
     {
         if (Instance != null)
@@ -97,10 +104,16 @@ public class GameManager : MonoBehaviour
 
         GameEvents.OnCardStatusRequested = GetCardStatus;
         GameEvents.OnCardChosen = ApplyCardByIndex;
+
+
     }
 
     public void StartGame()
     {
+        turnCounter = 0;
+
+
+
         GameObject player = GameObject.Find("Player");
         GameObject floor = GameObject.Find("Floor");
 
@@ -120,6 +133,14 @@ public class GameManager : MonoBehaviour
 
         UnityPlayer.Hp = 10;
         UnityPlayer.Curse = 0;
+
+        int saved = PlayerPrefs.GetInt("SelectedCareer", (int)CharacterType.Explorer);
+        selectedCharacter = (CharacterType)saved;
+
+        characterEffect = CharacterEffectFactory.Create(selectedCharacter);
+        characterEffect.OnStartGame(this);
+
+        Debug.LogError("StartGame 선택된 직업: " + selectedCharacter);
 
         if (player != null) player.SetActive(true);
         if (floor != null) floor.SetActive(true);
@@ -167,6 +188,9 @@ else
     public void StartTurn()
     {
         if (isGameOver) return;
+
+        turnCounter++;
+        characterEffect.OnTurnStart(this);
 
         if (UnityPlayer.SkipNextTurn)
         {
@@ -236,9 +260,9 @@ else
 
         if (index < 0 || index >= currentDrawnCards.Count) return;
 
-        var selected = currentDrawnCards[index];
+        var selectedCard = currentDrawnCards[index];
         currentDrawnCards.RemoveAt(index);
-        ApplyCard(selected, currentDrawnCards);
+        ApplyCard(selectedCard, currentDrawnCards);
 
         if (isChariotActive)
         {
@@ -258,6 +282,7 @@ else
                 return;
             }
         }
+        
 
         UnityGame.Turn++;
         UpdateTurnDisplay();
@@ -286,6 +311,8 @@ else
         HandleCurseDamage();
         HandleDeathCardInjection();
         HandleCurseIncrease();
+
+        characterEffect.OnAfterCardApply(this, selectedCard);
 
         if (UnityPlayer.NonHpIncreaseTurn > 0 && UnityPlayer.Hp > prevHp && !UnityPlayer.HpChangedThisCard)
             UnityPlayer.Hp = prevHp;
@@ -332,7 +359,7 @@ else
         }
 
         // ✅ 胜利条件只在 일반모드 时启用
-        if (logicGameMode == GameMode.Normal && UnityGame.Turn >= 5)
+        if (logicGameMode == GameMode.Normal && UnityGame.Turn >= 20)
         {
             ShowVictoryPanel();
             return;
@@ -343,15 +370,43 @@ else
     {
         Debug.Log("🎉 게임 승리!");
         Time.timeScale = 0f;
-        victoryPanel.SetActive(true);
 
-        returnToMenuButton.onClick.RemoveAllListeners();
-        returnToMenuButton.onClick.AddListener(() =>
+        // 1) victoryPanel이 연결돼 있지 않다면 씬에서 찾아서 할당
+        if (victoryPanel == null)
         {
-            Time.timeScale = 1f;
-            SceneManager.LoadScene("SampleScene");
-        });
+            var go = GameObject.Find("GameClear");           // 계층창에 있는 승리 패널 오브젝트 이름
+            if (go != null)
+                victoryPanel = go;
+            else
+                Debug.LogError("ShowVictoryPanel: 'GameClear' 오브젝트를 찾을 수 없습니다.");
+        }
+
+        // 2) 패널 활성화
+        if (victoryPanel != null)
+            victoryPanel.SetActive(true);
+
+        // 3) returnToMenuButton이 연결돼 있지 않다면 씬에서 찾아서 할당
+        if (returnToMenuButton == null)
+        {
+            var btnGO = GameObject.Find("return_to_main");  // Hierarchy 상 버튼 오브젝트 이름
+            if (btnGO != null)
+                returnToMenuButton = btnGO.GetComponent<Button>();
+            else
+                Debug.LogError("ShowVictoryPanel: 'return_to_main' 오브젝트를 찾을 수 없습니다.");
+        }
+
+        // 4) 버튼 리스너 설정
+        if (returnToMenuButton != null)
+        {
+            returnToMenuButton.onClick.RemoveAllListeners();
+            returnToMenuButton.onClick.AddListener(() =>
+            {
+                Time.timeScale = 1f;
+                SceneManager.LoadScene("SampleScene");
+            });
+        }
     }
+
 
     private void HandleDelayedEffects()
     {
@@ -368,6 +423,9 @@ else
 
     private void HandleCurseDamage()
     {
+        if (isChariotActive && isChariotFirstPick)
+        return;
+
         if (UnityPlayer.NonCurseDamageTurn > 0)
         {
             UnityPlayer.NonCurseDamageTurn--;
@@ -439,6 +497,7 @@ else
             unifiedCardManager.DisplayCards(currentDrawnCards);
             UpdateTurnDisplay();
             UpdateRerollState();
+            characterEffect.OnReroll(this);
         }
     }
 
