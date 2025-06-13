@@ -4,7 +4,7 @@ public static class CardStoryMap
 {
     public static readonly Dictionary<string, string> Story = new Dictionary<string, string>
     {
-        { "바보",       "This card symbolizes a pure beginning and adventure ." },
+        { "바보",       "This card symbolizes a pure beginning and adventure ㅁㅁ." },
         { "마법사",     "It represents creative power and self-confidence." },
         { "여교황",     "A symbol of intuition and hidden wisdom." },
         { "여제",       "Represents abundance, motherhood, and creativity." },

@@ -69,15 +69,23 @@ public class CardScrollManager : MonoBehaviour
             if (effectLabel) effectLabel.text = info.specialEffectText;
 
             // 从 CardStoryMap 里根据名称取故事（英文）
+            string story = CardStoryMap.GetStory(info.cardName);
+            string display = string.IsNullOrEmpty(story) ? "No story." : story;
+
+            // **填到故事标签上，供 ScrollView 一开始就能看到**
             if (storyLabel != null)
-            {
-                string story = CardStoryMap.GetStory(info.cardName);
-                storyLabel.text = string.IsNullOrEmpty(story) ? "No story." : story;
-            }
+                storyLabel.text = display;
             else
-            {
                 Debug.LogWarning("[CardScrollManager] 找不到名为 StoryText 的 TMP_Text");
-            }
+
+            // **关键：再把故事传给行里的 CardRowController，让它在翻转时显示**
+            var controller = row.GetComponent<CardRowController>();
+            if (controller != null)
+                controller.SetStory(display);
+            else
+                Debug.LogWarning("[CardScrollManager] 没有在 Prefab 上找到 CardRowController 组件");
         }
     }
 }
+
+        
