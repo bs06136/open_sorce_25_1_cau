@@ -116,29 +116,8 @@ git push origin --delete <branch>
 
 ---
 
-## 4. 포맷 및 품질
 
-
-### 🧹 Lint & 포맷
-
-- `.editorconfig` 및 StyleCop 적용
-- `dotnet format` 사용 권장
-
-### ✅ 테스트
-
-- NUnit 기반 단위 테스트
-- 커버리지 80% 목표
-- `Tests/` 폴더 내 구성
-
-### 🔁 CI 순서
-
-빌드 → 린트 → 테스트
-
-실패 시 머지 금지
-
----
-
-## 5. 커뮤니케이션 & 지원
+## 4. 커뮤니케이션 & 지원
 
 - **이슈 관리**: GitHub Issues
 - **문서 변경**: 반드시 Wiki에 반영
