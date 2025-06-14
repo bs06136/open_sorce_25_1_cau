@@ -8,8 +8,11 @@ public class CardButtonHandler : MonoBehaviour
 
     public void OnCardButtonClicked()
     {
-        // 실제 카드 인덱스로 변환
-        int actualCardIndex = GetActualCardIndex(slotIndex);
+        // 🔥 전차 효과 중인지 확인하고 다른 매핑 적용
+        int actualCardIndex = IsChariotSecondPick() ?
+            GetChariotActualCardIndex(slotIndex) :
+            GetActualCardIndex(slotIndex);
+
         if (actualCardIndex >= 0)
         {
             Debug.Log($"[CardButtonHandler] 슬롯 {slotIndex} 클릭 → 카드 인덱스 {actualCardIndex}");
@@ -24,6 +27,107 @@ public class CardButtonHandler : MonoBehaviour
         {
             Debug.LogWarning($"[CardButtonHandler] 슬롯 {slotIndex} 클릭했지만 유효하지 않은 카드 인덱스");
         }
+    }
+
+    /// <summary>
+    /// 전차 효과의 두 번째 선택인지 확인
+    /// </summary>
+    private bool IsChariotSecondPick()
+    {
+        if (GameManager.Instance == null) return false;
+
+        // GameManager의 전차 상태 확인 (리플렉션 사용)
+        var isChariotActiveField = GameManager.Instance.GetType()
+            .GetField("isChariotActive", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var isChariotFirstPickField = GameManager.Instance.GetType()
+            .GetField("isChariotFirstPick", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+        if (isChariotActiveField != null && isChariotFirstPickField != null)
+        {
+            bool isChariotActive = (bool)isChariotActiveField.GetValue(GameManager.Instance);
+            bool isChariotFirstPick = (bool)isChariotFirstPickField.GetValue(GameManager.Instance);
+
+            // 전차가 활성화되어 있고, 첫 번째 선택이 아니면 두 번째 선택
+            return isChariotActive && !isChariotFirstPick;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// 전차 효과 두 번째 선택 시 슬롯 인덱스를 카드 인덱스로 변환 (원래 위치 기반)
+    /// </summary>
+    private int GetChariotActualCardIndex(int buttonSlotIndex)
+    {
+        var currentCards = GetCurrentDrawnCards();
+        if (currentCards == null || currentCards.Count != 2)
+        {
+            Debug.LogError($"[CardButtonHandler] 전차 효과 오류 - currentCards가 null이거나 2장이 아님: {currentCards?.Count ?? 0}");
+            return -1;
+        }
+
+        Debug.Log($"[CardButtonHandler] 전차 효과 - 슬롯 {buttonSlotIndex}, 카드 수: {currentCards.Count}");
+
+        // 🔥 활성화된 슬롯들 가져오기 (원래 위치 그대로)
+        var activeSlots = GetActiveChariotSlots();
+        Debug.Log($"[CardButtonHandler] 활성 슬롯: [{string.Join(", ", activeSlots)}]");
+
+        // 🔥 클릭된 슬롯이 활성 슬롯 중 몇 번째인지 찾기
+        int cardIndex = -1;
+        for (int i = 0; i < activeSlots.Length; i++)
+        {
+            if (activeSlots[i] == buttonSlotIndex)
+            {
+                cardIndex = i;
+                Debug.Log($"[CardButtonHandler] 슬롯 {buttonSlotIndex}는 활성 슬롯 중 {i}번째 → 카드 인덱스 {cardIndex}");
+                break;
+            }
+        }
+
+        if (cardIndex >= 0 && cardIndex < currentCards.Count)
+        {
+            Debug.Log($"[CardButtonHandler] 최종 매핑: 슬롯 {buttonSlotIndex} → 카드 인덱스 {cardIndex} ('{currentCards[cardIndex].Name}')");
+            return cardIndex;
+        }
+        else
+        {
+            Debug.LogError($"[CardButtonHandler] 전차 효과에서 잘못된 슬롯: {buttonSlotIndex} (활성 슬롯: [{string.Join(", ", activeSlots)}])");
+            return -1;
+        }
+    }
+
+
+
+    /// <summary>
+    /// 현재 활성화된 전차 슬롯들 가져오기 (실제 상태 기반)
+    /// </summary>
+    private int[] GetActiveChariotSlots()
+    {
+        List<int> activeSlots = new List<int>();
+
+        if (UnifiedCardManager.Instance != null)
+        {
+            // 실제로 카드가 앞면으로 표시되고 버튼이 활성화된 슬롯들 확인
+            for (int i = 0; i < UnifiedCardManager.Instance.isCardFront.Length; i++)
+            {
+                bool isCardFront = UnifiedCardManager.Instance.isCardFront[i];
+                bool isButtonActive = i < UnifiedCardManager.Instance.cardButtons.Length &&
+                                    UnifiedCardManager.Instance.cardButtons[i] != null &&
+                                    UnifiedCardManager.Instance.cardButtons[i].interactable;
+
+                if (isCardFront && isButtonActive)
+                {
+                    activeSlots.Add(i);
+                }
+            }
+        }
+
+        // 슬롯 번호 순으로 정렬 (0, 1, 2 순서)
+        activeSlots.Sort();
+
+        var result = activeSlots.ToArray();
+        Debug.Log($"[CardButtonHandler] 감지된 활성 슬롯 (정렬됨): [{string.Join(", ", result)}]");
+        return result;
     }
 
     /// <summary>
@@ -54,8 +158,18 @@ public class CardButtonHandler : MonoBehaviour
             // CardStoryDisplay가 있으면 스토리 표시
             if (CardStoryDisplay.Instance != null)
             {
-                CardStoryDisplay.Instance.ShowCardStory(selectedCard.Name);
-                Debug.Log($"[CardButtonHandler] '{selectedCard.Name}' 카드 스토리 표시 (선택 전)");
+                // 🔥 전차 효과 두 번째 선택인 경우 표시 이름 변경
+                if (IsChariotSecondPick())
+                {
+                    string displayName = $"[전차] {selectedCard.Name}";
+                    CardStoryDisplay.Instance.ShowCardStoryWithCustomName(selectedCard.Name, displayName);
+                    Debug.Log($"[CardButtonHandler] 전차 효과 '{selectedCard.Name}' 카드 스토리 표시");
+                }
+                else
+                {
+                    CardStoryDisplay.Instance.ShowCardStory(selectedCard.Name);
+                    Debug.Log($"[CardButtonHandler] '{selectedCard.Name}' 카드 스토리 표시 (선택 전)");
+                }
             }
             else
             {
@@ -96,19 +210,27 @@ public class CardButtonHandler : MonoBehaviour
     }
 
     /// <summary>
-    /// 슬롯 인덱스를 실제 카드 인덱스로 변환
+    /// 슬롯 인덱스를 실제 카드 인덱스로 변환 (일반 상황) - 디버깅 강화
     /// </summary>
     private int GetActualCardIndex(int buttonSlotIndex)
     {
-        if (GameManager.Instance == null) return -1;
+        if (GameManager.Instance == null)
+        {
+            Debug.LogError("[CardButtonHandler] GameManager.Instance가 null");
+            return -1;
+        }
 
         // 현재 뽑힌 카드들 가져오기
         var currentCards = GetCurrentDrawnCards();
-        if (currentCards == null) return -1;
+        if (currentCards == null)
+        {
+            Debug.LogError("[CardButtonHandler] currentCards가 null");
+            return -1;
+        }
 
         int cardCount = currentCards.Count;
 
-        Debug.Log($"[CardButtonHandler] 현재 카드 수: {cardCount}, 클릭된 슬롯: {buttonSlotIndex}");
+        Debug.Log($"[CardButtonHandler] 일반 상황 - 카드 수: {cardCount}, 클릭된 슬롯: {buttonSlotIndex}");
 
         // 카드 수에 따른 슬롯 매핑
         int result = -1;
@@ -131,7 +253,7 @@ public class CardButtonHandler : MonoBehaviour
                 break;
         }
 
-        Debug.Log($"[CardButtonHandler] 슬롯 {buttonSlotIndex} → 카드 인덱스 {result}");
+        Debug.Log($"[CardButtonHandler] 일반 매핑: 슬롯 {buttonSlotIndex} → 카드 인덱스 {result}");
         return result;
     }
 }

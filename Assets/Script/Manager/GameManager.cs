@@ -247,23 +247,37 @@ public class GameManager : MonoBehaviour
         return (indices, hp, curse, text, UnityPlayer.RerollAvailable);
     }
 
+    /// <summary>
+    /// ApplyCardByIndex 메서드 수정 - 디버그 로그 추가
+    /// </summary>
     public void ApplyCardByIndex(int index)
     {
+        Debug.Log($"[GameManager] ApplyCardByIndex 호출: index={index}");
+        Debug.Log($"[GameManager] 현재 상태: currentDrawnCards.Count={currentDrawnCards?.Count ?? 0}");
+        Debug.Log($"[GameManager] 전차 상태: isChariotActive={isChariotActive}, isChariotFirstPick={isChariotFirstPick}");
+
         UnityPlayer.NextDrawNum = 3;
         UnityPlayer.Archangel = false;
 
-        if (index < 0 || index >= currentDrawnCards.Count) return;
+        if (index < 0 || index >= currentDrawnCards.Count)
+        {
+            Debug.LogError($"[GameManager] 잘못된 인덱스: {index}, 카드 수: {currentDrawnCards.Count}");
+            return;
+        }
 
         var selectedCard = currentDrawnCards[index];
+        Debug.Log($"[GameManager] 선택된 카드: '{selectedCard.Name}'");
 
         // 🔥 일반 선택도 강조 애니메이션 추가
         if (!isRandomPick) // 랜덤 선택이 아닐 때만 (랜덤은 이미 처리됨)
         {
+            Debug.Log("[GameManager] 일반 선택 애니메이션 시작");
             StartCoroutine(HandleNormalSelection(index, selectedCard));
             return;
         }
 
         // 랜덤 선택인 경우 기존 로직 그대로 진행
+        Debug.Log("[GameManager] 랜덤 선택 - 직접 카드 적용");
         ContinueWithCardApplication(index, selectedCard);
     }
 
@@ -310,7 +324,7 @@ public class GameManager : MonoBehaviour
         yield return StartCoroutine(HighlightSelectedCard(slotIndex, true));
 
         // 4. 잠시 대기 (플레이어가 확인할 시간)
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(1.0f);
 
         // 5. 선택된 카드도 페이드 아웃
         yield return StartCoroutine(FadeOutSelectedCard(slotIndex));
@@ -363,14 +377,64 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 일반 선택된 카드 강조 애니메이션
+    /// 현재 활성화된 전차 슬롯들 가져오기 (정렬된 순서로)
+    /// </summary>
+    private int[] GetActiveChariotSlots()
+    {
+        List<int> activeSlots = new List<int>();
+
+        if (unifiedCardManager != null)
+        {
+            // 실제로 카드가 앞면으로 표시된 슬롯들 확인
+            for (int i = 0; i < unifiedCardManager.isCardFront.Length; i++)
+            {
+                if (unifiedCardManager.isCardFront[i])
+                {
+                    activeSlots.Add(i);
+                }
+            }
+        }
+
+        // 🔥 슬롯 번호 순으로 정렬 (0, 1, 2 순서)
+        activeSlots.Sort();
+
+        var result = activeSlots.ToArray();
+        Debug.Log($"[GameManager] 감지된 활성 슬롯 (정렬됨): [{string.Join(", ", result)}]");
+        return result;
+    }
+
+    /// <summary>
+    /// 일반 선택된 카드 강조 애니메이션 (전차 부분 완전 수정)
     /// </summary>
     private System.Collections.IEnumerator HighlightNormalSelectedCard(int cardIndex)
     {
-        int[] slotIndices = GetSlotIndices(currentDrawnCards.Count);
-        int slotIndex = slotIndices[cardIndex];
+        int slotIndex;
 
-        Debug.Log($"[GameManager] 일반 카드 강조: 카드 인덱스 {cardIndex} → 슬롯 인덱스 {slotIndex}");
+        // 🔥 전차 두 번째 선택인지 확인
+        if (isChariotActive && !isChariotFirstPick)
+        {
+            // 🔥 전차 두 번째 선택: 활성화된 슬롯에서 해당 카드 인덱스의 슬롯 찾기
+            Debug.Log($"[GameManager] 전차 두 번째 선택 - 카드 인덱스 {cardIndex}");
+
+            var activeSlots = GetActiveChariotSlots();
+            if (cardIndex >= 0 && cardIndex < activeSlots.Length)
+            {
+                slotIndex = activeSlots[cardIndex];
+                Debug.Log($"[GameManager] 전차 두 번째 선택 매핑: 카드 인덱스 {cardIndex} → 슬롯 {slotIndex}");
+            }
+            else
+            {
+                Debug.LogError($"[GameManager] 전차 두 번째 선택 오류 - 잘못된 카드 인덱스: {cardIndex}, 활성 슬롯 수: {activeSlots.Length}");
+                yield break;
+            }
+        }
+        else
+        {
+            // 일반 상황: 기존 로직 사용
+            int[] slotIndices = GetSlotIndices(currentDrawnCards.Count);
+            slotIndex = slotIndices[cardIndex];
+            Debug.Log($"[GameManager] 일반 카드 강조: 카드 인덱스 {cardIndex} → 슬롯 인덱스 {slotIndex}");
+        }
 
         // 1. 스토리는 이미 CardButtonHandler에서 표시됨 (중복 방지)
 
@@ -386,6 +450,7 @@ public class GameManager : MonoBehaviour
         // 5. 선택된 카드도 페이드 아웃
         yield return StartCoroutine(FadeOutSelectedCard(slotIndex));
     }
+
 
     #endregion
 
@@ -442,7 +507,7 @@ public class GameManager : MonoBehaviour
             .setOnUpdate((Color color) => cardImage.color = color)
             .setLoopPingPong(1);
 
-        yield return new WaitForSeconds(highlightTime * 0.7f);
+        yield return new WaitForSeconds(highlightTime * 0.4f);
 
         // 3. 원래 크기로 복원
         LeanTween.scale(cardTransform.gameObject, originalScale, highlightTime * 0.3f)
@@ -456,7 +521,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 선택된 카드 페이드 아웃
+    /// 선택된 카드 페이드 아웃 (전차 부분 수정)
     /// </summary>
     private System.Collections.IEnumerator FadeOutSelectedCard(int slotIndex)
     {
@@ -471,11 +536,28 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSeconds(fadeTime);
 
-        // 모든 카드 슬롯을 빈 상태로 설정
-        unifiedCardManager.SetAllEmptySlots();
+        // 🔥 전차 효과 첫 번째 선택인지 확인
+        if (isChariotActive && isChariotFirstPick)
+        {
+            Debug.Log("[GameManager] 전차 첫 번째 선택 - 선택된 카드만 빈 슬롯으로 설정");
+            // 전차 첫 번째 선택: 선택된 카드만 빈 슬롯으로 설정
+            unifiedCardManager.SetEmptySlot(slotIndex);
 
-        // CanvasGroup 알파값 복원 (다음 턴을 위해)
-        unifiedCardManager.RestoreAllCardAlpha();
+            // 🔥 나머지 카드들의 투명도 복원
+            unifiedCardManager.RestoreAllCardAlpha();
+
+            // 선택된 슬롯은 다시 빈 상태로 (투명하게)
+            unifiedCardManager.SetEmptySlot(slotIndex);
+        }
+        else
+        {
+            Debug.Log("[GameManager] 일반 상황 또는 전차 두 번째 선택 - 모든 카드 슬롯 비우기");
+            // 일반 상황 또는 전차 두 번째 선택: 모든 카드 슬롯을 빈 상태로 설정
+            unifiedCardManager.SetAllEmptySlots();
+
+            // CanvasGroup 알파값 복원 (다음 턴을 위해)
+            unifiedCardManager.RestoreAllCardAlpha();
+        }
     }
 
     /// <summary>
@@ -498,24 +580,44 @@ public class GameManager : MonoBehaviour
     #endregion
 
     /// <summary>
-    /// 카드 적용 로직 계속 진행
+    /// 카드 적용 로직 (전차 부분 수정)
     /// </summary>
     private void ContinueWithCardApplication(int index, Card selectedCard)
     {
+        Debug.Log($"[GameManager] ===== ContinueWithCardApplication =====");
+        Debug.Log($"[GameManager] 인덱스: {index}, 카드: '{selectedCard.Name}'");
+        Debug.Log($"[GameManager] 전차 상태: active={isChariotActive}, firstPick={isChariotFirstPick}");
+        Debug.Log($"[GameManager] 현재 카드들: [{string.Join(", ", currentDrawnCards.ConvertAll(c => c.Name))}]");
+
+        // 🔥 인덱스 유효성 검사
+        if (index < 0 || index >= currentDrawnCards.Count)
+        {
+            Debug.LogError($"[GameManager] 잘못된 카드 인덱스: {index}, 전체 카드 수: {currentDrawnCards.Count}");
+            return;
+        }
+
+        // 선택된 카드를 목록에서 제거
         currentDrawnCards.RemoveAt(index);
+        Debug.Log($"[GameManager] 카드 '{selectedCard.Name}' 제거 후 남은 카드: [{string.Join(", ", currentDrawnCards.ConvertAll(c => c.Name))}]");
+
+        // 카드 효과 적용
         ApplyCard(selectedCard, currentDrawnCards);
 
         if (isChariotActive)
         {
             if (isChariotFirstPick)
             {
+                Debug.Log("[GameManager] 전차 첫 번째 선택 완료 - 두 번째 선택 준비");
                 isChariotFirstPick = false;
-                unifiedCardManager.DisplayCards(currentDrawnCards);
+
+                // 🔥 전차 효과: 첫 번째 선택 후 남은 2장을 특정 슬롯에 배치
+                DisplayChariotRemainingCards(index, currentDrawnCards);
                 UpdateTurnDisplay();
                 return;
             }
             else
             {
+                Debug.Log("[GameManager] 전차 두 번째 선택 완료 - 전차 효과 종료");
                 isChariotActive = false;
                 UnityGame.Turn++;
                 UpdateTurnDisplay();
@@ -524,9 +626,290 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        Debug.Log("[GameManager] 일반 카드 선택 완료 - 다음 턴 시작");
         UnityGame.Turn++;
         UpdateTurnDisplay();
         StartTurn();
+    }
+
+    /// <summary>
+    /// 전차 효과: 첫 번째 선택 후 남은 2장 배치 (원래 위치 그대로 유지)
+    /// </summary>
+    private void DisplayChariotRemainingCards(int selectedIndex, List<Card> remainingCards)
+    {
+        Debug.Log($"[GameManager] ===== 전차 효과 시작 =====");
+        Debug.Log($"[GameManager] 첫 번째 선택 인덱스: {selectedIndex}");
+        Debug.Log($"[GameManager] 남은 카드: {string.Join(", ", remainingCards.ConvertAll(c => c.Name))}");
+
+        if (remainingCards.Count != 2)
+        {
+            Debug.LogError($"[GameManager] 전차 효과 오류 - 남은 카드가 2장이 아닙니다: {remainingCards.Count}장");
+            return;
+        }
+
+        // 🔥 선택된 슬롯만 빈 상태로 만들고, 나머지는 그대로 유지
+        int[] originalSlots = GetSlotIndices(3); // [0, 1, 2]
+        int selectedSlotIndex = originalSlots[selectedIndex];
+
+        // 선택된 슬롯만 비우기
+        unifiedCardManager.SetEmptySlot(selectedSlotIndex);
+        unifiedCardManager.SetCardButtonActive(selectedSlotIndex, false);
+        unifiedCardManager.isCardFront[selectedSlotIndex] = false;
+
+        // 🔥 남은 카드들의 슬롯 인덱스 계산 (원래 위치 유지)
+        List<int> remainingSlotsList = new List<int>();
+        for (int i = 0; i < 3; i++)
+        {
+            if (i != selectedIndex) // 선택되지 않은 슬롯들
+            {
+                remainingSlotsList.Add(originalSlots[i]);
+            }
+        }
+        int[] remainingSlots = remainingSlotsList.ToArray();
+
+        Debug.Log($"[GameManager] 선택된 슬롯: {selectedSlotIndex} (비움)");
+        Debug.Log($"[GameManager] 남은 카드 슬롯: [{string.Join(", ", remainingSlots)}] (그대로 유지)");
+
+        // 🔥 남은 카드들의 버튼만 활성화 (이미지는 이미 표시되어 있음)
+        for (int i = 0; i < remainingSlots.Length; i++)
+        {
+            int slotIndex = remainingSlots[i];
+            unifiedCardManager.SetCardButtonActive(slotIndex, true);
+            unifiedCardManager.RestoreCardAlpha(slotIndex);
+
+            Debug.Log($"[GameManager] 슬롯 {slotIndex} 버튼 활성화 (카드: '{remainingCards[i].Name}')");
+        }
+
+        // 🔥 currentDrawnCards는 남은 카드들의 원래 순서 유지
+        // remainingCards는 이미 올바른 순서로 되어 있음 (selectedIndex 제거 후)
+        currentDrawnCards = new List<Card>(remainingCards);
+
+        Debug.Log($"[GameManager] 전차 배치 완료:");
+        for (int i = 0; i < remainingSlots.Length; i++)
+        {
+            Debug.Log($"  - 슬롯 {remainingSlots[i]}: '{remainingCards[i].Name}' (원래 위치 유지)");
+        }
+        Debug.Log($"  - currentDrawnCards: [{string.Join(", ", currentDrawnCards.ConvertAll(c => c.Name))}]");
+        Debug.Log($"[GameManager] ===== 전차 효과 완료 =====");
+    }
+
+
+
+    /// <summary>
+    /// 카드들을 슬롯 순서대로 재정렬
+    /// </summary>
+    private List<Card> ReorderCardsBySlots(List<Card> cards, int[] slotIndices)
+    {
+        List<Card> reorderedCards = new List<Card>();
+
+        // 슬롯 인덱스와 카드를 매핑
+        var slotCardPairs = new List<(int slotIndex, Card card)>();
+        for (int i = 0; i < Math.Min(cards.Count, slotIndices.Length); i++)
+        {
+            slotCardPairs.Add((slotIndices[i], cards[i]));
+        }
+
+        // 슬롯 인덱스 순으로 정렬 (0, 1, 2 순서)
+        slotCardPairs.Sort((a, b) => a.slotIndex.CompareTo(b.slotIndex));
+
+        // 정렬된 순서대로 카드 배열 생성
+        foreach (var pair in slotCardPairs)
+        {
+            reorderedCards.Add(pair.card);
+            Debug.Log($"[GameManager] 슬롯 {pair.slotIndex} → 카드 '{pair.card.Name}'");
+        }
+
+        return reorderedCards;
+    }
+
+    /// <summary>
+    /// 카드를 한 슬롯에서 다른 슬롯으로 이동 (수정됨)
+    /// </summary>
+    private void MoveCardToSlot(int fromSlot, int toSlot, Card card)
+    {
+        Debug.Log($"[GameManager] 카드 '{card.Name}' 이동: 슬롯 {fromSlot} → {toSlot}");
+
+        // 🔥 원래 슬롯을 빈 상태로 설정
+        unifiedCardManager.SetEmptySlot(fromSlot);
+        unifiedCardManager.SetCardButtonActive(fromSlot, false);
+        unifiedCardManager.isCardFront[fromSlot] = false;
+
+        // 🔥 새 슬롯에 카드 설정 (새로운 메서드 사용)
+        unifiedCardManager.SetCardSlotDirect(toSlot, card);
+        // 버튼 활성화는 DisplayChariotRemainingCards에서 일괄 처리
+
+        // 🔥 투명도 복원
+        unifiedCardManager.RestoreCardAlpha(toSlot);
+
+        Debug.Log($"[GameManager] 카드 이동 완료: '{card.Name}' → 슬롯 {toSlot}");
+    }
+
+    /// <summary>
+    /// 전차 효과에서 첫 번째 선택에 따른 남은 2장의 배치 슬롯 반환
+    /// </summary>
+    private int[] GetChariotRemainingSlots(int selectedIndex)
+    {
+        // 원래 3장이 [0, 1, 2] 슬롯에 배치되어 있었다고 가정
+        switch (selectedIndex)
+        {
+            case 0: // Left 선택 → Middle, Right 슬롯에 배치
+                return new int[] { 1, 2 };
+            case 1: // Middle 선택 → Left, Right 슬롯에 배치  
+                return new int[] { 0, 2 };
+            case 2: // Right 선택 → Left, Middle 슬롯에 배치
+                return new int[] { 0, 1 };
+            default:
+                Debug.LogError($"[GameManager] 잘못된 선택 인덱스: {selectedIndex}");
+                return new int[] { 0, 1 }; // 기본값
+        }
+    }
+
+    /// <summary>
+    /// 전차 효과 남은 카드들 애니메이션
+    /// </summary>
+    private System.Collections.IEnumerator AnimateChariotRemainingCards(List<Card> remainingCards, int[] targetSlots)
+    {
+        float moveDuration = 0.5f;
+        float flipDelay = 0.5f;
+        float flipDuration = 0.3f;
+
+        // 1. 카드들을 아래에서 올라오게 하는 애니메이션
+        for (int i = 0; i < 2; i++)
+        {
+            int slotIndex = targetSlots[i];
+            RectTransform rt = unifiedCardManager.cardImageSlots[slotIndex].GetComponent<RectTransform>();
+            if (rt == null) continue;
+
+            Vector2 originalPos = rt.anchoredPosition;
+            Vector2 startPos = originalPos + new Vector2(0, -Screen.height);
+            rt.anchoredPosition = startPos;
+
+            // 슬라이드 업
+            LeanTween.move(rt, originalPos, moveDuration).setEaseOutCubic();
+
+            if (i == 0) // 첫 번째 카드만 딜레이 후 두 번째 카드
+                yield return new WaitForSeconds(0.2f);
+        }
+
+        // 2. 전부 올라온 후 대기
+        yield return new WaitForSeconds(flipDelay);
+
+        // 3. 카드 뒤집기 (1단계: 0→90도)
+        for (int i = 0; i < 2; i++)
+        {
+            int slotIndex = targetSlots[i];
+            RectTransform rt = unifiedCardManager.cardImageSlots[slotIndex].GetComponent<RectTransform>();
+            if (rt == null) continue;
+
+            LeanTween.rotateY(rt.gameObject, 90f, flipDuration / 2).setEaseInOutSine();
+        }
+
+        yield return new WaitForSeconds(flipDuration / 2);
+
+        // 4. 90도에서 앞면 이미지로 교체
+        for (int i = 0; i < 2; i++)
+        {
+            int slotIndex = targetSlots[i];
+            SetChariotCardSlot(slotIndex, remainingCards[i]);
+            unifiedCardManager.isCardFront[slotIndex] = true;
+        }
+
+        // 5. 2단계: 90→0도
+        for (int i = 0; i < 2; i++)
+        {
+            int slotIndex = targetSlots[i];
+            RectTransform rt = unifiedCardManager.cardImageSlots[slotIndex].GetComponent<RectTransform>();
+            if (rt == null) continue;
+
+            LeanTween.rotateY(rt.gameObject, 0f, flipDuration / 2).setEaseInOutSine();
+        }
+
+        yield return new WaitForSeconds(flipDuration / 2);
+    }
+
+    /// <summary>
+    /// 전차 효과용 카드 슬롯 설정
+    /// </summary>
+    private void SetChariotCardSlot(int slotIndex, Card card)
+    {
+        if (slotIndex >= unifiedCardManager.cardImageSlots.Length) return;
+
+        var imageSlot = unifiedCardManager.cardImageSlots[slotIndex];
+        int cardIndex = GetCardIndex(card);
+
+        Debug.Log($"[GameManager] 전차 슬롯 {slotIndex}에 '{card.Name}' 카드 표시 (인덱스: {cardIndex})");
+
+        // 카드 이미지 설정
+        if (cardIndex >= 0 && cardIndex < unifiedCardManager.cardSprites.Length && unifiedCardManager.cardSprites[cardIndex] != null)
+        {
+            imageSlot.sprite = unifiedCardManager.cardSprites[cardIndex];
+            imageSlot.color = Color.white;
+        }
+        else
+        {
+            SetDefaultCardImage(imageSlot, card);
+        }
+
+        // 카드 이름 텍스트 설정
+        if (slotIndex < unifiedCardManager.cardNameTexts.Length && unifiedCardManager.cardNameTexts[slotIndex] != null)
+        {
+            unifiedCardManager.cardNameTexts[slotIndex].text = card.Name;
+        }
+    }
+
+    /// <summary>
+    /// 카드 인덱스 가져오기 (CardLibrary에서)
+    /// </summary>
+    private int GetCardIndex(Card card)
+    {
+        for (int i = 0; i < CardLibrary.AllCards.Count; i++)
+        {
+            if (CardLibrary.AllCards[i].Name == card.Name)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /// <summary>
+    /// 기본 카드 이미지 설정
+    /// </summary>
+    private void SetDefaultCardImage(Image imageSlot, Card card)
+    {
+        Debug.LogWarning($"[GameManager] '{card.Name}' 스프라이트 없음");
+
+        if (unifiedCardManager.defaultCardSprite != null)
+        {
+            imageSlot.sprite = unifiedCardManager.defaultCardSprite;
+            imageSlot.color = GetCardTypeColor(card);
+        }
+        else
+        {
+            imageSlot.sprite = null;
+            imageSlot.color = GetCardTypeColor(card);
+        }
+    }
+
+    /// <summary>
+    /// 카드 타입별 색상 (UnifiedCardManager에서 복사)
+    /// </summary>
+    private Color GetCardTypeColor(Card card)
+    {
+        switch (card.Name)
+        {
+            case "죽음": return Color.black;
+            case "바보": return new Color(1f, 0.5f, 0f); // 주황색
+            case "전차":
+            case "매달린 남자": return Color.cyan;
+            case "세계": return Color.magenta;
+            default:
+                if (card.HpChange > 0) return Color.green;
+                else if (card.HpChange < 0) return Color.red;
+                else if (card.CurseChange > 0) return new Color(0.5f, 0f, 0.5f); // 보라색
+                else if (card.CurseChange < 0) return Color.blue;
+                else return Color.yellow;
+        }
     }
 
     private void ApplyCard(Card selectedCard, List<Card> remainingCards)

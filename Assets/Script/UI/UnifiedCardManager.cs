@@ -272,6 +272,38 @@ public class UnifiedCardManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 특정 슬롯에 카드 직접 설정 (전차 효과용)
+    /// </summary>
+    public void SetCardSlotDirect(int slotIndex, Card card)
+    {
+        if (slotIndex >= cardImageSlots.Length) return;
+
+        var imageSlot = cardImageSlots[slotIndex];
+        int cardIndex = GetCardIndex(card);
+
+        Debug.Log($"[UnifiedCardManager] 슬롯 {slotIndex}에 '{card.Name}' 카드 직접 설정 (인덱스: {cardIndex})");
+
+        // 카드 이미지 설정
+        if (cardIndex >= 0 && cardIndex < cardSprites.Length && cardSprites[cardIndex] != null)
+        {
+            imageSlot.sprite = cardSprites[cardIndex];
+            imageSlot.color = Color.white;
+        }
+        else
+        {
+            SetDefaultCardImage(imageSlot, card);
+        }
+
+        // 카드 이름 텍스트 설정
+        if (slotIndex < cardNameTexts.Length && cardNameTexts[slotIndex] != null)
+        {
+            cardNameTexts[slotIndex].text = card.Name;
+        }
+
+        // 앞면 상태로 설정
+        isCardFront[slotIndex] = true;
+    }
     private void SetDefaultCardImage(Image imageSlot, Card card)
     {
         Debug.LogWarning($"[UnifiedCardManager] '{card.Name}' 스프라이트 없음");
@@ -321,20 +353,30 @@ public class UnifiedCardManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 특정 슬롯의 투명도만 복원
+    /// </summary>
+    public void RestoreCardAlpha(int slotIndex)
+    {
+        if (slotIndex >= cardImageSlots.Length) return;
+
+        var canvasGroup = cardImageSlots[slotIndex].GetComponent<CanvasGroup>();
+        if (canvasGroup != null)
+        {
+            canvasGroup.alpha = 1f;
+        }
+
+        // 이미지 색상도 원래대로 복원
+        cardImageSlots[slotIndex].color = Color.white;
+    }
+
+    /// <summary>
     /// 모든 카드 슬롯의 CanvasGroup 알파값 복원
     /// </summary>
     public void RestoreAllCardAlpha()
     {
         for (int i = 0; i < cardImageSlots.Length; i++)
         {
-            var canvasGroup = cardImageSlots[i].GetComponent<CanvasGroup>();
-            if (canvasGroup != null)
-            {
-                canvasGroup.alpha = 1f;
-            }
-
-            // 이미지 색상도 원래대로 복원
-            cardImageSlots[i].color = Color.white;
+            RestoreCardAlpha(i);
         }
     }
 
