@@ -118,13 +118,6 @@ git push origin --delete <branch>
 
 ## 4. 코드 스타일 & 품질
 
-### 📐 C# 코드 스타일
-
-- 클래스/메서드: `PascalCase`
-- 변수: `camelCase`
-- 상수: `UPPER_SNAKE_CASE`
-- 들여쓰기: 스페이스 4칸
-- 최대 라인 길이: 120자
 
 ### 🧹 Lint & 포맷
 
