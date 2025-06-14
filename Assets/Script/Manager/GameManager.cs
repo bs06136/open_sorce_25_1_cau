@@ -108,6 +108,40 @@ public class GameManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// 랜덤으로 선택된 카드의 스토리 표시
+    /// </summary>
+    /// <param name="randomIndex">랜덤으로 선택된 카드의 인덱스</param>
+    private void ShowRandomSelectedCardStory(int randomIndex)
+    {
+        if (currentDrawnCards != null && randomIndex >= 0 && randomIndex < currentDrawnCards.Count)
+        {
+            var selectedCard = currentDrawnCards[randomIndex];
+
+            Debug.Log($"[GameManager] 랜덤으로 선택된 카드: 인덱스 {randomIndex}, 이름 '{selectedCard.Name}'");
+
+            // CardStoryDisplay가 있으면 스토리 표시
+            if (CardStoryDisplay.Instance != null)
+            {
+                // 🔥 랜덤 선택임을 표시하기 위해 카드 이름 앞에 "[무작위]" 추가
+                string displayName = $"[무작위] {selectedCard.Name}";
+
+                // 🔥 스토리 표시 시 카드 이름도 함께 업데이트
+                CardStoryDisplay.Instance.ShowCardStoryWithCustomName(selectedCard.Name, displayName);
+
+                Debug.Log($"[GameManager] 랜덤 선택 카드 '{selectedCard.Name}' 스토리 표시");
+            }
+            else
+            {
+                Debug.LogWarning("[GameManager] CardStoryDisplay.Instance가 null입니다.");
+            }
+        }
+        else
+        {
+            Debug.LogError($"[GameManager] 랜덤 카드 인덱스 오류: {randomIndex}, 전체 카드 수: {currentDrawnCards?.Count ?? 0}");
+        }
+    }
+
     public void StartGame()
     {
         turnCounter = 0;
@@ -232,6 +266,8 @@ else
 
             lastRandomIndex = randomIndex;
             isRandomPick = true;
+
+            ShowRandomSelectedCardStory(randomIndex);
 
             ApplyCardByIndex(randomIndex);
             return;

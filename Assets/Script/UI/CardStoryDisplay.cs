@@ -98,6 +98,16 @@ public class CardStoryDisplay : MonoBehaviour
     /// <param name="cardName">카드 이름</param>
     public void ShowCardStory(string cardName)
     {
+        ShowCardStoryWithCustomName(cardName, cardName);
+    }
+
+    /// <summary>
+    /// 커스텀 표시 이름으로 카드 스토리 표시 (랜덤 선택용)
+    /// </summary>
+    /// <param name="cardName">실제 카드 이름 (스토리 검색용)</param>
+    /// <param name="displayName">화면에 표시될 이름</param>
+    public void ShowCardStoryWithCustomName(string cardName, string displayName)
+    {
         if (string.IsNullOrEmpty(cardName))
         {
             Debug.LogWarning("[CardStoryDisplay] 카드 이름이 비어있습니다.");
@@ -112,13 +122,13 @@ public class CardStoryDisplay : MonoBehaviour
 
         currentCardName = cardName;
 
-        // 스토리 가져오기
+        // 실제 카드 이름으로 스토리 가져오기
         string story = CardStoryLibrary.GetRandomStory(cardName);
 
-        Debug.Log($"[CardStoryDisplay] '{cardName}' 카드 스토리 표시: {story}");
+        Debug.Log($"[CardStoryDisplay] '{cardName}' 카드 스토리 표시 (표시명: '{displayName}'): {story}");
 
-        // 스토리 표시 코루틴 시작
-        currentStoryCoroutine = StartCoroutine(DisplayStoryCoroutine(cardName, story));
+        // 스토리 표시 코루틴 시작 (커스텀 표시 이름 사용)
+        currentStoryCoroutine = StartCoroutine(DisplayStoryCoroutine(displayName, story));
     }
 
     /// <summary>
