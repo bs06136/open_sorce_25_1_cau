@@ -284,7 +284,7 @@ public class GameManager : MonoBehaviour
     #region 랜덤 선택 애니메이션
 
     /// <summary>
-    /// 랜덤 선택 전체 프로세스 처리
+    /// 랜덤 선택 전체 프로세스 처리 (타이밍 수정)
     /// </summary>
     private System.Collections.IEnumerator HandleRandomSelection(int randomIndex)
     {
@@ -294,18 +294,67 @@ public class GameManager : MonoBehaviour
         unifiedCardManager.DisplayCards(currentDrawnCards);
         UpdateTurnDisplay();
 
-        // 2. 카드가 모두 뒤집힐 때까지 대기 (애니메이션 완료 대기)
-        yield return new WaitForSeconds(0.3f);
+        // 2. 카드 뒤집기 애니메이션이 완전히 완료될 때까지 충분히 대기
+        float cardAnimationTime = 0.5f + 0.2f * currentDrawnCards.Count + 0.5f + 0.3f; // 슬라이드업 + 딜레이 + 플립딜레이 + 플립시간
+        Debug.Log($"[GameManager] 카드 애니메이션 완료 대기: {cardAnimationTime}초");
+        yield return new WaitForSeconds(cardAnimationTime);
 
-        // 3. 랜덤 선택된 카드 강조 애니메이션
+        // 3. 모든 카드가 앞면으로 뒤집혔는지 확인
+        yield return StartCoroutine(WaitForCardsToFlip());
+
+        // 4. 랜덤 선택된 카드 강조 애니메이션
+        Debug.Log($"[GameManager] 랜덤 카드 강조 시작: 인덱스 {randomIndex}");
         yield return StartCoroutine(HighlightRandomSelectedCard(randomIndex));
 
-        // 4. 카드 적용
+        // 5. 카드 적용
         ContinueWithCardApplication(randomIndex, currentDrawnCards[randomIndex]);
     }
 
     /// <summary>
-    /// 랜덤 선택된 카드 강조 애니메이션
+    /// 모든 카드가 앞면으로 뒤집힐 때까지 대기
+    /// </summary>
+    private System.Collections.IEnumerator WaitForCardsToFlip()
+    {
+        int maxWaitTime = 50; // 5초 최대 대기
+        int waitCount = 0;
+
+        while (waitCount < maxWaitTime)
+        {
+            bool allCardsFlipped = true;
+
+            // 현재 배치된 카드 슬롯들이 모두 앞면인지 확인
+            int[] slotIndices = GetSlotIndices(currentDrawnCards.Count);
+
+            foreach (int slotIndex in slotIndices)
+            {
+                if (!unifiedCardManager.isCardFront[slotIndex])
+                {
+                    allCardsFlipped = false;
+                    break;
+                }
+            }
+
+            if (allCardsFlipped)
+            {
+                Debug.Log($"[GameManager] 모든 카드 뒤집기 완료! 대기 시간: {waitCount * 0.1f}초");
+                break;
+            }
+
+            yield return new WaitForSeconds(0.1f);
+            waitCount++;
+        }
+
+        if (waitCount >= maxWaitTime)
+        {
+            Debug.LogWarning("[GameManager] 카드 뒤집기 대기 시간 초과");
+        }
+
+        // 추가 안전 대기 시간 (0.2초)
+        yield return new WaitForSeconds(0.2f);
+    }
+
+    /// <summary>
+    /// 랜덤 선택된 카드 강조 애니메이션 (타이밍 조정)
     /// </summary>
     private System.Collections.IEnumerator HighlightRandomSelectedCard(int cardIndex)
     {
@@ -317,16 +366,19 @@ public class GameManager : MonoBehaviour
         // 1. 스토리 표시
         ShowRandomSelectedCardStory(cardIndex);
 
-        // 2. 다른 카드들 페이드 아웃
+        // 2. 약간의 대기 (스토리 표시 시간)
+        yield return new WaitForSeconds(0.3f);
+
+        // 3. 다른 카드들 페이드 아웃
         yield return StartCoroutine(FadeOutOtherCards(slotIndex));
 
-        // 3. 선택된 카드 강조 애니메이션 (랜덤용 - 노란색, 큰 확대)
+        // 4. 선택된 카드 강조 애니메이션 (랜덤용 - 노란색, 큰 확대)
         yield return StartCoroutine(HighlightSelectedCard(slotIndex, true));
 
-        // 4. 잠시 대기 (플레이어가 확인할 시간)
-        yield return new WaitForSeconds(1.0f);
+        // 5. 잠시 대기 (플레이어가 확인할 시간) - 랜덤 선택이므로 좀 더 길게
+        yield return new WaitForSeconds(1.2f);
 
-        // 5. 선택된 카드도 페이드 아웃
+        // 6. 선택된 카드도 페이드 아웃
         yield return StartCoroutine(FadeOutSelectedCard(slotIndex));
     }
 
