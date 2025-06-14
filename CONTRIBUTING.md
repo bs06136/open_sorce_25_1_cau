@@ -6,7 +6,6 @@
 
 ## 1. 개발 환경
 
-![PawsFurryGIF.gif](attachment:a5835e1f-b7f7-483a-8b19-1f40ae29b1f5:PawsFurryGIF.gif)
 
 ### 1.1 필수 도구
 
@@ -116,7 +115,7 @@ git push origin --delete <branch>
 
 ---
 
-## 4. 코드 스타일 & 품질
+## 4. 포맷 및 품질
 
 
 ### 🧹 Lint & 포맷
