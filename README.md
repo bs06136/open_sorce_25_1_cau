@@ -189,7 +189,7 @@
 
 ### Android (APK)
 
-1. 최신 릴리즈 페이지에서 `CursedTarot.apk` 파일을 다운로드합니다.  
+1. [최신 릴리즈 페이지](https://github.com/USERNAME/REPO/releases/latest)에서 `CursedTarot.apk` 파일을 다운로드합니다.  
 2. 다운로드한 APK 파일을 Android 기기로 복사합니다.  
 3. 기기 설정 → 보안 → ‘알 수 없는 출처(Unknown sources)’ 설치를 허용합니다.  
 4. APK 파일을 실행하여 설치를 완료합니다.  
