@@ -77,7 +77,7 @@ cd open_sorce_25_1_cau
 ```
 bugfix   : 체력이 줄어들지 않는 문제 해결
 doc      : 문서 내용 수정
-expand   : 새로운 카드 확장팩( 추가
+expand   : 새로운 카드 확장팩(빛나는 유물) 추가
 refactor : 카드 4장 선택되게 변경
 ```
 
@@ -98,13 +98,14 @@ git push origin <branch>
 3. **본문** 포함 항목:
     - **개요**: 작업 목적
     - **변경 사항**:
-        - `feat`: 기능 추가
         - `fix`: 버그 수정
-        - `refactor`: 리팩터링
         - `docs`: 문서 수정
+        - `expand`: 신규 카드, 로직 추가
+        - `refactor`: 기존 시스템, 로직 변경
+        - 
     - **테스트**: 검증 방법
     - **관련 이슈**: `closes #23`
-4. 리뷰어 지정 및 최소 1명 승인
+4. PR 요청 → collaborator 확인 후 승인
 5. CI 성공 → 머지
 6. 브랜치 삭제:
 
@@ -139,7 +140,6 @@ git push origin --delete <branch>
 
 ## 5. 커뮤니케이션 & 지원
 
-- **Slack**: `#cursed-tarot` 채널
 - **이슈 관리**: GitHub Issues
 - **문서 변경**: 반드시 Wiki에 반영
 
