@@ -320,6 +320,24 @@ public class UnifiedCardManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 모든 카드 슬롯의 CanvasGroup 알파값 복원
+    /// </summary>
+    public void RestoreAllCardAlpha()
+    {
+        for (int i = 0; i < cardImageSlots.Length; i++)
+        {
+            var canvasGroup = cardImageSlots[i].GetComponent<CanvasGroup>();
+            if (canvasGroup != null)
+            {
+                canvasGroup.alpha = 1f;
+            }
+
+            // 이미지 색상도 원래대로 복원
+            cardImageSlots[i].color = Color.white;
+        }
+    }
+
     public void SetCardButtonActive(int slotIndex, bool active)
     {
         if (slotIndex < cardButtons.Length && cardButtons[slotIndex] != null)

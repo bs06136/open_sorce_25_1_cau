@@ -1,0 +1,12 @@
+# ninja log v5
+120	410	7715712023087697	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	ae2c2545d40aec90
+412	719	7715712025925571	C:/Users/rlaxo/CursedTarotProject/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/2g2q5d25/obj/armeabi-v7a/libswappywrapper.so	358193add61b96ce
+34	1369	7715712032466418	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	260d72768aa0c23c
+47	1409	7715712032897751	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	fd8587ae28b181f9
+14	1468	7715712033548335	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	5e13f86a8dbbb372
+81	1488	7715712033829097	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	ccd5f902dcac5978
+1	1545	7715712034331697	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	dc4c34d796983e4f
+104	1688	7715712035879311	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	5c54f6543da94d84
+62	1717	7715712036190682	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	d7646de1dbe5d080
+24	1760	7715712036604049	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	eabd544f51a78c5e
+1761	1874	7715712037797459	C:/Users/rlaxo/CursedTarotProject/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/2g2q5d25/obj/armeabi-v7a/libgame.so	6cbad386127e0372

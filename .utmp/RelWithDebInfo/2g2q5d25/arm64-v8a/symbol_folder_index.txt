@@ -1,0 +1,1 @@
+C:\Users\rlaxo\CursedTarotProject\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\cxx\RelWithDebInfo\2g2q5d25\obj\arm64-v8a

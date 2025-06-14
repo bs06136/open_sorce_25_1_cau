@@ -14,16 +14,28 @@ public class CardButtonHandler : MonoBehaviour
         {
             Debug.Log($"[CardButtonHandler] 슬롯 {slotIndex} 클릭 → 카드 인덱스 {actualCardIndex}");
 
-            // 🔥 핵심: 카드 적용 BEFORE에 스토리 표시
+            // 🔥 카드 적용 전에 스토리 표시 (애니메이션에서 중복 표시 방지)
             ShowCardStoryBeforeSelection(actualCardIndex);
 
-            // 카드 선택 이벤트 발동 (이후 GameManager에서 카드가 적용되고 새로운 턴 시작됨)
-            GameEvents.OnCardChosen?.Invoke(actualCardIndex);
+            // 🔥 약간의 딜레이 후 카드 선택 이벤트 발동 (스토리가 먼저 표시되도록)
+            StartCoroutine(DelayedCardSelection(actualCardIndex));
         }
         else
         {
             Debug.LogWarning($"[CardButtonHandler] 슬롯 {slotIndex} 클릭했지만 유효하지 않은 카드 인덱스");
         }
+    }
+
+    /// <summary>
+    /// 딜레이된 카드 선택 (스토리 표시 후 진행)
+    /// </summary>
+    private System.Collections.IEnumerator DelayedCardSelection(int cardIndex)
+    {
+        // 스토리가 표시될 시간을 줌
+        yield return new WaitForSeconds(0.2f);
+
+        // 카드 선택 이벤트 발동 (이후 GameManager에서 강조 애니메이션과 카드 적용)
+        GameEvents.OnCardChosen?.Invoke(cardIndex);
     }
 
     /// <summary>
