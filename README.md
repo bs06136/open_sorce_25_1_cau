@@ -114,89 +114,52 @@
 
 | 20 | 21 | 22 | 23 | 24 |
 |----|----|----|----|----|
-| [![](https://github.com/user-attachments/assets/acb37763-fa63-4270-9f1a-9bac05bc4815)](https://github.com/user-attachments/assets/acb37763-fa63-4270-9f1a-9bac05bc4815) | [![](https://github.com/user-attachments/assets/4c40e63b-a728-4196-9310-122559c5a8ae)](https://github.com/user-attachments/assets/4c40e63b-a728-4196-9310-122559c5a8ae) | [![](https://github.com/user-attachments/assets/8479def0-d267-4dc4-9de4-d285a4e52e52)](https://github.com/user-attachments/assets/8479def0-d267-4dc4-9de4-d285a4e52e52) | [![](https://github.com/user-attachments/assets/df4682b5-abf1-4fe5-acca-acba0b1ae483)](https://github.com/user-attachments/assets/df4682b5-abf1-4fe5-acca-acba0b1ae483) | [![](https://github.com/user-attachments/assets/39e754cc-7903-4837-aad1-e463093ea075)](https://github.com/user-attachments/assets/39e754cc-7903-4837-aad1-e463093ea075) |
+| [![](https://github.com/user-attachments/assets/acb37763-fa63-4270-9f1a-9bac05bc4815)](https://github.com/user-atta당
 
-| 25 | 26 | 27 | 28 | 29 |
-|----|----|----|----|----|
-| [![](https://github.com/user-attachments/assets/e2f21330-4eb1-4a15-97ab-84e255fc4a5c)](https://github.com/user-attachments/assets/e2f21330-4eb1-4a15-97ab-84e255fc4a5c) | [![](https://github.com/user-attachments/assets/7a899356-fd4f-4bf0-999c-7931aa61e8b7)](https://github.com/user-attachments/assets/7a899356-fd4f-4bf0-999c-7931aa61e8b7) | [![](https://github.com/user-attachments/assets/c58c38bc-4f6a-4b4b-b6ba-3444ad6270d9)](https://github.com/user-attachments/assets/c58c38bc-4f6a-4b4b-b6ba-3444ad6270d9) | [![](https://github.com/user-attachments/assets/dd9807fe-12d9-4236-8018-f989a75929da)](https://github.com/user-attachments/assets/dd9807fe-12d9-4236-8018-f989a75929da) | [![](https://github.com/user-attachments/assets/36c76d4d-8feb-4c9c-8e3d-a3dfbcf25557)](https://github.com/user-attachments/assets/36c76d4d-8feb-4c9c-8e3d-a3dfbcf25557) |
 
-| 30 | 31 | 32 | 33 | 34 |
-|----|----|----|----|----|
-| [![](https://github.com/user-attachments/assets/9e818ac6-f520-44e7-927b-25fa51ee067e)](https://github.com/user-attachments/assets/9e818ac6-f520-44e7-927b-25fa51ee067e) | [![](https://github.com/user-attachments/assets/32dc6d70-23cc-40c5-bc79-fe8e4710646d)](https://github.com/user-attachments/assets/32dc6d70-23cc-40c5-bc79-fe8e4710646d) | [![](https://github.com/user-attachments/assets/206fc37f-f139-4955-b46c-a031b99fcd67)](https://github.com/user-attachments/assets/206fc37f-f139-4955-b46c-a031b99fcd67) | [![](https://github.com/user-attachments/assets/5c7601f5-4b4b-446c-adad-1aefa84a0aef)](https://github.com/user-attachments/assets/5c7601f5-4b4b-446c-adad-1aefa84a0aef) | [![](https://github.com/user-attachments/assets/4119860d-5362-41e4-ad5d-b96bf27a3a5e)](https://github.com/user-attachments/assets/4119860d-5362-41e4-ad5d-b96bf27a3a5e) |
+### 개발 담당
 
-| 35 | 36 | 37 | 38 | 39 |
-|----|----|----|----|----|
-| [![](https://github.com/user-attachments/assets/0557ad70-443f-4766-99cf-6f19150f4ae7)](https://github.com/user-attachments/assets/0557ad70-443f-4766-99cf-6f19150f4ae7) | [![](https://github.com/user-attachments/assets/3c693073-9d12-4b8b-aa6f-59de5b7dbd8e)](https://github.com/user-attachments/assets/3c693073-9d12-4b8b-aa6f-59de5b7dbd8e) | [![](https://github.com/user-attachments/assets/8283bb89-0bdf-4521-aece-999a49b95361)](https://github.com/user-attachments/assets/8283bb89-0bdf-4521-aece-999a49b95361) | [![](https://github.com/user-attachments/assets/d32e3f0e-abaf-44aa-910d-bf932e33fcdd)](https://github.com/user-attachments/assets/d32e3f0e-abaf-44aa-910d-bf932e33fcdd) | [![](https://github.com/user-attachments/assets/04b2928e-442a-4f8d-9bcf-49c515158545)](https://github.com/user-attachments/assets/04b2928e-442a-4f8d-9bcf-49c515158545) |
+## 🎮 게임 로직
 
-| 40 | main | Start | Floor |   |
-|----|---|---|---|---|
-| [![](https://github.com/user-attachments/assets/74d2f6ff-9cf1-4ec1-80ad-b55c3c47c181)](https://github.com/user-attachments/assets/74d2f6ff-9cf1-4ec1-80ad-b55c3c47c181) | ![1main](https://github.com/user-attachments/assets/f62aca8b-4c46-417a-9c52-ef3088376968) | ![start1](https://github.com/user-attachments/assets/cb7809fb-4427-4c6c-91ac-43bbc9efe355) | ![Floor_1to10](https://github.com/user-attachments/assets/787aac0b-5765-4409-97f6-54714e52c1a9) |  |
+**배태현**  
+- 카드별 체력, 저주 수치 적용  
+- 카드별 특수 효과 적용  
+- 카드 드로우 기능  
+- 직업 기능  
+- 카드 덱 기능  
+
+**가오즈항**  
+- 카드 자동 추출 시스템 구현  
+- 게임 로직 설계 및 최적화  
+- 무한모드 추가  
+- 카드별 스토리 추가  
 
 ---
 
-### 👥 개발 담당
-게임 로직
+## 🎨 UI/UX
 
-배태현
+**김태우**  
+- 카드 이미지(40장) 제작  
+- UI 연결(카드 이미지, 카드 효과, 카드 스토리)  
+- 메인 메뉴 구성(텍스트, 버튼)  
+- 인게임 화면 구성(HP, 저주 표시, 카드 위치, 턴 표시)  
 
-카드별 체력, 저주 수치 적용
+**송민석**  
+- 게임 UI 이미지 제작 및 비율 조정  
+- 카드 드로우 애니메이션 추가  
+- 게임 엔딩 장면 연동  
+- 크레딧 화면  
+- 카드 종류 탭(초기 설정)  
 
-카드별 특수 효과 적용
+---
 
-카드 드로우 기능
+## 📝 설계 및 문서화
 
-직업 기능
-
-카드 덱 기능
-
-가오즈항
-
-카드 자동 추출 시스템 구현
-
-게임 로직 설계 및 최적화
-
-무한모드 추가
-
-카드별 스토리 추가
-
-UI/UX
-
-김태우
-
-카드 이미지(40장) 제작
-
-UI 연결(카드 이미지, 카드 효과, 카드 스토리)
-
-메인 메뉴 구성(텍스트, 버튼)
-
-인게임 화면 구성(HP, 저주 표시, 카드 위치, 턴 표시)
-
-송민석
-
-게임 UI 이미지 제작 및 비율 조정
-
-카드 드로우 애니메이션 추가
-
-게임 엔딩 장면 연동
-
-크레딧 화면
-
-카드 종류 탭(초기 설정)
-
-설계 및 문서화
-
-정어진
-
-게임 시스템 설계 및 기획
-
-게임 초기 CLI 버전 개발
-
-문서화
-
-발표
-
-UI 개선
-
-게임 로직 버그 수정
-
-카드 효과 제작
+**정어진**  
+- 게임 시스템 설계 및 기획  
+- 게임 초기 CLI 버전 개발  
+- 문서화  
+- 발표  
+- UI 개선  
+- 게임 로직 버그 수정  
+- 카드 효과 제작  
