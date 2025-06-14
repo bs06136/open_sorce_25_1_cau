@@ -7,13 +7,13 @@
 ## 1. 개발 환경
 
 
-### 1.1 필수 도구
+### 🔧 필수 도구
 
 - Unity Hub
 - Git
 - VS Code (권장)
 
-### 1.2 저장소 복제
+### 💾 저장소 복제
 
 ```
 bash
@@ -23,7 +23,7 @@ cd open_sorce_25_1_cau
 
 ```
 
-### 1.3 Unity 설치
+### 🕹 Unity 설치
 
 - [Unity 다운로드 페이지](https://unity.com/kr/download)에서 에디터 설치
 - Android 빌드 지원 모듈 설치:
@@ -31,7 +31,7 @@ cd open_sorce_25_1_cau
     - Android SDK & NDK Tools
     - OpenJDK
 
-### 1.4 프로젝트 연결
+### 🔗 프로젝트 연결
 
 - Unity Hub → **Add** → 클론한 폴더 선택 → 프로젝트 로드
 
