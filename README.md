@@ -131,7 +131,12 @@
 | 40 | main | Start | Floor |   |
 |----|---|---|---|---|
 | [![](https://github.com/user-attachments/assets/74d2f6ff-9cf1-4ec1-80ad-b55c3c47c181)](https://github.com/user-attachments/assets/74d2f6ff-9cf1-4ec1-80ad-b55c3c47c181) | ![1main](https://github.com/user-attachments/assets/f62aca8b-4c46-417a-9c52-ef3088376968) | ![start1](https://github.com/user-attachments/assets/cb7809fb-4427-4c6c-91ac-43bbc9efe355) | ![Floor_1to10](https://github.com/user-attachments/assets/787aac0b-5765-4409-97f6-54714e52c1a9) |  |
+
+---
+
 ### 개발 담당
+
+---
 
 ## 🎮 게임 로직
 
