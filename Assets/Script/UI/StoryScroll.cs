@@ -7,7 +7,7 @@ public class StoryScroll : MonoBehaviour
 {
     public TextMeshProUGUI storyText;
     public float scrollSpeed = 80.0f; // 스크롤 속도
-    public float fadeInTime = 1.0f;
+    public float fadeInTime = 0.0f;
 
     private RectTransform textRectTransform;
     private bool isScrolling = false;

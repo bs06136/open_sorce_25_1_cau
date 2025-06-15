@@ -8,6 +8,8 @@ public class CardRowController : MonoBehaviour, IPointerClickHandler
     public GameObject FrontPanel;      // 整个前面UI的空物件
     public GameObject BackPanel;       // 整个背面UI的空物件（只放故事文本）
 
+    public GameObject EffectSpace;
+
     [Header("Story 文本 (位于 BackPanel 里面)")]
     public TextMeshProUGUI StoryText;
 
@@ -19,7 +21,7 @@ public class CardRowController : MonoBehaviour, IPointerClickHandler
     {
         // 启动时只显示前面
         FrontPanel.SetActive(true);
-        BackPanel .SetActive(false);
+        BackPanel.SetActive(false);
     }
 
     /// <summary>
@@ -39,11 +41,11 @@ public class CardRowController : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         // 防止重复点击打断动画
-        if (LeanTween.isTweening(gameObject)) return;
+        if (LeanTween.isTweening(EffectSpace)) return;
 
         float halfDuration = 0.25f;
         // 先绕本地 Y 轴旋转 90°
-        LeanTween.rotateY(gameObject, 90f, halfDuration)
+        LeanTween.rotateY(EffectSpace, 90f, halfDuration)
             .setOnComplete(OnHalfFlipped)
             .setEase(LeanTweenType.easeInOutQuad);
     }
@@ -53,14 +55,14 @@ public class CardRowController : MonoBehaviour, IPointerClickHandler
         // 切换正反面
         isShowingFront = !isShowingFront;
         FrontPanel.SetActive(isShowingFront);
-        BackPanel .SetActive(!isShowingFront);
+        BackPanel.SetActive(!isShowingFront);
 
         // 如果是背面，刷新一次文本（确保最新）
         if (!isShowingFront && StoryText != null)
             StoryText.text = storyContent;
 
         // 再反向旋转回 0°
-        LeanTween.rotateY(gameObject, 0f, 0.25f)
+        LeanTween.rotateY(EffectSpace, 0f, 0.25f)
             .setEase(LeanTweenType.easeInOutQuad);
     }
 }
