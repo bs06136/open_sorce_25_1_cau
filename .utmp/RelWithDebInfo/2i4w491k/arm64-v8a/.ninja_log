@@ -1,0 +1,12 @@
+# ninja log v5
+155	20032	7717139161915675	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	48a115d820bd5a7f
+173	20293	7717139162384696	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	95dabd049bba83d4
+1	20321	7717139163689719	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	93602bbb8350395b
+97	20818	7717139168978939	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	2090f2f7bb2f7a52
+135	22775	7717139188811906	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	655c39b5d2075cc2
+20322	22778	7717139189160972	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	27d57baa49278d0a
+117	23600	7717139196642753	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	ae0c30d75611d01e
+22779	26783	7717139221701902	C:/Users/eojin/Unity/open_sorce_25_1_cau/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/2i4w491k/obj/arm64-v8a/libswappywrapper.so	f8af2d8ba8063514
+20148	29746	7717139258753784	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	e01c1ec2ba289bc8
+20294	31284	7717139275027526	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	cc840555ac3dbac5
+31286	32169	7717139281590584	C:/Users/eojin/Unity/open_sorce_25_1_cau/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/2i4w491k/obj/arm64-v8a/libgame.so	ac44a1b1c26c4e59
