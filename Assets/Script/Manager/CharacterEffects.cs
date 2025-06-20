@@ -25,13 +25,13 @@ namespace CardGame.Effects
         {
             return type switch
             {
-                CharacterType.Explorer    => new ExplorerEffect(),
+                CharacterType.Explorer => new ExplorerEffect(),
                 CharacterType.Gravekeeper => new GravekeeperEffect(),
                 CharacterType.Necromancer => new NecromancerEffect(),
-                CharacterType.Cleric      => new ClericEffect(),
-                CharacterType.Gambler     => new GamblerEffect(),
-                CharacterType.Avenger     => new AvengerEffect(),
-                CharacterType.Merchant    => new MerchantEffect(),
+                CharacterType.Cleric => new ClericEffect(),
+                CharacterType.Gambler => new GamblerEffect(),
+                CharacterType.Avenger => new AvengerEffect(),
+                CharacterType.Merchant => new MerchantEffect(),
                 CharacterType.DemonBinder => new DemonBinderEffect(),
                 _ => new ExplorerEffect()
             };
@@ -96,7 +96,7 @@ namespace CardGame.Effects
             if (t % 6 == 0)
                 gm.UnityPlayer.Curse = Math.Max(0, gm.UnityPlayer.Curse - 1);
             if (t % 5 == 0)
-                gm.UnityPlayer.Hp += 3;
+                gm.UnityPlayer.Hp -= 3;
         }
         public void OnAfterCardApply(GameManager gm, Card selectedCard) { }
         public void OnReroll(GameManager gm) { }
