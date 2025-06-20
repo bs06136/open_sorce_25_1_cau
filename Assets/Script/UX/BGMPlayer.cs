@@ -1,12 +1,28 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BGMPlayer : MonoBehaviour
 {
+    public static BGMPlayer Instance { get; private set; }
     public AudioSource bgmSource;
+
+    public Toggle mainSetting;
+    public Toggle ingameSetting;
+
+    private bool isSyncing = false;
 
     void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject); // 중복 생성 방지
+            return;
+        }
 
         // 저장된 설정 불러오기
         bool isOn = PlayerPrefs.GetInt("BGM_ON", 1) == 1;
@@ -14,6 +30,15 @@ public class BGMPlayer : MonoBehaviour
 
         if (!bgmSource.isPlaying && isOn)
             bgmSource.Play();
+    }
+
+    void Start()
+    {
+        Debug.Log($"BGMPlayer: bgmSource.mute = {bgmSource.mute}");
+        mainSetting.isOn = PlayerPrefs.GetInt("BGM_ON", 1) == 1;
+        ingameSetting.isOn = mainSetting.isOn;
+        mainSetting.onValueChanged.AddListener(OnMainSettingBGMChanged);
+        ingameSetting.onValueChanged.AddListener(OnIngameSettingBGMChanged);
     }
 
     // 설정에서 호출: BGM 켜기/끄기
@@ -29,5 +54,23 @@ public class BGMPlayer : MonoBehaviour
         }
         PlayerPrefs.SetInt("BGM_ON", on ? 1 : 0);
         PlayerPrefs.Save();
+    }
+
+    void OnMainSettingBGMChanged(bool isOn)
+    {
+        SetBgmOn(isOn);
+        if (isSyncing) return;
+        isSyncing = true;
+        ingameSetting.isOn = isOn;
+        isSyncing = false;
+    }
+
+    void OnIngameSettingBGMChanged(bool isOn)
+    {
+        SetBgmOn(isOn);
+        if (isSyncing) return;
+        isSyncing = true;
+        mainSetting.isOn = isOn;
+        isSyncing = false;
     }
 }

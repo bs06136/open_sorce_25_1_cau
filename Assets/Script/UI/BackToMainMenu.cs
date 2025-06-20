@@ -5,7 +5,9 @@ public class BackToMainMenu : MonoBehaviour
 {
     public void ReturnToMainMenu()
     {
-        SceneManager.LoadScene("SampleScene");
- 
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.ResetGameToMainMenu();
+        }
     }
 }

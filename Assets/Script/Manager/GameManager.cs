@@ -1048,7 +1048,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        if (logicGameMode == GameMode.Normal && UnityGame.Turn >= 20)
+        if (logicGameMode == GameMode.Normal && UnityGame.Turn >= 40)
         {
             ShowVictoryPanel();
             return;
@@ -1224,4 +1224,41 @@ public class GameManager : MonoBehaviour
     }
 
     public bool IsInfiniteMode() => logicGameMode == GameMode.Infinite;
+
+    public void ResetGameToMainMenu()
+    {
+        // // 게임 상태 변수 초기화
+        // isGameOver = false;
+        // isCardProcessing = false;
+        // isChariotActive = false;
+        // isChariotFirstPick = false;
+        // isRandomPick = false;
+        // lastRandomIndex = -1;
+        // turnCounter = 0;
+        // UnityGame = null;
+        // UnityPlayer = null;
+        // characterEffect = null;
+        // currentDrawnCards.Clear();
+
+        // UI 상태 초기화
+        if (ingameCanvas != null) ingameCanvas.SetActive(false);
+        if (gameOverCanvas != null) gameOverCanvas.SetActive(false);
+        if (victoryPanel != null) victoryPanel.SetActive(false);
+        if (cardPageCanvas != null) cardPageCanvas.SetActive(false);
+        if (creditCanvas != null) creditCanvas.SetActive(false);
+        if (settingCanvas != null) settingCanvas.SetActive(false);
+        if (gameClearCanvas != null) gameClearCanvas.SetActive(false);
+        if (ingameSettingCanvas != null) ingameSettingCanvas.SetActive(false);
+        if (storyCanvas != null) storyCanvas.SetActive(false);
+        if (CharacterCanvas != null) CharacterCanvas.SetActive(false);
+
+        // 메인 메뉴만 활성화
+        if (mainMenuCanvas != null) mainMenuCanvas.SetActive(true);
+
+        // 카드 UI 등도 필요하다면 초기화
+        if (unifiedCardManager != null)
+            unifiedCardManager.SetAllEmptySlots();
+
+        // 기타 필요한 리셋 작업 추가
+    }
 }
