@@ -3,12 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|c:\\users\\ms864\\onedrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\assets\\script\\manager\\careerselectionhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\manager\\careerselectionhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|c:\\users\\ms864\\onedrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\assets\\script\\ui\\unifiedcardmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\ui\\unifiedcardmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|c:\\users\\ms864\\onedrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\assets\\script\\manager\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\assets\\script\\manager\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\manager\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\assets\\script\\manager\\careerselectionhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\manager\\careerselectionhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\assets\\script\\ui\\cardstorydisplay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -25,10 +29,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\assets\\script\\ui\\cardeffectmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\ui\\cardeffectmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\assets\\script\\ui\\unifiedcardmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{24FE5D35-EE0C-65DE-6905-30B5D4D08879}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\ui\\unifiedcardmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,21 +38,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "CareerSelectionHandler.cs",
-              "DocumentMoniker": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\Manager\\CareerSelectionHandler.cs",
-              "RelativeDocumentMoniker": "Assets\\Script\\Manager\\CareerSelectionHandler.cs",
-              "ToolTip": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\Manager\\CareerSelectionHandler.cs",
-              "RelativeToolTip": "Assets\\Script\\Manager\\CareerSelectionHandler.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAADwvwkAAAAWAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-18T03:13:33.392Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Document",
               "DocumentIndex": 1,
@@ -61,14 +48,14 @@
               "RelativeDocumentMoniker": "Assets\\Script\\Manager\\GameManager.cs",
               "ToolTip": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\Manager\\GameManager.cs",
               "RelativeToolTip": "Assets\\Script\\Manager\\GameManager.cs",
-              "ViewState": "AgIAAHgAAAAAAAAAAABQwHsAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABsBAAAATFVVVVXlv0QBAABRAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-14T01:23:10.613Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "CardStoryDisplay.cs",
               "DocumentMoniker": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\UI\\CardStoryDisplay.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\UI\\CardStoryDisplay.cs",
@@ -80,7 +67,32 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
+              "Title": "UnifiedCardManager.cs",
+              "DocumentMoniker": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\UI\\UnifiedCardManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\UI\\UnifiedCardManager.cs",
+              "ToolTip": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\UI\\UnifiedCardManager.cs",
+              "RelativeToolTip": "Assets\\Script\\UI\\UnifiedCardManager.cs",
+              "ViewState": "AgIAAN8AAAAAU1UousItwPEAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-04T02:55:42.703Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CareerSelectionHandler.cs",
+              "DocumentMoniker": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\Manager\\CareerSelectionHandler.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\Manager\\CareerSelectionHandler.cs",
+              "ToolTip": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\Manager\\CareerSelectionHandler.cs",
+              "RelativeToolTip": "Assets\\Script\\Manager\\CareerSelectionHandler.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwkAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-18T03:13:33.392Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "CardStoryLibrary.cs",
               "DocumentMoniker": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\GameCore\\CardStoryLibrary.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\GameCore\\CardStoryLibrary.cs",
@@ -92,7 +104,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "CardButtonHandler.cs",
               "DocumentMoniker": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\UI\\CardButtonHandler.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\UI\\CardButtonHandler.cs",
@@ -105,18 +117,6 @@
             {
               "$type": "Document",
               "DocumentIndex": 6,
-              "Title": "UnifiedCardManager.cs",
-              "DocumentMoniker": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\UI\\UnifiedCardManager.cs",
-              "RelativeDocumentMoniker": "Assets\\Script\\UI\\UnifiedCardManager.cs",
-              "ToolTip": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\UI\\UnifiedCardManager.cs",
-              "RelativeToolTip": "Assets\\Script\\UI\\UnifiedCardManager.cs",
-              "ViewState": "AgIAADUCAAAAAAAAAAAgwD8CAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-04T02:55:42.703Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
               "Title": "CardEffectManager.cs",
               "DocumentMoniker": "C:\\Users\\ms864\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\open_sorce_25_1_cau\\Assets\\Script\\UI\\CardEffectManager.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\UI\\CardEffectManager.cs",

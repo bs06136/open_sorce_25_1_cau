@@ -181,6 +181,8 @@ public class UnifiedCardManager : MonoBehaviour
 
     private IEnumerator AnimateDraw(List<Card> cards)
     {
+        GameManager.Instance.SetCardProcessing(true);
+
         float moveDuration = 0.5f; // 올라오는 시간
         float delayBetweenCards = 0.2f; // 카드마다 딜레이
         float flipDelay = 0.5f; // 다 올라오고 뒤집기까지 대기 시간
@@ -243,6 +245,8 @@ public class UnifiedCardManager : MonoBehaviour
             // 0도로 회전
             LeanTween.rotateY(rt.gameObject, 0f, flipDuration / 2).setEaseInOutSine();
         }
+
+        GameManager.Instance.SetCardProcessing(false);
     }
 
     private void SetCardSlot(int slotIndex, Card card)

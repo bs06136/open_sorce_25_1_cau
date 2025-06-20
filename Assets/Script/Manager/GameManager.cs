@@ -19,6 +19,18 @@ public class GameManager : MonoBehaviour
     private bool isGameOver = false;
     public static GameManager Instance { get; private set; }
 
+    private bool isCardProcessing = false;
+
+    public void SetCardProcessing(bool value)
+    {
+        isCardProcessing = value;
+    }
+    public bool IsCardProcessing()
+    {
+        return isCardProcessing;
+    }
+
+
     [Header("UI 컴포넌트")]
     public PlayerHP playerHpUI;
     public PlayerCurse playerCurseUI;
@@ -252,6 +264,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void ApplyCardByIndex(int index)
     {
+        if (isCardProcessing) return; // 중복 클릭 무시
+        isCardProcessing = true;
         Debug.Log($"[GameManager] ApplyCardByIndex 호출: index={index}");
         Debug.Log($"[GameManager] 현재 상태: currentDrawnCards.Count={currentDrawnCards?.Count ?? 0}");
         Debug.Log($"[GameManager] 전차 상태: isChariotActive={isChariotActive}, isChariotFirstPick={isChariotFirstPick}");
@@ -262,6 +276,7 @@ public class GameManager : MonoBehaviour
         if (index < 0 || index >= currentDrawnCards.Count)
         {
             Debug.LogError($"[GameManager] 잘못된 인덱스: {index}, 카드 수: {currentDrawnCards.Count}");
+            isCardProcessing = false;
             return;
         }
 
