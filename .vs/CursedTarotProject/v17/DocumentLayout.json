@@ -3,16 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\rlaxo\\CursedTarotProject\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{C5634289-DFCB-D22A-6438-6554E35EE3E5}|Assembly-CSharp.csproj|C:\\Users\\rlaxo\\CursedTarotProject\\assets\\script\\manager\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C5634289-DFCB-D22A-6438-6554E35EE3E5}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\manager\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C5634289-DFCB-D22A-6438-6554E35EE3E5}|Assembly-CSharp.csproj|c:\\users\\rlaxo\\cursedtarotproject\\assets\\script\\ui\\cardbuttonhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{C5634289-DFCB-D22A-6438-6554E35EE3E5}|Assembly-CSharp.csproj|C:\\Users\\rlaxo\\CursedTarotProject\\assets\\script\\ui\\cardbuttonhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C5634289-DFCB-D22A-6438-6554E35EE3E5}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\ui\\cardbuttonhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C5634289-DFCB-D22A-6438-6554E35EE3E5}|Assembly-CSharp.csproj|C:\\Users\\rlaxo\\CursedTarotProject\\assets\\script\\ui\\unifiedcardmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C5634289-DFCB-D22A-6438-6554E35EE3E5}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\ui\\unifiedcardmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C5634289-DFCB-D22A-6438-6554E35EE3E5}|Assembly-CSharp.csproj|c:\\users\\rlaxo\\cursedtarotproject\\assets\\script\\manager\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C5634289-DFCB-D22A-6438-6554E35EE3E5}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\manager\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C5634289-DFCB-D22A-6438-6554E35EE3E5}|Assembly-CSharp.csproj|c:\\users\\rlaxo\\cursedtarotproject\\assets\\script\\gamecore\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C5634289-DFCB-D22A-6438-6554E35EE3E5}|Assembly-CSharp.csproj|solutionrelative:assets\\script\\gamecore\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C5634289-DFCB-D22A-6438-6554E35EE3E5}|Assembly-CSharp.csproj|C:\\Users\\rlaxo\\CursedTarotProject\\assets\\script\\ui\\cardeffectmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -26,11 +30,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "Game.cs",
+              "DocumentMoniker": "C:\\Users\\rlaxo\\CursedTarotProject\\Assets\\Script\\GameCore\\Game.cs",
+              "RelativeDocumentMoniker": "Assets\\Script\\GameCore\\Game.cs",
+              "ToolTip": "C:\\Users\\rlaxo\\CursedTarotProject\\Assets\\Script\\GameCore\\Game.cs",
+              "RelativeToolTip": "Assets\\Script\\GameCore\\Game.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-22T13:04:17.522Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "CardEffectManager.cs",
               "DocumentMoniker": "C:\\Users\\rlaxo\\CursedTarotProject\\Assets\\Script\\UI\\CardEffectManager.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\UI\\CardEffectManager.cs",
@@ -42,38 +59,39 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "CardButtonHandler.cs",
               "DocumentMoniker": "C:\\Users\\rlaxo\\CursedTarotProject\\Assets\\Script\\UI\\CardButtonHandler.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\UI\\CardButtonHandler.cs",
               "ToolTip": "C:\\Users\\rlaxo\\CursedTarotProject\\Assets\\Script\\UI\\CardButtonHandler.cs",
               "RelativeToolTip": "Assets\\Script\\UI\\CardButtonHandler.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAACIAAAAAAAAAAAAAAC8AAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-14T02:59:22.878Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "UnifiedCardManager.cs",
               "DocumentMoniker": "C:\\Users\\rlaxo\\CursedTarotProject\\Assets\\Script\\UI\\UnifiedCardManager.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\UI\\UnifiedCardManager.cs",
               "ToolTip": "C:\\Users\\rlaxo\\CursedTarotProject\\Assets\\Script\\UI\\UnifiedCardManager.cs",
               "RelativeToolTip": "Assets\\Script\\UI\\UnifiedCardManager.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAJYCAAAAAAAAAAAgwJsCAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-14T02:52:24.061Z"
+              "WhenOpened": "2025-06-14T02:52:24.061Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "GameManager.cs",
               "DocumentMoniker": "C:\\Users\\rlaxo\\CursedTarotProject\\Assets\\Script\\Manager\\GameManager.cs",
               "RelativeDocumentMoniker": "Assets\\Script\\Manager\\GameManager.cs",
               "ToolTip": "C:\\Users\\rlaxo\\CursedTarotProject\\Assets\\Script\\Manager\\GameManager.cs",
               "RelativeToolTip": "Assets\\Script\\Manager\\GameManager.cs",
-              "ViewState": "AgIAABMBAAAAAAAAAAAmwB8BAAASAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAF4EAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-14T02:50:46.839Z",
               "EditorCaption": ""

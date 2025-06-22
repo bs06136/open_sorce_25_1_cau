@@ -210,7 +210,10 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Cleric 1_0: 462051695784995011
+      Cleric 1_1: 8907464867479458347
+      Cleric 1_2: -3455682790286467308
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

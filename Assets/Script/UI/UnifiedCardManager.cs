@@ -23,7 +23,6 @@ public class UnifiedCardManager : MonoBehaviour
         {
             Destroy(gameObject); // 혹시 중복 생기면 제거
         }
-
     }
 
     [Header("=== 카드 스프라이트 설정 ===")]
@@ -76,7 +75,6 @@ public class UnifiedCardManager : MonoBehaviour
         // 리롤 버튼 이벤트 연결 (있는 경우에만)
         if (rerollButton != null)
             Debug.Log("[UnifiedCardManager] 리롤 버튼이 설정됨");
-        // rerollButton.onClick.AddListener(OnRerollClicked);
 
         UpdateRerollUI();
     }
@@ -212,7 +210,7 @@ public class UnifiedCardManager : MonoBehaviour
             if (FindObjectOfType<SoundEffectPlayer>()?.SoundEffectIsOn == true)
             {
                 drawSoundSource?.PlayOneShot(drawSoundClip); // 드로우 사운드 재생
-            }            
+            }
             yield return new WaitForSeconds(delayBetweenCards);
         }
 
@@ -316,6 +314,7 @@ public class UnifiedCardManager : MonoBehaviour
         // 앞면 상태로 설정
         isCardFront[slotIndex] = true;
     }
+
     private void SetDefaultCardImage(Image imageSlot, Card card)
     {
         Debug.LogWarning($"[UnifiedCardManager] '{card.Name}' 스프라이트 없음");
@@ -392,11 +391,19 @@ public class UnifiedCardManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 🔥 카드 버튼 활성화/비활성화 (강화된 디버그 로그)
+    /// </summary>
     public void SetCardButtonActive(int slotIndex, bool active)
     {
         if (slotIndex < cardButtons.Length && cardButtons[slotIndex] != null)
         {
             cardButtons[slotIndex].interactable = active;
+            Debug.Log($"[UnifiedCardManager] 슬롯 {slotIndex} 버튼 활성화: {active} (실제 상태: {cardButtons[slotIndex].interactable})");
+        }
+        else
+        {
+            Debug.LogError($"[UnifiedCardManager] 슬롯 {slotIndex} 버튼이 null이거나 범위 초과! (총 버튼 수: {cardButtons?.Length ?? 0})");
         }
     }
 
@@ -409,7 +416,6 @@ public class UnifiedCardManager : MonoBehaviour
     /// </summary>
     private void ShowCardEffect(int slotIndex, Card card)
     {
-
         // 앞면이 아닐 때는 효과를 무조건 숨김
         if (slotIndex >= isCardFront.Length || !isCardFront[slotIndex])
         {
@@ -447,7 +453,6 @@ public class UnifiedCardManager : MonoBehaviour
     /// </summary>
     private void HideCardEffect(int slotIndex)
     {
-
         if (slotIndex >= effectPanels.Length || effectPanels[slotIndex] == null) return;
 
         effectPanels[slotIndex].SetActive(false);
@@ -658,6 +663,26 @@ public class UnifiedCardManager : MonoBehaviour
 
         Debug.Log("[UnifiedCardManager] 특수 카드 테스트 표시");
         DisplayCards(testCards);
+    }
+
+    /// <summary>
+    /// 🔥 전차 버튼 상태 디버그 (테스트용)
+    /// </summary>
+    [ContextMenu("Debug Button States")]
+    public void DebugButtonStates()
+    {
+        Debug.Log("[UnifiedCardManager] 현재 버튼 상태:");
+        for (int i = 0; i < cardButtons.Length; i++)
+        {
+            if (cardButtons[i] != null)
+            {
+                Debug.Log($"  슬롯 {i}: 활성화={cardButtons[i].interactable}, 앞면={isCardFront[i]}");
+            }
+            else
+            {
+                Debug.Log($"  슬롯 {i}: 버튼이 null");
+            }
+        }
     }
 
     #endregion

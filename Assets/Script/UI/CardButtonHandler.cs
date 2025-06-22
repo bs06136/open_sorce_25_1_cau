@@ -8,6 +8,17 @@ public class CardButtonHandler : MonoBehaviour
 
     public void OnCardButtonClicked()
     {
+        Debug.Log($"[CardButtonHandler] 슬롯 {slotIndex} 클릭됨");
+        Debug.Log($"[CardButtonHandler] GameManager 처리 상태: {GameManager.Instance?.IsCardProcessing() ?? false}");
+        Debug.Log($"[CardButtonHandler] 전차 상태: active={GameManager.Instance?.IsChariotActive() ?? false}, firstPick={GameManager.Instance?.IsChariotFirstPick() ?? false}");
+
+        // 🔥 GameManager가 처리 중이면 클릭 무시
+        if (GameManager.Instance?.IsCardProcessing() == true)
+        {
+            Debug.Log($"[CardButtonHandler] GameManager가 처리 중이므로 클릭 무시");
+            return;
+        }
+
         // 🔥 전차 효과 중인지 확인하고 다른 매핑 적용
         int actualCardIndex = IsChariotSecondPick() ?
             GetChariotActualCardIndex(slotIndex) :
@@ -30,28 +41,16 @@ public class CardButtonHandler : MonoBehaviour
     }
 
     /// <summary>
-    /// 전차 효과의 두 번째 선택인지 확인
+    /// 전차 효과의 두 번째 선택인지 확인 (리플렉션 대신 public 메서드 사용)
     /// </summary>
     private bool IsChariotSecondPick()
     {
         if (GameManager.Instance == null) return false;
 
-        // GameManager의 전차 상태 확인 (리플렉션 사용)
-        var isChariotActiveField = GameManager.Instance.GetType()
-            .GetField("isChariotActive", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        var isChariotFirstPickField = GameManager.Instance.GetType()
-            .GetField("isChariotFirstPick", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-
-        if (isChariotActiveField != null && isChariotFirstPickField != null)
-        {
-            bool isChariotActive = (bool)isChariotActiveField.GetValue(GameManager.Instance);
-            bool isChariotFirstPick = (bool)isChariotFirstPickField.GetValue(GameManager.Instance);
-
-            // 전차가 활성화되어 있고, 첫 번째 선택이 아니면 두 번째 선택
-            return isChariotActive && !isChariotFirstPick;
-        }
-
-        return false;
+        // 🔥 리플렉션 대신 GameManager의 public 메서드 사용
+        bool result = GameManager.Instance.IsChariotSecondPick();
+        Debug.Log($"[CardButtonHandler] 전차 두 번째 선택 여부: {result}");
+        return result;
     }
 
     /// <summary>
@@ -96,8 +95,6 @@ public class CardButtonHandler : MonoBehaviour
         }
     }
 
-
-
     /// <summary>
     /// 현재 활성화된 전차 슬롯들 가져오기 (실제 상태 기반)
     /// </summary>
@@ -114,6 +111,8 @@ public class CardButtonHandler : MonoBehaviour
                 bool isButtonActive = i < UnifiedCardManager.Instance.cardButtons.Length &&
                                     UnifiedCardManager.Instance.cardButtons[i] != null &&
                                     UnifiedCardManager.Instance.cardButtons[i].interactable;
+
+                Debug.Log($"[CardButtonHandler] 슬롯 {i}: 앞면={isCardFront}, 버튼활성={isButtonActive}");
 
                 if (isCardFront && isButtonActive)
                 {
@@ -139,6 +138,7 @@ public class CardButtonHandler : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
 
         // 카드 선택 이벤트 발동 (이후 GameManager에서 강조 애니메이션과 카드 적용)
+        Debug.Log($"[CardButtonHandler] GameEvents.OnCardChosen 호출: 카드 인덱스 {cardIndex}");
         GameEvents.OnCardChosen?.Invoke(cardIndex);
     }
 
@@ -183,7 +183,7 @@ public class CardButtonHandler : MonoBehaviour
     }
 
     /// <summary>
-    /// 현재 뽑힌 카드들 가져오기
+    /// 현재 뽑힌 카드들 가져오기 (리플렉션 대신 GameManager의 public 필드/메서드 사용 권장)
     /// </summary>
     private List<Card> GetCurrentDrawnCards()
     {
@@ -193,6 +193,7 @@ public class CardButtonHandler : MonoBehaviour
             return null;
         }
 
+        // 🔥 리플렉션 사용 (GameManager에 public getter 추가를 권장)
         var cards = GameManager.Instance.GetType()
             .GetField("currentDrawnCards", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
             ?.GetValue(GameManager.Instance) as List<Card>;
