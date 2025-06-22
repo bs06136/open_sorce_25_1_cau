@@ -221,7 +221,7 @@ namespace CardGame
             GameEvents.TriggerPositiveEffect("[암거래 효과] 5턴간 죽음 카드 추가 금지");
             Debug.Log("[암거래 효과] 5턴간 죽음 카드 추가 금지");
             player.NotAddDeath = Math.Max(player.NotAddDeath, 5);
-            player.DeathCardAddedThisCard  = true;
+            player.DeathCardAddedThisCard = true;
         }
 
         public static void EmberEffect(Player player, Game game, List<Card> cards)

@@ -37,6 +37,8 @@ public class GameManager : MonoBehaviour
     public UnifiedCardManager unifiedCardManager;
     public TurnDisplay turnDisplay;
 
+    public Toggle tutorialToggle;
+
     public Game UnityGame { get; private set; }
     public PlayerBridge UnityPlayer { get; private set; }
 
@@ -62,6 +64,7 @@ public class GameManager : MonoBehaviour
     public GameObject ingameSettingCanvas;
     public GameObject storyCanvas;
     public GameObject CharacterCanvas;
+    public GameObject TutorialOverlayCanvas;
 
     [Header("Victory UI")]
     public GameObject victoryPanel;
@@ -109,6 +112,7 @@ public class GameManager : MonoBehaviour
         ingameSettingCanvas.SetActive(false);
         storyCanvas.SetActive(false);
         CharacterCanvas.SetActive(false);
+        TutorialOverlayCanvas.SetActive(false);
 
         UpdateGameModeUI();
 
@@ -153,6 +157,15 @@ public class GameManager : MonoBehaviour
 
         mainMenuCanvas.SetActive(false);
         ingameCanvas.SetActive(true);
+
+        if (tutorialToggle.isOn)
+        {
+            TutorialOverlayCanvas.SetActive(true);
+        }
+        else
+        {
+            TutorialOverlayCanvas.SetActive(false);
+        }
 
         UpdateTurnDisplay();
         StartTurn();
@@ -1087,7 +1100,7 @@ public class GameManager : MonoBehaviour
             returnToMenuButton.onClick.AddListener(() =>
             {
                 Time.timeScale = 1f;
-                SceneManager.LoadScene("SampleScene");
+                ResetGameToMainMenu(); // 씬 로드 대신 이 메서드 호출
             });
         }
     }
@@ -1227,18 +1240,18 @@ public class GameManager : MonoBehaviour
 
     public void ResetGameToMainMenu()
     {
-        // // 게임 상태 변수 초기화
-        // isGameOver = false;
-        // isCardProcessing = false;
-        // isChariotActive = false;
-        // isChariotFirstPick = false;
-        // isRandomPick = false;
-        // lastRandomIndex = -1;
-        // turnCounter = 0;
-        // UnityGame = null;
-        // UnityPlayer = null;
-        // characterEffect = null;
-        // currentDrawnCards.Clear();
+        // 게임 상태 변수 초기화
+        isGameOver = false;
+        isCardProcessing = false;
+        isChariotActive = false;
+        isChariotFirstPick = false;
+        isRandomPick = false;
+        lastRandomIndex = -1;
+        turnCounter = 0;
+        UnityGame = null;
+        UnityPlayer = null;
+        characterEffect = null;
+        currentDrawnCards.Clear();
 
         // UI 상태 초기화
         if (ingameCanvas != null) ingameCanvas.SetActive(false);

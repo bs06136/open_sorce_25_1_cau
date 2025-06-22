@@ -9,6 +9,10 @@ public class UnifiedCardManager : MonoBehaviour
 {
     public static UnifiedCardManager Instance { get; private set; }
 
+    [Header("=== 카드 드로우 효과음 ===")]
+    public AudioSource drawSoundSource;
+    public AudioClip drawSoundClip;
+
     private void Awake()
     {
         if (Instance == null)
@@ -205,6 +209,10 @@ public class UnifiedCardManager : MonoBehaviour
 
             // 슬라이드 업
             LeanTween.move(rt, originalPos, moveDuration).setEaseOutCubic();
+            if (FindObjectOfType<SoundEffectPlayer>()?.SoundEffectIsOn == true)
+            {
+                drawSoundSource?.PlayOneShot(drawSoundClip); // 드로우 사운드 재생
+            }            
             yield return new WaitForSeconds(delayBetweenCards);
         }
 

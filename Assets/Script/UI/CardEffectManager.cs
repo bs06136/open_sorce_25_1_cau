@@ -74,6 +74,15 @@ public class CardEffectManager : MonoBehaviour
 
     private void Start()
     {
+        // StartCoroutine(MonitorCardChanges());
+    }
+
+    private void OnEnable()
+    {
+        // 🔥 카드 효과 데이터 초기화
+        InitializeCardEffectData();
+
+        // 🔥 카드 변화 모니터링 시작
         StartCoroutine(MonitorCardChanges());
     }
 

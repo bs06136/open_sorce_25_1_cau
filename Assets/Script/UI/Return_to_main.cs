@@ -8,12 +8,7 @@ public class Return_to_main : MonoBehaviour
 
     public void backToMainMenu()
     {
-        //MainMenuCanvas.SetActive(true);
-        //GameOverCanvas.SetActive(false);
-        // }
-
-        // public void RetryGame()
-        // {
-        SceneManager.LoadScene("SampleScene");
+        // 씬 로드 대신 GameManager의 메서드 호출
+        GameManager.Instance.ResetGameToMainMenu();
     }
 }

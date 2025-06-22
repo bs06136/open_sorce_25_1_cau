@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections; // ← 이 줄 추가
 
 public class BGMPlayer : MonoBehaviour
 {
@@ -72,5 +73,20 @@ public class BGMPlayer : MonoBehaviour
         isSyncing = true;
         mainSetting.isOn = isOn;
         isSyncing = false;
+    }
+
+    public void DuckBgm(float duckVolume, float duration)
+    {
+        if (bgmSource == null) return;
+        StopAllCoroutines();
+        StartCoroutine(DuckBgmCoroutine(duckVolume, duration));
+    }
+
+    private IEnumerator DuckBgmCoroutine(float duckVolume, float duration)
+    {
+        float originalVolume = bgmSource.volume;
+        bgmSource.volume = duckVolume;
+        yield return new WaitForSeconds(duration);
+        bgmSource.volume = originalVolume;
     }
 }

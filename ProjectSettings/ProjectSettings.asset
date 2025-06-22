@@ -12,7 +12,7 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: The Five Blue Dragon Brothers
+  companyName: "\uCCAD\uB8E1\uC624\uD615\uC81C"
   productName: "\uC800\uC8FC\uBC1B\uC740 \uD0C0\uB85C"
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
@@ -143,9 +143,6 @@ PlayerSettings:
   bundleVersion: 0.1.1
   preloadedAssets:
   - {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
-  - {fileID: 11400000, guid: 4953a4fa619f2b943aa29a5b60355b01, type: 2}
-  - {fileID: 11400000, guid: 5b521f926f0fedc4b810d802ca358b4d, type: 2}
-  - {fileID: -4205200972497586120, guid: bba7851ca9cdbf1458bae7f55a6371f6, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -167,7 +164,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.4
   androidMinAspectRatio: 1
   applicationIdentifier:
-    Android: com.DefaultCompany.com.unity.template.mobile2D
+    Android: com.the_five_blue_dragon_brothers.cursed_tarrot
     Lumin: com.DefaultCompany.com.unity.template.mobile2D
     Standalone: com.DefaultCompany.com.unity.template.mobile2D
     iPhone: com.DefaultCompany.com.unity.template.mobile2D
@@ -178,7 +175,7 @@ PlayerSettings:
     iPhone: 0
     tvOS: 0
   overrideDefaultApplicationIdentifier: 1
-  AndroidBundleVersionCode: 1
+  AndroidBundleVersionCode: 2
   AndroidMinSdkVersion: 30
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1

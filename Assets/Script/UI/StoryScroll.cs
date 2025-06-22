@@ -12,7 +12,7 @@ public class StoryScroll : MonoBehaviour
     private RectTransform textRectTransform;
     private bool isScrolling = false;
 
-    void Start()
+    void OnEnable()
     {
         textRectTransform = storyText.GetComponent<RectTransform>();
 

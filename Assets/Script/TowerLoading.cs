@@ -6,11 +6,17 @@ public class TowerLoading : MonoBehaviour
     public GameObject objectToActivate;
     public GameObject objectToActivate2;
     public GameObject objectToDeactivate;
-    public float delay = 3f;
+    public float delay = 2f;
 
     void Start()
     {
+        // StartCoroutine(SwitchObjectsAfterDelay());
+    }
+
+    void OnEnable()
+    {
         StartCoroutine(SwitchObjectsAfterDelay());
+
     }
 
     IEnumerator SwitchObjectsAfterDelay()

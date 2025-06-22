@@ -78,7 +78,10 @@ namespace CardGame.Effects
         {
             if (gm.GetCurrentTurn() % 3 == 0)
             {
-                var reviveCard = CardLibrary.AllCards.FirstOrDefault(c => c.Name == "부활");
+                var reviveCard = CardLibrary.AllCards.FirstOrDefault(c => c.Name == "부활").Copy(new Dictionary<string, object>
+                {
+                    { "HpChange", 1 }
+                });
                 if (reviveCard != null)
                     gm.UnityGame.Deck.Add(reviveCard);
             }
